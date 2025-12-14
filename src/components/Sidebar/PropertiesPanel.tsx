@@ -7,6 +7,7 @@ import type {
   PostgreSQLNodeData,
   S3BucketNodeData,
   RedisNodeData,
+  StickyNoteNodeData,
 } from '../../types/nodes';
 
 function UserProperties({ data, onChange }: { data: UserNodeData; onChange: (data: Partial<UserNodeData>) => void }) {
@@ -221,6 +222,47 @@ function RedisProperties({ data, onChange }: { data: RedisNodeData; onChange: (d
   );
 }
 
+const noteColors = [
+  { value: 'yellow', label: 'Yellow', class: 'bg-yellow-300' },
+  { value: 'blue', label: 'Blue', class: 'bg-blue-300' },
+  { value: 'green', label: 'Green', class: 'bg-green-300' },
+  { value: 'pink', label: 'Pink', class: 'bg-pink-300' },
+  { value: 'purple', label: 'Purple', class: 'bg-purple-300' },
+];
+
+function StickyNoteProperties({ data, onChange }: { data: StickyNoteNodeData; onChange: (data: Partial<StickyNoteNodeData>) => void }) {
+  return (
+    <div className="space-y-4">
+      <div>
+        <label className="block text-xs text-slate-400 mb-2">Content</label>
+        <textarea
+          value={data.content || ''}
+          onChange={(e) => onChange({ content: e.target.value })}
+          className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2.5 text-sm text-white resize-none"
+          placeholder="Add your notes here..."
+          rows={5}
+        />
+      </div>
+      <div>
+        <label className="block text-xs text-slate-400 mb-2">Color</label>
+        <div className="flex gap-2">
+          {noteColors.map((color) => (
+            <button
+              key={color.value}
+              onClick={() => onChange({ color: color.value as StickyNoteNodeData['color'] })}
+              className={`
+                w-8 h-8 rounded-lg ${color.class} transition-all
+                ${data.color === color.value ? 'ring-2 ring-white ring-offset-2 ring-offset-slate-800' : 'hover:scale-110'}
+              `}
+              title={color.label}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function PropertiesPanel() {
   const { nodes, selectedNodeId, updateNode, deleteNode, setSelectedNodeId } = useCanvasStore();
   const selectedNode = nodes.find((n) => n.id === selectedNodeId);
@@ -264,6 +306,8 @@ export function PropertiesPanel() {
         return <S3BucketProperties data={selectedNode.data as S3BucketNodeData} onChange={handleChange} />;
       case 'redis':
         return <RedisProperties data={selectedNode.data as RedisNodeData} onChange={handleChange} />;
+      case 'stickyNote':
+        return <StickyNoteProperties data={selectedNode.data as StickyNoteNodeData} onChange={handleChange} />;
       default:
         return null;
     }

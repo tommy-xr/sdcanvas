@@ -6,7 +6,8 @@ export type SystemNodeType =
   | 'apiServer'
   | 'postgresql'
   | 's3Bucket'
-  | 'redis';
+  | 'redis'
+  | 'stickyNote';
 
 export interface BaseNodeData {
   label: string;
@@ -76,12 +77,18 @@ export interface RedisNodeData extends BaseNodeData {
   evictionPolicy: 'noeviction' | 'allkeys-lru' | 'volatile-lru' | 'allkeys-random';
 }
 
+export interface StickyNoteNodeData extends BaseNodeData {
+  content: string;
+  color: 'yellow' | 'blue' | 'green' | 'pink' | 'purple';
+}
+
 export type SystemNodeData =
   | UserNodeData
   | LoadBalancerNodeData
   | APIServerNodeData
   | PostgreSQLNodeData
   | S3BucketNodeData
-  | RedisNodeData;
+  | RedisNodeData
+  | StickyNoteNodeData;
 
 export type SystemNode = Node<SystemNodeData, SystemNodeType>;

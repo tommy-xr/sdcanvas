@@ -6,6 +6,7 @@ import {
   Database,
   HardDrive,
   Zap,
+  StickyNote,
 } from 'lucide-react';
 import type { SystemNodeType } from '../../types/nodes';
 
@@ -78,6 +79,17 @@ const components: ComponentDefinition[] = [
       label: 'Cache',
       maxMemory: '256MB',
       evictionPolicy: 'allkeys-lru',
+    },
+  },
+  {
+    type: 'stickyNote',
+    label: 'Sticky Note',
+    icon: <StickyNote size={20} />,
+    color: '#eab308',
+    defaultData: {
+      label: 'Note',
+      content: '',
+      color: 'yellow',
     },
   },
 ];

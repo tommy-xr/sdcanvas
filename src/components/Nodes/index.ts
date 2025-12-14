@@ -5,6 +5,7 @@ import { APIServerNode } from './APIServerNode';
 import { PostgreSQLNode } from './PostgreSQLNode';
 import { S3BucketNode } from './S3BucketNode';
 import { RedisNode } from './RedisNode';
+import { StickyNoteNode } from './StickyNoteNode';
 
 export const nodeTypes: NodeTypes = {
   user: UserNode,
@@ -13,6 +14,7 @@ export const nodeTypes: NodeTypes = {
   postgresql: PostgreSQLNode,
   s3Bucket: S3BucketNode,
   redis: RedisNode,
+  stickyNote: StickyNoteNode,
 };
 
 export {
@@ -22,4 +24,5 @@ export {
   PostgreSQLNode,
   S3BucketNode,
   RedisNode,
+  StickyNoteNode,
 };
