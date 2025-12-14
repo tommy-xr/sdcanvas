@@ -10,7 +10,7 @@ export function S3BucketNode({ data, selected }: NodeProps) {
     <BaseNode
       icon={<HardDrive size={18} />}
       label={nodeData.label}
-      subtitle="S3 Bucket"
+      subtitle="Blob Storage (S3, GCS)"
       color="#ff9900"
       selected={selected}
     >

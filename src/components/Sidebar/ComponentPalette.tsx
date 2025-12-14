@@ -50,32 +50,32 @@ const components: ComponentDefinition[] = [
   },
   {
     type: 'postgresql',
-    label: 'PostgreSQL',
+    label: 'Relational DB',
     icon: <Database size={20} />,
     color: '#336791',
     defaultData: {
-      label: 'PostgreSQL',
+      label: 'Database',
       tables: [],
     },
   },
   {
     type: 's3Bucket',
-    label: 'S3 Bucket',
+    label: 'Blob Storage',
     icon: <HardDrive size={20} />,
     color: '#ff9900',
     defaultData: {
-      label: 'S3 Bucket',
+      label: 'Blob Storage',
       bucketName: 'my-bucket',
       isPublic: false,
     },
   },
   {
     type: 'redis',
-    label: 'Redis Cache',
+    label: 'Cache',
     icon: <Zap size={20} />,
     color: '#dc382d',
     defaultData: {
-      label: 'Redis',
+      label: 'Cache',
       maxMemory: '256MB',
       evictionPolicy: 'allkeys-lru',
     },

@@ -11,7 +11,7 @@ export function PostgreSQLNode({ data, selected }: NodeProps) {
     <BaseNode
       icon={<Database size={18} />}
       label={nodeData.label}
-      subtitle="PostgreSQL"
+      subtitle="Relational (Postgres, MySQL)"
       color="#336791"
       selected={selected}
     >

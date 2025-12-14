@@ -17,7 +17,7 @@ export function LoadBalancerNode({ data, selected }: NodeProps) {
     <BaseNode
       icon={<Network size={18} />}
       label={nodeData.label}
-      subtitle="Load Balancer"
+      subtitle="Load Balancer (nginx, ALB)"
       color="#f59e0b"
       selected={selected}
     >

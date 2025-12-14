@@ -17,7 +17,7 @@ export function RedisNode({ data, selected }: NodeProps) {
     <BaseNode
       icon={<Zap size={18} />}
       label={nodeData.label}
-      subtitle="Redis Cache"
+      subtitle="Cache (Redis, Memcached)"
       color="#dc382d"
       selected={selected}
     >
