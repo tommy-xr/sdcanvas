@@ -113,15 +113,19 @@ function DraggableComponent({ component }: { component: ComponentDefinition }) {
 
 export function ComponentPalette() {
   return (
-    <div className="w-72 bg-slate-800 border-r border-slate-700 p-5 flex flex-col">
-      <h2 className="text-lg font-semibold text-white mb-2">Components</h2>
-      <p className="text-xs text-slate-400 mb-5">
-        Drag components onto the canvas to build your system design.
-      </p>
-      <div className="space-y-3 flex-1 overflow-y-auto pr-1">
-        {components.map((component) => (
-          <DraggableComponent key={component.type} component={component} />
-        ))}
+    <div className="w-72 bg-slate-800 border-r border-slate-700 flex flex-col">
+      <div className="px-6 pt-5 pb-4">
+        <h2 className="text-lg font-semibold text-white mb-2">Components</h2>
+        <p className="text-xs text-slate-400 leading-relaxed">
+          Drag components onto the canvas to build your system design.
+        </p>
+      </div>
+      <div className="flex-1 overflow-y-auto px-6 pb-5">
+        <div className="space-y-3">
+          {components.map((component) => (
+            <DraggableComponent key={component.type} component={component} />
+          ))}
+        </div>
       </div>
     </div>
   );

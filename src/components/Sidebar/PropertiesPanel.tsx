@@ -227,11 +227,13 @@ export function PropertiesPanel() {
 
   if (!selectedNode) {
     return (
-      <div className="w-80 bg-slate-800 border-l border-slate-700 p-5">
-        <h2 className="text-lg font-semibold text-white mb-3">Properties</h2>
-        <p className="text-sm text-slate-400">
-          Select a component to view and edit its properties.
-        </p>
+      <div className="w-80 bg-slate-800 border-l border-slate-700">
+        <div className="px-6 py-5">
+          <h2 className="text-lg font-semibold text-white mb-3">Properties</h2>
+          <p className="text-sm text-slate-400">
+            Select a component to view and edit its properties.
+          </p>
+        </div>
       </div>
     );
   }
@@ -268,48 +270,52 @@ export function PropertiesPanel() {
   };
 
   return (
-    <div className="w-80 bg-slate-800 border-l border-slate-700 p-5 flex flex-col">
-      <div className="flex items-center justify-between mb-5">
+    <div className="w-80 bg-slate-800 border-l border-slate-700 flex flex-col">
+      <div className="px-6 pt-5 pb-4 flex items-center justify-between">
         <h2 className="text-lg font-semibold text-white">Properties</h2>
         <button
           onClick={() => setSelectedNodeId(null)}
-          className="text-slate-400 hover:text-white p-1 rounded hover:bg-slate-700 transition-colors"
+          className="text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-slate-700 transition-colors"
         >
           <X size={18} />
         </button>
       </div>
 
-      <div className="space-y-5 flex-1 overflow-y-auto pr-1">
-        <div>
-          <label className="block text-xs text-slate-400 mb-2">Label</label>
-          <input
-            type="text"
-            value={(selectedNode.data as { label: string }).label || ''}
-            onChange={(e) => handleLabelChange(e.target.value)}
-            className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2.5 text-sm text-white"
-          />
-        </div>
-
-        <div>
-          <label className="block text-xs text-slate-400 mb-2">Type</label>
-          <div className="text-sm text-slate-300 capitalize">
-            {selectedNode.type?.replace(/([A-Z])/g, ' $1').trim()}
+      <div className="flex-1 overflow-y-auto px-6">
+        <div className="space-y-5">
+          <div>
+            <label className="block text-xs text-slate-400 mb-2">Label</label>
+            <input
+              type="text"
+              value={(selectedNode.data as { label: string }).label || ''}
+              onChange={(e) => handleLabelChange(e.target.value)}
+              className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2.5 text-sm text-white"
+            />
           </div>
+
+          <div>
+            <label className="block text-xs text-slate-400 mb-2">Type</label>
+            <div className="text-sm text-slate-300 capitalize">
+              {selectedNode.type?.replace(/([A-Z])/g, ' $1').trim()}
+            </div>
+          </div>
+
+          <hr className="border-slate-700" />
+
+          {renderTypeSpecificProps()}
         </div>
-
-        <hr className="border-slate-700" />
-
-        {renderTypeSpecificProps()}
       </div>
 
-      <button
-        onClick={handleDelete}
-        className="mt-5 flex items-center justify-center gap-2 w-full bg-red-600/20 hover:bg-red-600/30
-                   text-red-400 border border-red-600/50 rounded-lg py-2.5 text-sm transition-colors"
-      >
-        <Trash2 size={16} />
-        Delete Component
-      </button>
+      <div className="px-6 py-5">
+        <button
+          onClick={handleDelete}
+          className="flex items-center justify-center gap-2 w-full bg-red-600/20 hover:bg-red-600/30
+                     text-red-400 border border-red-600/50 rounded-lg py-2.5 text-sm transition-colors"
+        >
+          <Trash2 size={16} />
+          Delete Component
+        </button>
+      </div>
     </div>
   );
 }
