@@ -15,7 +15,11 @@ import { nodeTypes } from '../Nodes';
 import { edgeTypes } from '../Edges';
 import type { SystemNode, SystemNodeType } from '../../types/nodes';
 
-export function Canvas() {
+interface CanvasProps {
+  onOpenSchemaDesigner: (nodeId: string) => void;
+}
+
+export function Canvas({ onOpenSchemaDesigner }: CanvasProps) {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const { screenToFlowPosition } = useReactFlow();
   const {
@@ -32,6 +36,15 @@ export function Canvas() {
       setSelectedNodeId(node.id);
     },
     [setSelectedNodeId]
+  );
+
+  const onNodeDoubleClick: NodeMouseHandler = useCallback(
+    (_, node) => {
+      if (node.type === 'postgresql') {
+        onOpenSchemaDesigner(node.id);
+      }
+    },
+    [onOpenSchemaDesigner]
   );
 
   const onPaneClick = useCallback(() => {
@@ -80,6 +93,7 @@ export function Canvas() {
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         onNodeClick={onNodeClick}
+        onNodeDoubleClick={onNodeDoubleClick}
         onPaneClick={onPaneClick}
         onDragOver={onDragOver}
         onDrop={onDrop}

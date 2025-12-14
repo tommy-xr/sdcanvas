@@ -34,8 +34,49 @@ export interface APIEndpoint {
   description?: string;
 }
 
+// Common PostgreSQL column types
+export type ColumnType =
+  // Numeric types
+  | 'serial'
+  | 'bigserial'
+  | 'smallint'
+  | 'integer'
+  | 'bigint'
+  | 'decimal'
+  | 'numeric'
+  | 'real'
+  | 'double precision'
+  // Character types
+  | 'char'
+  | 'varchar'
+  | 'text'
+  // Date/Time types
+  | 'timestamp'
+  | 'timestamptz'
+  | 'date'
+  | 'time'
+  | 'timetz'
+  | 'interval'
+  // Boolean
+  | 'boolean'
+  // UUID
+  | 'uuid'
+  // JSON types
+  | 'json'
+  | 'jsonb'
+  // Binary
+  | 'bytea'
+  // Array (represented as base type + array flag)
+  | 'integer[]'
+  | 'text[]'
+  | 'varchar[]'
+  | 'jsonb[]';
+
+export type IndexType = 'btree' | 'hash' | 'gin' | 'gist' | 'brin';
+
 export interface PostgreSQLNodeData extends BaseNodeData {
   tables: DatabaseTable[];
+  estimatedRowCounts?: Record<string, number>; // tableId -> estimated rows
 }
 
 export interface DatabaseTable {
@@ -43,12 +84,13 @@ export interface DatabaseTable {
   name: string;
   columns: DatabaseColumn[];
   indexes: DatabaseIndex[];
+  estimatedRows?: number;
 }
 
 export interface DatabaseColumn {
   id: string;
   name: string;
-  type: string;
+  type: ColumnType | string;
   isPrimaryKey: boolean;
   isForeignKey: boolean;
   foreignKeyRef?: {
@@ -57,14 +99,43 @@ export interface DatabaseColumn {
   };
   isNullable: boolean;
   isUnique: boolean;
+  defaultValue?: string;
+  length?: number; // for varchar(n), char(n)
 }
 
 export interface DatabaseIndex {
   id: string;
   name: string;
-  columns: string[];
+  columns: string[]; // column ids
   isUnique: boolean;
-  type: 'btree' | 'hash' | 'gin' | 'gist';
+  type: IndexType;
+  includeColumns?: string[]; // for covering indexes (INCLUDE clause)
+}
+
+// JOIN types for visualization
+export type JoinType = 'INNER' | 'LEFT' | 'RIGHT' | 'FULL' | 'CROSS';
+
+export interface JoinDefinition {
+  id: string;
+  leftTableId: string;
+  rightTableId: string;
+  joinType: JoinType;
+  conditions: JoinCondition[];
+}
+
+export interface JoinCondition {
+  leftColumnId: string;
+  rightColumnId: string;
+  operator: '=' | '<' | '>' | '<=' | '>=' | '<>';
+}
+
+// Query cost estimation types
+export interface QueryCostEstimate {
+  estimatedRows: number;
+  estimatedCost: number;
+  scanType: 'seq_scan' | 'index_scan' | 'index_only_scan' | 'bitmap_scan';
+  usedIndexes: string[];
+  warnings: string[];
 }
 
 export interface S3BucketNodeData extends BaseNodeData {

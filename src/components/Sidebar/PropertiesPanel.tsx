@@ -1,5 +1,5 @@
 import { useCanvasStore } from '../../store/canvasStore';
-import { Trash2, X } from 'lucide-react';
+import { Trash2, X, ExternalLink } from 'lucide-react';
 import type {
   UserNodeData,
   LoadBalancerNodeData,
@@ -9,6 +9,10 @@ import type {
   RedisNodeData,
   StickyNoteNodeData,
 } from '../../types/nodes';
+
+interface PropertiesPanelProps {
+  onOpenSchemaDesigner: (nodeId: string) => void;
+}
 
 function UserProperties({ data, onChange }: { data: UserNodeData; onChange: (data: Partial<UserNodeData>) => void }) {
   return (
@@ -117,7 +121,15 @@ function APIServerProperties({ data, onChange }: { data: APIServerNodeData; onCh
   );
 }
 
-function PostgreSQLProperties({ data, onChange }: { data: PostgreSQLNodeData; onChange: (data: Partial<PostgreSQLNodeData>) => void }) {
+function PostgreSQLProperties({
+  data,
+  onChange,
+  onOpenSchemaDesigner,
+}: {
+  data: PostgreSQLNodeData;
+  onChange: (data: Partial<PostgreSQLNodeData>) => void;
+  onOpenSchemaDesigner?: () => void;
+}) {
   const addTable = () => {
     const newTable = {
       id: `table-${Date.now()}`,
@@ -126,6 +138,7 @@ function PostgreSQLProperties({ data, onChange }: { data: PostgreSQLNodeData; on
         { id: `col-${Date.now()}`, name: 'id', type: 'serial', isPrimaryKey: true, isForeignKey: false, isNullable: false, isUnique: true },
       ],
       indexes: [],
+      estimatedRows: 1000,
     };
     onChange({ tables: [...(data.tables || []), newTable] });
   };
@@ -156,8 +169,18 @@ function PostgreSQLProperties({ data, onChange }: { data: PostgreSQLNodeData; on
           )}
         </div>
       </div>
+      {onOpenSchemaDesigner && (
+        <button
+          onClick={onOpenSchemaDesigner}
+          className="flex items-center justify-center gap-2 w-full bg-slate-700 hover:bg-slate-600
+                     text-slate-300 border border-slate-600 rounded-lg py-2 text-sm transition-colors"
+        >
+          <ExternalLink size={14} />
+          Open Schema Designer
+        </button>
+      )}
       <p className="text-xs text-slate-500">
-        Double-click node to open schema designer (coming soon)
+        Or double-click the node on the canvas
       </p>
     </div>
   );
@@ -263,7 +286,7 @@ function StickyNoteProperties({ data, onChange }: { data: StickyNoteNodeData; on
   );
 }
 
-export function PropertiesPanel() {
+export function PropertiesPanel({ onOpenSchemaDesigner }: PropertiesPanelProps) {
   const { nodes, selectedNodeId, updateNode, deleteNode, setSelectedNodeId } = useCanvasStore();
   const selectedNode = nodes.find((n) => n.id === selectedNodeId);
 
@@ -301,7 +324,13 @@ export function PropertiesPanel() {
       case 'apiServer':
         return <APIServerProperties data={selectedNode.data as APIServerNodeData} onChange={handleChange} />;
       case 'postgresql':
-        return <PostgreSQLProperties data={selectedNode.data as PostgreSQLNodeData} onChange={handleChange} />;
+        return (
+          <PostgreSQLProperties
+            data={selectedNode.data as PostgreSQLNodeData}
+            onChange={handleChange}
+            onOpenSchemaDesigner={() => onOpenSchemaDesigner(selectedNode.id)}
+          />
+        );
       case 's3Bucket':
         return <S3BucketProperties data={selectedNode.data as S3BucketNodeData} onChange={handleChange} />;
       case 'redis':
