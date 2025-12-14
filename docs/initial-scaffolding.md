@@ -37,13 +37,21 @@ src/
 │   │   ├── RedisNode.tsx           # Cache
 │   │   ├── StickyNoteNode.tsx      # Annotations
 │   │   └── index.ts
-│   └── Edges/
-│       ├── LabeledEdge.tsx         # Custom edge with labels
+│   ├── Edges/
+│   │   ├── LabeledEdge.tsx         # Custom edge with labels
+│   │   └── index.ts
+│   └── SchemaDesigner/             # Database schema designer (Milestone 2)
+│       ├── SchemaDesignerModal.tsx # Main modal container
+│       ├── TableList.tsx           # Table sidebar list
+│       ├── TableEditor.tsx         # Column & index editor
+│       ├── ERDiagram.tsx           # Visual ER diagram
+│       ├── JoinVisualizer.tsx      # JOIN configuration & preview
+│       ├── QueryCostEstimator.tsx  # Query cost analysis
 │       └── index.ts
 ├── store/
 │   └── canvasStore.ts              # Zustand store (nodes, edges, selection)
 ├── types/
-│   ├── nodes.ts                    # Node type definitions
+│   ├── nodes.ts                    # Node type definitions (incl. DB schema types)
 │   └── edges.ts                    # Edge type definitions
 ├── App.tsx
 ├── main.tsx
