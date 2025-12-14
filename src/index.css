@@ -18,3 +18,34 @@ body {
   background-color: #1a1a2e;
   color: #eee;
 }
+
+/* React Flow Controls - make them more visible */
+.react-flow__controls {
+  background-color: #1e293b !important;
+  border: 1px solid #475569 !important;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3) !important;
+}
+
+.react-flow__controls-button {
+  background-color: #1e293b !important;
+  border-bottom: 1px solid #475569 !important;
+  fill: #e2e8f0 !important;
+}
+
+.react-flow__controls-button:hover {
+  background-color: #334155 !important;
+}
+
+.react-flow__controls-button svg {
+  fill: #e2e8f0 !important;
+}
+
+/* MiniMap styling */
+.react-flow__minimap {
+  background-color: #1e293b !important;
+  border: 1px solid #475569 !important;
+}
+
+.react-flow__minimap-mask {
+  fill: rgb(30 41 59 / 0.8) !important;
+}

@@ -1,10 +1,11 @@
-import { useCallback } from 'react';
+import { useCallback, useRef } from 'react';
 import {
   ReactFlow,
   Background,
   Controls,
   MiniMap,
   BackgroundVariant,
+  useReactFlow,
 } from '@xyflow/react';
 import type { NodeMouseHandler } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
@@ -15,6 +16,8 @@ import { edgeTypes } from '../Edges';
 import type { SystemNode, SystemNodeType } from '../../types/nodes';
 
 export function Canvas() {
+  const reactFlowWrapper = useRef<HTMLDivElement>(null);
+  const { screenToFlowPosition } = useReactFlow();
   const {
     nodes,
     edges,
@@ -51,10 +54,10 @@ export function Canvas() {
         event.dataTransfer.getData('application/nodedata')
       );
 
-      const position = {
-        x: event.clientX - 280,
-        y: event.clientY - 50,
-      };
+      const position = screenToFlowPosition({
+        x: event.clientX,
+        y: event.clientY,
+      });
 
       const newNode: SystemNode = {
         id: `${type}-${Date.now()}`,
@@ -65,11 +68,11 @@ export function Canvas() {
 
       useCanvasStore.getState().addNode(newNode);
     },
-    []
+    [screenToFlowPosition]
   );
 
   return (
-    <div className="flex-1 h-full">
+    <div ref={reactFlowWrapper} className="flex-1 h-full">
       <ReactFlow
         nodes={nodes}
         edges={edges}

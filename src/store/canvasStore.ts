@@ -13,10 +13,12 @@ interface CanvasState {
   nodes: SystemNode[];
   edges: SystemEdge[];
   selectedNodeId: string | null;
+  fileName: string;
 
   // Actions
   setNodes: (nodes: SystemNode[]) => void;
   setEdges: (edges: SystemEdge[]) => void;
+  setFileName: (name: string) => void;
   onNodesChange: (changes: NodeChange[]) => void;
   onEdgesChange: (changes: EdgeChange[]) => void;
   onConnect: (connection: Connection) => void;
@@ -33,9 +35,11 @@ export const useCanvasStore = create<CanvasState>()(
       nodes: [],
       edges: [],
       selectedNodeId: null,
+      fileName: 'Untitled Design',
 
       setNodes: (nodes) => set({ nodes }),
       setEdges: (edges) => set({ edges }),
+      setFileName: (fileName) => set({ fileName }),
 
       onNodesChange: (changes) => {
         set({
