@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Plus, Trash2, FileJson, ArrowRight, ArrowLeft } from 'lucide-react';
-import type { APIEndpoint, SchemaDefinition, SchemaProperty } from '../../types/nodes';
+import { Plus, Trash2, FileJson, ArrowRight, ArrowLeft, File } from 'lucide-react';
+import type { APIEndpoint, SchemaDefinition, SchemaProperty, ResponseType, BinaryContentType } from '../../types/nodes';
 
 interface SchemaEditorProps {
   endpoints: APIEndpoint[];
@@ -13,6 +13,43 @@ type SchemaType = 'request' | 'response';
 
 const PROPERTY_TYPES = ['string', 'number', 'boolean', 'object', 'array'] as const;
 const PROPERTY_FORMATS = ['', 'email', 'date-time', 'date', 'uuid', 'uri', 'hostname'] as const;
+
+const CONTENT_TYPE_CATEGORIES = [
+  {
+    label: 'General',
+    types: [
+      { value: 'application/octet-stream', label: 'Binary (application/octet-stream)' },
+      { value: 'text/plain', label: 'Plain Text (text/plain)' },
+      { value: 'text/csv', label: 'CSV (text/csv)' },
+    ],
+  },
+  {
+    label: 'Documents',
+    types: [
+      { value: 'application/pdf', label: 'PDF (application/pdf)' },
+      { value: 'application/zip', label: 'ZIP Archive (application/zip)' },
+    ],
+  },
+  {
+    label: 'Images',
+    types: [
+      { value: 'image/png', label: 'PNG Image (image/png)' },
+      { value: 'image/jpeg', label: 'JPEG Image (image/jpeg)' },
+      { value: 'image/gif', label: 'GIF Image (image/gif)' },
+      { value: 'image/webp', label: 'WebP Image (image/webp)' },
+      { value: 'image/svg+xml', label: 'SVG Image (image/svg+xml)' },
+    ],
+  },
+  {
+    label: 'Audio/Video',
+    types: [
+      { value: 'audio/mpeg', label: 'MP3 Audio (audio/mpeg)' },
+      { value: 'audio/wav', label: 'WAV Audio (audio/wav)' },
+      { value: 'video/mp4', label: 'MP4 Video (video/mp4)' },
+      { value: 'video/webm', label: 'WebM Video (video/webm)' },
+    ],
+  },
+];
 
 export function SchemaEditor({
   endpoints,
@@ -139,11 +176,15 @@ export function SchemaEditor({
                     REQ
                   </span>
                 )}
-                {endpoint.responseSchema && (
+                {endpoint.responseType === 'binary' ? (
+                  <span className="text-[10px] px-1.5 py-0.5 bg-purple-500/20 text-purple-400 rounded">
+                    BIN
+                  </span>
+                ) : endpoint.responseSchema ? (
                   <span className="text-[10px] px-1.5 py-0.5 bg-blue-500/20 text-blue-400 rounded">
                     RES
                   </span>
-                )}
+                ) : null}
               </div>
             </div>
           ))}
@@ -188,7 +229,19 @@ export function SchemaEditor({
 
             {/* Schema content */}
             <div className="flex-1 overflow-y-auto p-4">
-              {currentSchema ? (
+              {activeSchemaType === 'response' ? (
+                <ResponseEditor
+                  endpoint={selectedEndpoint}
+                  onUpdateEndpoint={(updates) => onUpdateEndpoint(selectedEndpoint.id, updates)}
+                  currentSchema={currentSchema}
+                  onInitializeSchema={initializeSchema}
+                  onAddProperty={addProperty}
+                  onUpdateProperty={updateProperty}
+                  onRemoveProperty={removeProperty}
+                  onToggleRequired={toggleRequired}
+                  onClearSchema={clearSchema}
+                />
+              ) : currentSchema ? (
                 <SchemaProperties
                   schema={currentSchema}
                   onAddProperty={addProperty}
@@ -212,8 +265,8 @@ export function SchemaEditor({
               )}
             </div>
 
-            {/* JSON Preview */}
-            {currentSchema && (
+            {/* JSON Preview - only for request or JSON response */}
+            {currentSchema && (activeSchemaType === 'request' || selectedEndpoint.responseType !== 'binary') && (
               <div className="border-t border-slate-700 p-4">
                 <h4 className="text-xs text-slate-400 mb-2">JSON Schema Preview</h4>
                 <pre className="bg-slate-900/50 rounded-lg p-3 text-xs text-slate-300 font-mono overflow-auto max-h-32">
@@ -231,6 +284,203 @@ export function SchemaEditor({
           </div>
         )}
       </div>
+    </div>
+  );
+}
+
+// Response Editor - handles both JSON and Binary response types
+interface ResponseEditorProps {
+  endpoint: APIEndpoint;
+  onUpdateEndpoint: (updates: Partial<APIEndpoint>) => void;
+  currentSchema: SchemaDefinition | undefined;
+  onInitializeSchema: () => void;
+  onAddProperty: (name: string) => void;
+  onUpdateProperty: (name: string, updates: Partial<SchemaProperty>) => void;
+  onRemoveProperty: (name: string) => void;
+  onToggleRequired: (name: string) => void;
+  onClearSchema: () => void;
+}
+
+function ResponseEditor({
+  endpoint,
+  onUpdateEndpoint,
+  currentSchema,
+  onInitializeSchema,
+  onAddProperty,
+  onUpdateProperty,
+  onRemoveProperty,
+  onToggleRequired,
+  onClearSchema,
+}: ResponseEditorProps) {
+  const responseType = endpoint.responseType || 'json';
+  const [customContentType, setCustomContentType] = useState('');
+
+  const handleResponseTypeChange = (type: ResponseType) => {
+    onUpdateEndpoint({
+      responseType: type,
+      // Clear the other type's data when switching
+      ...(type === 'binary'
+        ? { responseSchema: undefined, responseContentType: 'application/octet-stream' }
+        : { responseContentType: undefined }),
+    });
+  };
+
+  const handleContentTypeChange = (contentType: string) => {
+    if (contentType === 'custom') {
+      // Don't update yet, wait for custom input
+      return;
+    }
+    onUpdateEndpoint({ responseContentType: contentType as BinaryContentType });
+  };
+
+  const handleCustomContentTypeSubmit = () => {
+    if (customContentType.trim()) {
+      onUpdateEndpoint({ responseContentType: customContentType.trim() as BinaryContentType });
+      setCustomContentType('');
+    }
+  };
+
+  // Check if current content type is a custom one
+  const isCustomContentType = endpoint.responseContentType &&
+    !CONTENT_TYPE_CATEGORIES.some(cat =>
+      cat.types.some(t => t.value === endpoint.responseContentType)
+    );
+
+  return (
+    <div className="space-y-6">
+      {/* Response Type Toggle */}
+      <div>
+        <label className="block text-xs text-slate-400 mb-2">Response Type</label>
+        <div className="flex gap-2">
+          <button
+            onClick={() => handleResponseTypeChange('json')}
+            className={`
+              flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors
+              ${responseType === 'json'
+                ? 'bg-blue-600 text-white'
+                : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+              }
+            `}
+          >
+            <FileJson size={16} />
+            JSON
+          </button>
+          <button
+            onClick={() => handleResponseTypeChange('binary')}
+            className={`
+              flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors
+              ${responseType === 'binary'
+                ? 'bg-blue-600 text-white'
+                : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+              }
+            `}
+          >
+            <File size={16} />
+            Binary / File
+          </button>
+        </div>
+      </div>
+
+      {/* Content based on response type */}
+      {responseType === 'binary' ? (
+        <div className="space-y-4">
+          <div>
+            <label className="block text-xs text-slate-400 mb-2">Content-Type</label>
+            <select
+              value={isCustomContentType ? 'custom' : (endpoint.responseContentType || 'application/octet-stream')}
+              onChange={(e) => handleContentTypeChange(e.target.value)}
+              className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2.5
+                         text-white text-sm focus:border-blue-500 focus:outline-none"
+            >
+              {CONTENT_TYPE_CATEGORIES.map((category) => (
+                <optgroup key={category.label} label={category.label}>
+                  {category.types.map((type) => (
+                    <option key={type.value} value={type.value}>
+                      {type.label}
+                    </option>
+                  ))}
+                </optgroup>
+              ))}
+              <optgroup label="Custom">
+                <option value="custom">Custom content type...</option>
+              </optgroup>
+            </select>
+          </div>
+
+          {/* Custom content type input */}
+          {(isCustomContentType || customContentType) && (
+            <div>
+              <label className="block text-xs text-slate-400 mb-2">Custom Content-Type</label>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={isCustomContentType ? endpoint.responseContentType : customContentType}
+                  onChange={(e) => {
+                    if (isCustomContentType) {
+                      onUpdateEndpoint({ responseContentType: e.target.value as BinaryContentType });
+                    } else {
+                      setCustomContentType(e.target.value);
+                    }
+                  }}
+                  onKeyDown={(e) => e.key === 'Enter' && !isCustomContentType && handleCustomContentTypeSubmit()}
+                  placeholder="e.g., application/x-custom"
+                  className="flex-1 bg-slate-700 border border-slate-600 rounded-lg px-3 py-2
+                             text-white text-sm focus:border-blue-500 focus:outline-none font-mono"
+                />
+                {!isCustomContentType && (
+                  <button
+                    onClick={handleCustomContentTypeSubmit}
+                    disabled={!customContentType.trim()}
+                    className="px-4 py-2 bg-blue-600 hover:bg-blue-500 disabled:bg-slate-600
+                               text-white rounded-lg text-sm font-medium transition-colors"
+                  >
+                    Set
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Binary response preview */}
+          <div className="bg-slate-900/50 rounded-lg p-4">
+            <h4 className="text-xs text-slate-400 mb-2">Response Preview</h4>
+            <div className="flex items-center gap-3">
+              <File size={24} className="text-slate-500" />
+              <div>
+                <p className="text-sm text-slate-300">Binary file response</p>
+                <p className="text-xs text-slate-500 font-mono">
+                  Content-Type: {endpoint.responseContentType || 'application/octet-stream'}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <p className="text-xs text-slate-500">
+            Use this for endpoints that return files, images, or other binary data (e.g., from S3).
+          </p>
+        </div>
+      ) : currentSchema ? (
+        <SchemaProperties
+          schema={currentSchema}
+          onAddProperty={onAddProperty}
+          onUpdateProperty={onUpdateProperty}
+          onRemoveProperty={onRemoveProperty}
+          onToggleRequired={onToggleRequired}
+          onClear={onClearSchema}
+        />
+      ) : (
+        <div className="flex flex-col items-center justify-center py-12 text-slate-500">
+          <FileJson size={48} className="mb-3 opacity-50" />
+          <p>No response schema defined</p>
+          <button
+            onClick={onInitializeSchema}
+            className="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white
+                       rounded-lg text-sm font-medium transition-colors"
+          >
+            Create Schema
+          </button>
+        </div>
+      )}
     </div>
   );
 }

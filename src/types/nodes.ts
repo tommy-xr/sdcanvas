@@ -29,13 +29,35 @@ export interface APIServerNodeData extends BaseNodeData {
 
 export type HTTPMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 
+export type ResponseType = 'json' | 'binary';
+
+// Common binary content types
+export type BinaryContentType =
+  | 'application/octet-stream'
+  | 'application/pdf'
+  | 'image/png'
+  | 'image/jpeg'
+  | 'image/gif'
+  | 'image/webp'
+  | 'image/svg+xml'
+  | 'audio/mpeg'
+  | 'audio/wav'
+  | 'video/mp4'
+  | 'video/webm'
+  | 'application/zip'
+  | 'text/plain'
+  | 'text/csv'
+  | string; // Allow custom content types
+
 export interface APIEndpoint {
   id: string;
   method: HTTPMethod;
   path: string;
   description?: string;
   requestSchema?: SchemaDefinition;
-  responseSchema?: SchemaDefinition;
+  responseType?: ResponseType; // 'json' (default) or 'binary'
+  responseSchema?: SchemaDefinition; // Used when responseType is 'json'
+  responseContentType?: BinaryContentType; // Used when responseType is 'binary'
   linkedQueries?: LinkedQuery[];
 }
 
