@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Layers, Pencil, Trash2 } from 'lucide-react';
+import { Layers, Pencil, Trash2, Github } from 'lucide-react';
 import { useCanvasStore } from '../../store/canvasStore';
 
 export function Header() {
@@ -116,6 +116,16 @@ export function Header() {
           </div>
         )}
       </div>
+
+      <a
+        href="https://github.com/tommy-xr/sdcanvas"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="p-2 rounded text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+        title="View on GitHub"
+      >
+        <Github size={20} />
+      </a>
     </header>
   );
 }
