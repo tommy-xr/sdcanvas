@@ -19,11 +19,11 @@ function UserProperties({ data, onChange }: { data: UserNodeData; onChange: (dat
   return (
     <div className="space-y-4">
       <div>
-        <label className="block text-xs text-slate-400 mb-1">Client Type</label>
+        <label className="block text-xs text-gray-500 mb-1">Client Type</label>
         <select
           value={data.clientType}
           onChange={(e) => onChange({ clientType: e.target.value as UserNodeData['clientType'] })}
-          className="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2 text-sm text-white"
+          className="w-full bg-gray-50 border border-gray-300 rounded px-3 py-2 text-sm text-gray-900"
         >
           <option value="browser">Browser</option>
           <option value="mobile">Mobile</option>
@@ -38,11 +38,11 @@ function LoadBalancerProperties({ data, onChange }: { data: LoadBalancerNodeData
   return (
     <div className="space-y-4">
       <div>
-        <label className="block text-xs text-slate-400 mb-1">Algorithm</label>
+        <label className="block text-xs text-gray-500 mb-1">Algorithm</label>
         <select
           value={data.algorithm}
           onChange={(e) => onChange({ algorithm: e.target.value as LoadBalancerNodeData['algorithm'] })}
-          className="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2 text-sm text-white"
+          className="w-full bg-gray-50 border border-gray-300 rounded px-3 py-2 text-sm text-gray-900"
         >
           <option value="round-robin">Round Robin</option>
           <option value="least-connections">Least Connections</option>
@@ -88,21 +88,21 @@ function APIServerProperties({
     <div className="space-y-4">
       <div>
         <div className="flex items-center justify-between mb-2">
-          <label className="text-xs text-slate-400">Endpoints</label>
+          <label className="text-xs text-gray-500">Endpoints</label>
           <button
             onClick={addEndpoint}
-            className="text-xs bg-blue-600 hover:bg-blue-500 px-2 py-1 rounded"
+            className="text-xs bg-blue-500 hover:bg-blue-400 text-white px-2 py-1 rounded"
           >
             + Add
           </button>
         </div>
         <div className="space-y-2 max-h-48 overflow-y-auto">
           {data.endpoints?.map((endpoint) => (
-            <div key={endpoint.id} className="flex items-center gap-1 bg-slate-700 p-2 rounded">
+            <div key={endpoint.id} className="flex items-center gap-1 bg-gray-100 p-2 rounded">
               <select
                 value={endpoint.method}
                 onChange={(e) => updateEndpoint(endpoint.id, { method: e.target.value as typeof endpoint.method })}
-                className="bg-slate-600 border-none rounded px-1 py-1 text-xs text-white w-16"
+                className="bg-gray-200 border-none rounded px-1 py-1 text-xs text-gray-900 w-16"
               >
                 <option>GET</option>
                 <option>POST</option>
@@ -114,11 +114,11 @@ function APIServerProperties({
                 type="text"
                 value={endpoint.path}
                 onChange={(e) => updateEndpoint(endpoint.id, { path: e.target.value })}
-                className="flex-1 bg-slate-600 border-none rounded px-2 py-1 text-xs text-white"
+                className="flex-1 bg-gray-200 border-none rounded px-2 py-1 text-xs text-gray-900"
               />
               <button
                 onClick={() => removeEndpoint(endpoint.id)}
-                className="text-slate-400 hover:text-red-400"
+                className="text-gray-400 hover:text-red-500"
               >
                 <X size={14} />
               </button>
@@ -129,14 +129,14 @@ function APIServerProperties({
       {onOpenAPIDesigner && (
         <button
           onClick={onOpenAPIDesigner}
-          className="flex items-center justify-center gap-2 w-full bg-slate-700 hover:bg-slate-600
-                     text-slate-300 border border-slate-600 rounded-lg py-2 text-sm transition-colors"
+          className="flex items-center justify-center gap-2 w-full bg-gray-100 hover:bg-gray-200
+                     text-gray-700 border border-gray-300 rounded-lg py-2 text-sm transition-colors"
         >
           <ExternalLink size={14} />
           Open API Designer
         </button>
       )}
-      <p className="text-xs text-slate-500">
+      <p className="text-xs text-gray-400">
         Or double-click the node on the canvas
       </p>
     </div>
@@ -169,39 +169,39 @@ function PostgreSQLProperties({
     <div className="space-y-4">
       <div>
         <div className="flex items-center justify-between mb-2">
-          <label className="text-xs text-slate-400">Tables</label>
+          <label className="text-xs text-gray-500">Tables</label>
           <button
             onClick={addTable}
-            className="text-xs bg-blue-600 hover:bg-blue-500 px-2 py-1 rounded"
+            className="text-xs bg-blue-500 hover:bg-blue-400 text-white px-2 py-1 rounded"
           >
             + Add Table
           </button>
         </div>
         <div className="space-y-2 max-h-48 overflow-y-auto">
           {data.tables?.map((table) => (
-            <div key={table.id} className="bg-slate-700 p-2 rounded text-xs">
-              <div className="font-medium text-slate-200">{table.name}</div>
-              <div className="text-slate-400">
+            <div key={table.id} className="bg-gray-100 p-2 rounded text-xs">
+              <div className="font-medium text-gray-700">{table.name}</div>
+              <div className="text-gray-500">
                 {table.columns.length} columns, {table.indexes.length} indexes
               </div>
             </div>
           ))}
           {(!data.tables || data.tables.length === 0) && (
-            <div className="text-xs text-slate-500 italic">No tables defined</div>
+            <div className="text-xs text-gray-400 italic">No tables defined</div>
           )}
         </div>
       </div>
       {onOpenSchemaDesigner && (
         <button
           onClick={onOpenSchemaDesigner}
-          className="flex items-center justify-center gap-2 w-full bg-slate-700 hover:bg-slate-600
-                     text-slate-300 border border-slate-600 rounded-lg py-2 text-sm transition-colors"
+          className="flex items-center justify-center gap-2 w-full bg-gray-100 hover:bg-gray-200
+                     text-gray-700 border border-gray-300 rounded-lg py-2 text-sm transition-colors"
         >
           <ExternalLink size={14} />
           Open Schema Designer
         </button>
       )}
-      <p className="text-xs text-slate-500">
+      <p className="text-xs text-gray-400">
         Or double-click the node on the canvas
       </p>
     </div>
@@ -212,12 +212,12 @@ function S3BucketProperties({ data, onChange }: { data: S3BucketNodeData; onChan
   return (
     <div className="space-y-4">
       <div>
-        <label className="block text-xs text-slate-400 mb-1">Bucket Name</label>
+        <label className="block text-xs text-gray-500 mb-1">Bucket Name</label>
         <input
           type="text"
           value={data.bucketName || ''}
           onChange={(e) => onChange({ bucketName: e.target.value })}
-          className="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2 text-sm text-white"
+          className="w-full bg-gray-50 border border-gray-300 rounded px-3 py-2 text-sm text-gray-900"
           placeholder="my-bucket"
         />
       </div>
@@ -227,9 +227,9 @@ function S3BucketProperties({ data, onChange }: { data: S3BucketNodeData; onChan
           id="isPublic"
           checked={data.isPublic || false}
           onChange={(e) => onChange({ isPublic: e.target.checked })}
-          className="rounded bg-slate-700 border-slate-600"
+          className="rounded bg-gray-50 border-gray-300"
         />
-        <label htmlFor="isPublic" className="text-sm text-slate-300">
+        <label htmlFor="isPublic" className="text-sm text-gray-700">
           Public Access
         </label>
       </div>
@@ -241,21 +241,21 @@ function RedisProperties({ data, onChange }: { data: RedisNodeData; onChange: (d
   return (
     <div className="space-y-4">
       <div>
-        <label className="block text-xs text-slate-400 mb-1">Max Memory</label>
+        <label className="block text-xs text-gray-500 mb-1">Max Memory</label>
         <input
           type="text"
           value={data.maxMemory || ''}
           onChange={(e) => onChange({ maxMemory: e.target.value })}
-          className="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2 text-sm text-white"
+          className="w-full bg-gray-50 border border-gray-300 rounded px-3 py-2 text-sm text-gray-900"
           placeholder="256MB"
         />
       </div>
       <div>
-        <label className="block text-xs text-slate-400 mb-1">Eviction Policy</label>
+        <label className="block text-xs text-gray-500 mb-1">Eviction Policy</label>
         <select
           value={data.evictionPolicy}
           onChange={(e) => onChange({ evictionPolicy: e.target.value as RedisNodeData['evictionPolicy'] })}
-          className="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2 text-sm text-white"
+          className="w-full bg-gray-50 border border-gray-300 rounded px-3 py-2 text-sm text-gray-900"
         >
           <option value="noeviction">No Eviction</option>
           <option value="allkeys-lru">All Keys LRU</option>
@@ -279,17 +279,17 @@ function StickyNoteProperties({ data, onChange }: { data: StickyNoteNodeData; on
   return (
     <div className="space-y-4">
       <div>
-        <label className="block text-xs text-slate-400 mb-2">Content</label>
+        <label className="block text-xs text-gray-500 mb-2">Content</label>
         <textarea
           value={data.content || ''}
           onChange={(e) => onChange({ content: e.target.value })}
-          className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2.5 text-sm text-white resize-none"
+          className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2.5 text-sm text-gray-900 resize-none"
           placeholder="Add your notes here..."
           rows={5}
         />
       </div>
       <div>
-        <label className="block text-xs text-slate-400 mb-2">Color</label>
+        <label className="block text-xs text-gray-500 mb-2">Color</label>
         <div className="flex gap-2">
           {noteColors.map((color) => (
             <button
@@ -297,7 +297,7 @@ function StickyNoteProperties({ data, onChange }: { data: StickyNoteNodeData; on
               onClick={() => onChange({ color: color.value as StickyNoteNodeData['color'] })}
               className={`
                 w-8 h-8 rounded-lg ${color.class} transition-all
-                ${data.color === color.value ? 'ring-2 ring-white ring-offset-2 ring-offset-slate-800' : 'hover:scale-110'}
+                ${data.color === color.value ? 'ring-2 ring-blue-500 ring-offset-2 ring-offset-white' : 'hover:scale-110'}
               `}
               title={color.label}
             />
@@ -314,10 +314,10 @@ export function PropertiesPanel({ onOpenSchemaDesigner, onOpenAPIDesigner }: Pro
 
   if (!selectedNode) {
     return (
-      <div className="w-80 bg-slate-800 border-l border-slate-700">
+      <div className="w-80 bg-white border-l border-gray-200">
         <div className="px-6 py-5">
-          <h2 className="text-lg font-semibold text-white mb-3">Properties</h2>
-          <p className="text-sm text-slate-400">
+          <h2 className="text-lg font-semibold text-gray-900 mb-3">Properties</h2>
+          <p className="text-sm text-gray-500">
             Select a component to view and edit its properties.
           </p>
         </div>
@@ -371,12 +371,12 @@ export function PropertiesPanel({ onOpenSchemaDesigner, onOpenAPIDesigner }: Pro
   };
 
   return (
-    <div className="w-80 bg-slate-800 border-l border-slate-700 flex flex-col">
+    <div className="w-80 bg-white border-l border-gray-200 flex flex-col">
       <div className="px-6 pt-5 pb-4 flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-white">Properties</h2>
+        <h2 className="text-lg font-semibold text-gray-900">Properties</h2>
         <button
           onClick={() => setSelectedNodeId(null)}
-          className="text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-slate-700 transition-colors"
+          className="text-gray-400 hover:text-gray-600 p-1.5 rounded-lg hover:bg-gray-100 transition-colors"
         >
           <X size={18} />
         </button>
@@ -385,23 +385,23 @@ export function PropertiesPanel({ onOpenSchemaDesigner, onOpenAPIDesigner }: Pro
       <div className="flex-1 overflow-y-auto px-6">
         <div className="space-y-5">
           <div>
-            <label className="block text-xs text-slate-400 mb-2">Label</label>
+            <label className="block text-xs text-gray-500 mb-2">Label</label>
             <input
               type="text"
               value={(selectedNode.data as { label: string }).label || ''}
               onChange={(e) => handleLabelChange(e.target.value)}
-              className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2.5 text-sm text-white"
+              className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2.5 text-sm text-gray-900"
             />
           </div>
 
           <div>
-            <label className="block text-xs text-slate-400 mb-2">Type</label>
-            <div className="text-sm text-slate-300 capitalize">
+            <label className="block text-xs text-gray-500 mb-2">Type</label>
+            <div className="text-sm text-gray-700 capitalize">
               {selectedNode.type?.replace(/([A-Z])/g, ' $1').trim()}
             </div>
           </div>
 
-          <hr className="border-slate-700" />
+          <hr className="border-gray-200" />
 
           {renderTypeSpecificProps()}
         </div>
@@ -410,8 +410,8 @@ export function PropertiesPanel({ onOpenSchemaDesigner, onOpenAPIDesigner }: Pro
       <div className="px-6 py-5">
         <button
           onClick={handleDelete}
-          className="flex items-center justify-center gap-2 w-full bg-red-600/20 hover:bg-red-600/30
-                     text-red-400 border border-red-600/50 rounded-lg py-2.5 text-sm transition-colors"
+          className="flex items-center justify-center gap-2 w-full bg-red-50 hover:bg-red-100
+                     text-red-600 border border-red-200 rounded-lg py-2.5 text-sm transition-colors"
         >
           <Trash2 size={16} />
           Delete Component

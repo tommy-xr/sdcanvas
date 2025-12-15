@@ -17,18 +17,18 @@ export function EndpointEditor({ endpoint, onUpdate }: EndpointEditorProps) {
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
       {/* Header */}
-      <div className="p-4 border-b border-slate-700">
-        <h3 className="text-lg font-medium text-white mb-4">Edit Endpoint</h3>
+      <div className="p-4 border-b border-gray-200">
+        <h3 className="text-lg font-medium text-gray-900 mb-4">Edit Endpoint</h3>
 
         {/* Method + Path */}
         <div className="flex gap-3">
           <div className="w-32">
-            <label className="block text-xs text-slate-400 mb-1">Method</label>
+            <label className="block text-xs text-gray-500 mb-1">Method</label>
             <select
               value={endpoint.method}
               onChange={(e) => onUpdate({ method: e.target.value as HTTPMethod })}
-              className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2.5
-                         text-white text-sm focus:border-blue-500 focus:outline-none"
+              className="w-full bg-gray-100 border border-gray-300 rounded-lg px-3 py-2.5
+                         text-gray-900 text-sm focus:border-blue-500 focus:outline-none"
             >
               {HTTP_METHODS.map((method) => (
                 <option key={method.value} value={method.value}>
@@ -38,13 +38,13 @@ export function EndpointEditor({ endpoint, onUpdate }: EndpointEditorProps) {
             </select>
           </div>
           <div className="flex-1">
-            <label className="block text-xs text-slate-400 mb-1">Path</label>
+            <label className="block text-xs text-gray-500 mb-1">Path</label>
             <input
               type="text"
               value={endpoint.path}
               onChange={(e) => onUpdate({ path: e.target.value })}
-              className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2.5
-                         text-white text-sm font-mono focus:border-blue-500 focus:outline-none"
+              className="w-full bg-gray-100 border border-gray-300 rounded-lg px-3 py-2.5
+                         text-gray-900 text-sm font-mono focus:border-blue-500 focus:outline-none"
               placeholder="/api/endpoint"
             />
           </div>
@@ -55,12 +55,12 @@ export function EndpointEditor({ endpoint, onUpdate }: EndpointEditorProps) {
       <div className="flex-1 overflow-y-auto p-4 space-y-6">
         {/* Description */}
         <div>
-          <label className="block text-xs text-slate-400 mb-2">Description</label>
+          <label className="block text-xs text-gray-500 mb-2">Description</label>
           <textarea
             value={endpoint.description || ''}
             onChange={(e) => onUpdate({ description: e.target.value })}
-            className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2.5
-                       text-white text-sm focus:border-blue-500 focus:outline-none resize-none"
+            className="w-full bg-gray-100 border border-gray-300 rounded-lg px-3 py-2.5
+                       text-gray-900 text-sm focus:border-blue-500 focus:outline-none resize-none"
             rows={3}
             placeholder="Describe what this endpoint does..."
           />
@@ -71,14 +71,14 @@ export function EndpointEditor({ endpoint, onUpdate }: EndpointEditorProps) {
 
         {/* Quick Preview */}
         <div>
-          <label className="block text-xs text-slate-400 mb-2">Preview</label>
-          <div className="bg-slate-900/50 rounded-lg p-4 font-mono text-sm">
+          <label className="block text-xs text-gray-500 mb-2">Preview</label>
+          <div className="bg-gray-100 rounded-lg p-4 font-mono text-sm">
             <span className={getMethodColorClass(endpoint.method)}>
               {endpoint.method}
             </span>
-            <span className="text-slate-300 ml-2">{endpoint.path}</span>
+            <span className="text-gray-700 ml-2">{endpoint.path}</span>
             {endpoint.description && (
-              <p className="text-slate-500 mt-2 text-xs font-sans">
+              <p className="text-gray-400 mt-2 text-xs font-sans">
                 {endpoint.description}
               </p>
             )}
@@ -86,29 +86,29 @@ export function EndpointEditor({ endpoint, onUpdate }: EndpointEditorProps) {
         </div>
 
         {/* Linked Resources Summary */}
-        <div className="bg-slate-700/30 rounded-lg p-4">
-          <h4 className="text-sm font-medium text-slate-300 mb-3">Linked Resources</h4>
+        <div className="bg-gray-50 rounded-lg p-4">
+          <h4 className="text-sm font-medium text-gray-700 mb-3">Linked Resources</h4>
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div>
-              <span className="text-slate-500">Request Schema:</span>
-              <span className="text-slate-300 ml-2">
+              <span className="text-gray-400">Request Schema:</span>
+              <span className="text-gray-700 ml-2">
                 {endpoint.requestSchema ? 'Defined' : 'Not set'}
               </span>
             </div>
             <div>
-              <span className="text-slate-500">Response Schema:</span>
-              <span className="text-slate-300 ml-2">
+              <span className="text-gray-400">Response Schema:</span>
+              <span className="text-gray-700 ml-2">
                 {endpoint.responseSchema ? 'Defined' : 'Not set'}
               </span>
             </div>
             <div className="col-span-2">
-              <span className="text-slate-500">Database Queries:</span>
-              <span className="text-slate-300 ml-2">
+              <span className="text-gray-400">Database Queries:</span>
+              <span className="text-gray-700 ml-2">
                 {endpoint.linkedQueries?.length || 0} linked
               </span>
             </div>
           </div>
-          <p className="text-xs text-slate-500 mt-3">
+          <p className="text-xs text-gray-400 mt-3">
             Use the "Schemas" and "DB Queries" tabs to configure these
           </p>
         </div>
@@ -125,12 +125,12 @@ function PathParameters({ path }: { path: string }) {
 
   return (
     <div>
-      <label className="block text-xs text-slate-400 mb-2">Path Parameters</label>
+      <label className="block text-xs text-gray-500 mb-2">Path Parameters</label>
       <div className="flex flex-wrap gap-2">
         {params.map((param, idx) => (
           <span
             key={idx}
-            className="px-2 py-1 bg-slate-700 rounded text-sm text-blue-400 font-mono"
+            className="px-2 py-1 bg-gray-100 rounded text-sm text-blue-400 font-mono"
           >
             {param}
           </span>
@@ -148,5 +148,5 @@ function getMethodColorClass(method: string): string {
     DELETE: 'text-red-400',
     PATCH: 'text-purple-400',
   };
-  return colors[method] || 'text-slate-400';
+  return colors[method] || 'text-gray-500';
 }

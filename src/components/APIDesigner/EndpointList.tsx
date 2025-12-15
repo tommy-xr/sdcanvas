@@ -25,11 +25,11 @@ export function EndpointList({
   onDeleteEndpoint,
 }: EndpointListProps) {
   return (
-    <div className="w-72 border-r border-slate-700 flex flex-col">
-      <div className="p-4 border-b border-slate-700">
+    <div className="w-72 border-r border-gray-200 flex flex-col">
+      <div className="p-4 border-b border-gray-200">
         <button
           onClick={onAddEndpoint}
-          className="flex items-center justify-center gap-2 w-full bg-blue-600 hover:bg-blue-500
+          className="flex items-center justify-center gap-2 w-full bg-blue-500 hover:bg-blue-400
                      text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
         >
           <Plus size={16} />
@@ -39,7 +39,7 @@ export function EndpointList({
 
       <div className="flex-1 overflow-y-auto p-2">
         {endpoints.length === 0 ? (
-          <div className="text-center text-slate-500 py-8 px-4">
+          <div className="text-center text-gray-400 py-8 px-4">
             <p className="text-sm">No endpoints yet</p>
             <p className="text-xs mt-1">Click "Add Endpoint" to create one</p>
           </div>
@@ -54,7 +54,7 @@ export function EndpointList({
                   ${
                     selectedEndpointId === endpoint.id
                       ? 'bg-blue-600/20 border border-blue-500/30'
-                      : 'hover:bg-slate-700/50 border border-transparent'
+                      : 'hover:bg-gray-100 border border-transparent'
                   }
                 `}
                 onClick={() => onSelectEndpoint(endpoint.id)}
@@ -68,7 +68,7 @@ export function EndpointList({
                   >
                     {endpoint.method}
                   </span>
-                  <span className="text-sm text-slate-300 truncate font-mono">
+                  <span className="text-sm text-gray-700 truncate font-mono">
                     {endpoint.path}
                   </span>
                 </div>
@@ -77,7 +77,7 @@ export function EndpointList({
                     e.stopPropagation();
                     onDeleteEndpoint(endpoint.id);
                   }}
-                  className="opacity-0 group-hover:opacity-100 p-1 text-slate-400
+                  className="opacity-0 group-hover:opacity-100 p-1 text-gray-500
                              hover:text-red-400 transition-all"
                 >
                   <Trash2 size={14} />

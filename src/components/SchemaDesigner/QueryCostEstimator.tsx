@@ -194,7 +194,7 @@ export function QueryCostEstimator({ tables }: QueryCostEstimatorProps) {
 
   if (tables.length === 0) {
     return (
-      <div className="flex-1 flex items-center justify-center text-slate-500">
+      <div className="flex-1 flex items-center justify-center text-gray-400">
         <div className="text-center">
           <BarChart3 size={48} className="mx-auto mb-3 opacity-50" />
           <p>No tables to analyze</p>
@@ -207,10 +207,10 @@ export function QueryCostEstimator({ tables }: QueryCostEstimatorProps) {
   return (
     <div className="flex-1 flex overflow-hidden">
       {/* Query builder */}
-      <div className="w-1/2 border-r border-slate-700 flex flex-col overflow-hidden">
-        <div className="p-4 border-b border-slate-700">
-          <h3 className="text-sm font-medium text-slate-300">Query Configuration</h3>
-          <p className="text-xs text-slate-500 mt-1">
+      <div className="w-1/2 border-r border-gray-200 flex flex-col overflow-hidden">
+        <div className="p-4 border-b border-gray-200">
+          <h3 className="text-sm font-medium text-gray-700">Query Configuration</h3>
+          <p className="text-xs text-gray-400 mt-1">
             Configure a query to estimate its cost
           </p>
         </div>
@@ -218,7 +218,7 @@ export function QueryCostEstimator({ tables }: QueryCostEstimatorProps) {
         <div className="flex-1 overflow-y-auto p-4 space-y-6">
           {/* Table selection */}
           <div>
-            <label className="block text-xs text-slate-400 mb-2">
+            <label className="block text-xs text-gray-500 mb-2">
               <Database size={12} className="inline mr-1" />
               From Table
             </label>
@@ -232,8 +232,8 @@ export function QueryCostEstimator({ tables }: QueryCostEstimatorProps) {
                   orderByColumn: null,
                 })
               }
-              className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2
-                         text-sm text-white focus:border-blue-500 focus:outline-none"
+              className="w-full bg-gray-100 border border-gray-300 rounded-lg px-3 py-2
+                         text-sm text-gray-900 focus:border-blue-500 focus:outline-none"
             >
               {tables.map((table) => (
                 <option key={table.id} value={table.id}>
@@ -246,7 +246,7 @@ export function QueryCostEstimator({ tables }: QueryCostEstimatorProps) {
           {/* WHERE columns */}
           {selectedTable && (
             <div>
-              <label className="block text-xs text-slate-400 mb-2">
+              <label className="block text-xs text-gray-500 mb-2">
                 <Search size={12} className="inline mr-1" />
                 WHERE Columns (click to toggle)
               </label>
@@ -266,8 +266,8 @@ export function QueryCostEstimator({ tables }: QueryCostEstimatorProps) {
                         transition-colors
                         ${
                           isSelected
-                            ? 'bg-blue-600 text-white'
-                            : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                            ? 'bg-blue-500 text-white'
+                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                         }
                       `}
                     >
@@ -277,7 +277,7 @@ export function QueryCostEstimator({ tables }: QueryCostEstimatorProps) {
                   );
                 })}
               </div>
-              <p className="text-xs text-slate-500 mt-2">
+              <p className="text-xs text-gray-400 mt-2">
                 <Zap size={10} className="inline text-yellow-400" /> = has index
               </p>
             </div>
@@ -286,7 +286,7 @@ export function QueryCostEstimator({ tables }: QueryCostEstimatorProps) {
           {/* ORDER BY */}
           {selectedTable && (
             <div>
-              <label className="block text-xs text-slate-400 mb-2">
+              <label className="block text-xs text-gray-500 mb-2">
                 <Clock size={12} className="inline mr-1" />
                 ORDER BY
               </label>
@@ -298,8 +298,8 @@ export function QueryCostEstimator({ tables }: QueryCostEstimatorProps) {
                     orderByColumn: e.target.value || null,
                   })
                 }
-                className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2
-                           text-sm text-white focus:border-blue-500 focus:outline-none"
+                className="w-full bg-gray-100 border border-gray-300 rounded-lg px-3 py-2
+                           text-sm text-gray-900 focus:border-blue-500 focus:outline-none"
               >
                 <option value="">None</option>
                 {selectedTable.columns.map((col) => (
@@ -313,7 +313,7 @@ export function QueryCostEstimator({ tables }: QueryCostEstimatorProps) {
 
           {/* JOIN */}
           <div>
-            <label className="block text-xs text-slate-400 mb-2">JOIN Table</label>
+            <label className="block text-xs text-gray-500 mb-2">JOIN Table</label>
             <select
               value={queryConfig.joinTableId || ''}
               onChange={(e) =>
@@ -323,8 +323,8 @@ export function QueryCostEstimator({ tables }: QueryCostEstimatorProps) {
                   joinColumn: null,
                 })
               }
-              className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2
-                         text-sm text-white focus:border-blue-500 focus:outline-none"
+              className="w-full bg-gray-100 border border-gray-300 rounded-lg px-3 py-2
+                         text-sm text-gray-900 focus:border-blue-500 focus:outline-none"
             >
               <option value="">None</option>
               {tables
@@ -338,7 +338,7 @@ export function QueryCostEstimator({ tables }: QueryCostEstimatorProps) {
 
             {joinTable && (
               <div className="mt-2">
-                <label className="block text-xs text-slate-400 mb-1">Join Column</label>
+                <label className="block text-xs text-gray-500 mb-1">Join Column</label>
                 <select
                   value={queryConfig.joinColumn || ''}
                   onChange={(e) =>
@@ -347,8 +347,8 @@ export function QueryCostEstimator({ tables }: QueryCostEstimatorProps) {
                       joinColumn: e.target.value || null,
                     })
                   }
-                  className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2
-                             text-sm text-white focus:border-blue-500 focus:outline-none"
+                  className="w-full bg-gray-100 border border-gray-300 rounded-lg px-3 py-2
+                             text-sm text-gray-900 focus:border-blue-500 focus:outline-none"
                 >
                   <option value="">Select column...</option>
                   {joinTable.columns.map((col) => (
@@ -363,7 +363,7 @@ export function QueryCostEstimator({ tables }: QueryCostEstimatorProps) {
 
           {/* LIMIT */}
           <div>
-            <label className="block text-xs text-slate-400 mb-2">LIMIT</label>
+            <label className="block text-xs text-gray-500 mb-2">LIMIT</label>
             <input
               type="number"
               value={queryConfig.limit || ''}
@@ -374,8 +374,8 @@ export function QueryCostEstimator({ tables }: QueryCostEstimatorProps) {
                 })
               }
               placeholder="No limit"
-              className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2
-                         text-sm text-white focus:border-blue-500 focus:outline-none"
+              className="w-full bg-gray-100 border border-gray-300 rounded-lg px-3 py-2
+                         text-sm text-gray-900 focus:border-blue-500 focus:outline-none"
             />
           </div>
         </div>
@@ -384,9 +384,9 @@ export function QueryCostEstimator({ tables }: QueryCostEstimatorProps) {
       {/* Cost analysis */}
       <div className="w-1/2 flex flex-col overflow-hidden">
         {/* SQL Preview */}
-        <div className="p-4 border-b border-slate-700">
-          <h3 className="text-sm font-medium text-slate-300 mb-2">Query Preview</h3>
-          <pre className="bg-slate-900/50 rounded-lg p-3 text-xs text-slate-300 font-mono whitespace-pre-wrap">
+        <div className="p-4 border-b border-gray-200">
+          <h3 className="text-sm font-medium text-gray-700 mb-2">Query Preview</h3>
+          <pre className="bg-gray-100 rounded-lg p-3 text-xs text-gray-700 font-mono whitespace-pre-wrap">
             {sampleSql || 'SELECT * FROM ...'}
           </pre>
         </div>
@@ -397,23 +397,23 @@ export function QueryCostEstimator({ tables }: QueryCostEstimatorProps) {
             <>
               {/* Metrics */}
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-slate-700/30 rounded-lg p-4">
-                  <div className="text-xs text-slate-400 mb-1">Estimated Rows</div>
-                  <div className="text-2xl font-bold text-white">
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <div className="text-xs text-gray-500 mb-1">Estimated Rows</div>
+                  <div className="text-2xl font-bold text-gray-900">
                     {costEstimate.estimatedRows.toLocaleString()}
                   </div>
                 </div>
-                <div className="bg-slate-700/30 rounded-lg p-4">
-                  <div className="text-xs text-slate-400 mb-1">Relative Cost</div>
-                  <div className="text-2xl font-bold text-white">
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <div className="text-xs text-gray-500 mb-1">Relative Cost</div>
+                  <div className="text-2xl font-bold text-gray-900">
                     {costEstimate.estimatedCost.toLocaleString()}
                   </div>
                 </div>
               </div>
 
               {/* Scan type */}
-              <div className="bg-slate-700/30 rounded-lg p-4">
-                <div className="text-xs text-slate-400 mb-2">Scan Type</div>
+              <div className="bg-gray-50 rounded-lg p-4">
+                <div className="text-xs text-gray-500 mb-2">Scan Type</div>
                 <div
                   className={`
                   inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium
@@ -435,8 +435,8 @@ export function QueryCostEstimator({ tables }: QueryCostEstimatorProps) {
 
               {/* Used indexes */}
               {costEstimate.usedIndexes.length > 0 && (
-                <div className="bg-slate-700/30 rounded-lg p-4">
-                  <div className="text-xs text-slate-400 mb-2">Used Indexes</div>
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <div className="text-xs text-gray-500 mb-2">Used Indexes</div>
                   <div className="space-y-1">
                     {costEstimate.usedIndexes.map((idx, i) => (
                       <div
@@ -460,7 +460,7 @@ export function QueryCostEstimator({ tables }: QueryCostEstimatorProps) {
                   </div>
                   <ul className="space-y-2">
                     {costEstimate.warnings.map((warning, i) => (
-                      <li key={i} className="text-sm text-slate-300 flex items-start gap-2">
+                      <li key={i} className="text-sm text-gray-700 flex items-start gap-2">
                         <span className="text-orange-400 mt-1">•</span>
                         {warning}
                       </li>
@@ -476,7 +476,7 @@ export function QueryCostEstimator({ tables }: QueryCostEstimatorProps) {
                     <CheckCircle2 size={16} />
                     Query looks optimized!
                   </div>
-                  <p className="text-sm text-slate-300 mt-2">
+                  <p className="text-sm text-gray-700 mt-2">
                     The query uses appropriate indexes for efficient data access.
                   </p>
                 </div>

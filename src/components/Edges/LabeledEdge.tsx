@@ -14,18 +14,18 @@ const connectionStyles: Record<string, { stroke: string; strokeDasharray?: strin
 };
 
 const methodColors: Record<string, string> = {
-  GET: 'text-green-400',
-  POST: 'text-blue-400',
-  PUT: 'text-yellow-400',
-  DELETE: 'text-red-400',
-  PATCH: 'text-purple-400',
+  GET: 'text-green-600',
+  POST: 'text-blue-600',
+  PUT: 'text-yellow-600',
+  DELETE: 'text-red-600',
+  PATCH: 'text-purple-600',
 };
 
 const queryTypeColors: Record<string, string> = {
-  SELECT: 'text-green-400',
-  INSERT: 'text-blue-400',
-  UPDATE: 'text-yellow-400',
-  DELETE: 'text-red-400',
+  SELECT: 'text-green-600',
+  INSERT: 'text-blue-600',
+  UPDATE: 'text-yellow-600',
+  DELETE: 'text-red-600',
 };
 
 export function LabeledEdge({
@@ -56,21 +56,21 @@ export function LabeledEdge({
   const renderPrefix = () => {
     if (edgeData?.connectionType === 'http' && edgeData.method) {
       return (
-        <span className={`${methodColors[edgeData.method] || 'text-blue-400'} mr-1 font-bold`}>
+        <span className={`${methodColors[edgeData.method] || 'text-blue-600'} mr-1 font-bold`}>
           {edgeData.method}
         </span>
       );
     }
     if (edgeData?.connectionType === 'database' && edgeData.queryType) {
       return (
-        <span className={`${queryTypeColors[edgeData.queryType] || 'text-slate-400'} mr-1 font-bold`}>
+        <span className={`${queryTypeColors[edgeData.queryType] || 'text-gray-500'} mr-1 font-bold`}>
           {edgeData.queryType}
         </span>
       );
     }
     if (edgeData?.connectionType === 'websocket' && edgeData.eventName) {
       return (
-        <span className="text-purple-400 mr-1">
+        <span className="text-purple-600 mr-1">
           {edgeData.eventName}
         </span>
       );
@@ -111,12 +111,12 @@ export function LabeledEdge({
             }}
             className={`
               px-2 py-0.5 rounded text-xs font-medium
-              bg-slate-700 border border-slate-600
-              ${selected ? 'ring-1 ring-blue-400' : ''}
+              bg-white border border-gray-300 shadow-sm
+              ${selected ? 'ring-1 ring-blue-500' : ''}
             `}
           >
             {prefix}
-            {label && <span className="text-slate-200">{label}</span>}
+            {label && <span className="text-gray-700">{label}</span>}
           </div>
         </EdgeLabelRenderer>
       )}

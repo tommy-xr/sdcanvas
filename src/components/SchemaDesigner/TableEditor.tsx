@@ -129,26 +129,26 @@ export function TableEditor({ table, allTables, onUpdate }: TableEditorProps) {
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
       {/* Table header */}
-      <div className="p-4 border-b border-slate-700 space-y-4">
+      <div className="p-4 border-b border-gray-200 space-y-4">
         <div className="flex items-center gap-4">
           <div className="flex-1">
-            <label className="block text-xs text-slate-400 mb-1">Table Name</label>
+            <label className="block text-xs text-gray-500 mb-1">Table Name</label>
             <input
               type="text"
               value={table.name}
               onChange={(e) => handleTableNameChange(e.target.value)}
-              className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2
-                         text-white text-sm focus:border-blue-500 focus:outline-none"
+              className="w-full bg-gray-100 border border-gray-300 rounded-lg px-3 py-2
+                         text-gray-900 text-sm focus:border-blue-500 focus:outline-none"
             />
           </div>
           <div className="w-40">
-            <label className="block text-xs text-slate-400 mb-1">Est. Rows</label>
+            <label className="block text-xs text-gray-500 mb-1">Est. Rows</label>
             <input
               type="number"
               value={table.estimatedRows || 1000}
               onChange={(e) => handleEstimatedRowsChange(e.target.value)}
-              className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2
-                         text-white text-sm focus:border-blue-500 focus:outline-none"
+              className="w-full bg-gray-100 border border-gray-300 rounded-lg px-3 py-2
+                         text-gray-900 text-sm focus:border-blue-500 focus:outline-none"
               min="0"
             />
           </div>
@@ -160,8 +160,8 @@ export function TableEditor({ table, allTables, onUpdate }: TableEditorProps) {
             onClick={() => setActiveSection('columns')}
             className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-colors ${
               activeSection === 'columns'
-                ? 'bg-blue-600 text-white'
-                : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                ? 'bg-blue-500 text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
             Columns ({table.columns.length})
@@ -170,8 +170,8 @@ export function TableEditor({ table, allTables, onUpdate }: TableEditorProps) {
             onClick={() => setActiveSection('indexes')}
             className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-colors ${
               activeSection === 'indexes'
-                ? 'bg-blue-600 text-white'
-                : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                ? 'bg-blue-500 text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
             Indexes ({table.indexes.length})
@@ -229,11 +229,11 @@ function ColumnsSection({
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-medium text-slate-300">Columns</h3>
+        <h3 className="text-sm font-medium text-gray-700">Columns</h3>
         <button
           onClick={onAddColumn}
-          className="flex items-center gap-1 text-xs bg-slate-700 hover:bg-slate-600
-                     text-slate-300 px-3 py-1.5 rounded-lg transition-colors"
+          className="flex items-center gap-1 text-xs bg-gray-100 hover:bg-gray-200
+                     text-gray-700 px-3 py-1.5 rounded-lg transition-colors"
         >
           <Plus size={14} />
           Add Column
@@ -242,7 +242,7 @@ function ColumnsSection({
 
       {/* Column headers */}
       <div className="grid grid-cols-[1fr_140px_50px_50px_50px_50px_180px_40px] gap-2 px-3 py-2
-                      bg-slate-700/50 rounded-lg text-xs text-slate-400 font-medium">
+                      bg-gray-100/50 rounded-lg text-xs text-gray-500 font-medium">
         <div>Name</div>
         <div>Type</div>
         <div className="text-center" title="Primary Key">PK</div>
@@ -267,7 +267,7 @@ function ColumnsSection({
       </div>
 
       {columns.length === 0 && (
-        <div className="text-center py-8 text-slate-500 text-sm">
+        <div className="text-center py-8 text-gray-400 text-sm">
           No columns defined. Click "Add Column" to create one.
         </div>
       )}
@@ -289,13 +289,13 @@ function ColumnRow({ column, otherTables, onUpdate, onDelete }: ColumnRowProps) 
 
   return (
     <div className="grid grid-cols-[1fr_140px_50px_50px_50px_50px_180px_40px] gap-2 items-center
-                    bg-slate-700/30 rounded-lg px-3 py-2 hover:bg-slate-700/50 transition-colors">
+                    bg-gray-100/30 rounded-lg px-3 py-2 hover:bg-gray-100/50 transition-colors">
       {/* Name */}
       <input
         type="text"
         value={column.name}
         onChange={(e) => onUpdate({ name: e.target.value })}
-        className="bg-slate-600 border-none rounded px-2 py-1 text-sm text-white
+        className="bg-gray-200 border-none rounded px-2 py-1 text-sm text-gray-900
                    focus:ring-1 focus:ring-blue-500 focus:outline-none"
       />
 
@@ -303,7 +303,7 @@ function ColumnRow({ column, otherTables, onUpdate, onDelete }: ColumnRowProps) 
       <select
         value={column.type}
         onChange={(e) => onUpdate({ type: e.target.value as ColumnType })}
-        className="bg-slate-600 border-none rounded px-2 py-1 text-sm text-white
+        className="bg-gray-200 border-none rounded px-2 py-1 text-sm text-gray-900
                    focus:ring-1 focus:ring-blue-500 focus:outline-none"
       >
         {Object.entries(
@@ -335,7 +335,7 @@ function ColumnRow({ column, otherTables, onUpdate, onDelete }: ColumnRowProps) 
               isUnique: e.target.checked ? true : column.isUnique,
             })
           }
-          className="w-4 h-4 rounded bg-slate-600 border-slate-500
+          className="w-4 h-4 rounded bg-gray-200 border-gray-400
                      text-blue-600 focus:ring-blue-500"
         />
       </div>
@@ -347,7 +347,7 @@ function ColumnRow({ column, otherTables, onUpdate, onDelete }: ColumnRowProps) 
           checked={!column.isNullable}
           onChange={(e) => onUpdate({ isNullable: !e.target.checked })}
           disabled={column.isPrimaryKey}
-          className="w-4 h-4 rounded bg-slate-600 border-slate-500
+          className="w-4 h-4 rounded bg-gray-200 border-gray-400
                      text-blue-600 focus:ring-blue-500 disabled:opacity-50"
         />
       </div>
@@ -359,7 +359,7 @@ function ColumnRow({ column, otherTables, onUpdate, onDelete }: ColumnRowProps) 
           checked={column.isUnique}
           onChange={(e) => onUpdate({ isUnique: e.target.checked })}
           disabled={column.isPrimaryKey}
-          className="w-4 h-4 rounded bg-slate-600 border-slate-500
+          className="w-4 h-4 rounded bg-gray-200 border-gray-400
                      text-blue-600 focus:ring-blue-500 disabled:opacity-50"
         />
       </div>
@@ -375,7 +375,7 @@ function ColumnRow({ column, otherTables, onUpdate, onDelete }: ColumnRowProps) 
               foreignKeyRef: e.target.checked ? undefined : undefined,
             })
           }
-          className="w-4 h-4 rounded bg-slate-600 border-slate-500
+          className="w-4 h-4 rounded bg-gray-200 border-gray-400
                      text-blue-600 focus:ring-blue-500"
         />
       </div>
@@ -395,7 +395,7 @@ function ColumnRow({ column, otherTables, onUpdate, onDelete }: ColumnRowProps) 
                   : undefined,
               });
             }}
-            className="flex-1 bg-slate-600 border-none rounded px-1 py-1 text-xs text-white
+            className="flex-1 bg-gray-200 border-none rounded px-1 py-1 text-xs text-gray-900
                        focus:ring-1 focus:ring-blue-500 focus:outline-none"
           >
             <option value="">Table...</option>
@@ -416,7 +416,7 @@ function ColumnRow({ column, otherTables, onUpdate, onDelete }: ColumnRowProps) 
                   },
                 })
               }
-              className="flex-1 bg-slate-600 border-none rounded px-1 py-1 text-xs text-white
+              className="flex-1 bg-gray-200 border-none rounded px-1 py-1 text-xs text-gray-900
                          focus:ring-1 focus:ring-blue-500 focus:outline-none"
             >
               <option value="">Column...</option>
@@ -429,13 +429,13 @@ function ColumnRow({ column, otherTables, onUpdate, onDelete }: ColumnRowProps) 
           )}
         </div>
       ) : (
-        <div className="text-slate-500 text-xs">-</div>
+        <div className="text-gray-400 text-xs">-</div>
       )}
 
       {/* Delete */}
       <button
         onClick={onDelete}
-        className="p-1 text-slate-400 hover:text-red-400 transition-colors"
+        className="p-1 text-gray-500 hover:text-red-400 transition-colors"
       >
         <Trash2 size={14} />
       </button>
@@ -466,11 +466,11 @@ function IndexesSection({
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-medium text-slate-300">Indexes</h3>
+        <h3 className="text-sm font-medium text-gray-700">Indexes</h3>
         <button
           onClick={onAddIndex}
-          className="flex items-center gap-1 text-xs bg-slate-700 hover:bg-slate-600
-                     text-slate-300 px-3 py-1.5 rounded-lg transition-colors"
+          className="flex items-center gap-1 text-xs bg-gray-100 hover:bg-gray-200
+                     text-gray-700 px-3 py-1.5 rounded-lg transition-colors"
         >
           <Plus size={14} />
           Add Index
@@ -484,7 +484,7 @@ function IndexesSection({
           <AlertCircle size={16} className="text-blue-400 mt-0.5 flex-shrink-0" />
           <div>
             <span className="text-blue-400 font-medium">Tip:</span>
-            <span className="text-slate-300 ml-1">
+            <span className="text-gray-700 ml-1">
               You have JSONB/array columns ({jsonbColumns.map(c => c.name).join(', ')}).
               Consider adding GIN indexes for efficient querying.
             </span>
@@ -507,7 +507,7 @@ function IndexesSection({
       </div>
 
       {indexes.length === 0 && (
-        <div className="text-center py-8 text-slate-500 text-sm">
+        <div className="text-center py-8 text-gray-400 text-sm">
           No indexes defined. Click "Add Index" to create one.
         </div>
       )}
@@ -534,17 +534,17 @@ function IndexCard({ index, columns, tableName, onUpdate, onDelete }: IndexCardP
   const selectedIndexType = INDEX_TYPES.find((t) => t.value === index.type);
 
   return (
-    <div className="bg-slate-700/30 rounded-lg p-4 space-y-3">
+    <div className="bg-gray-100/30 rounded-lg p-4 space-y-3">
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1 space-y-3">
           {/* Index name */}
           <div>
-            <label className="block text-xs text-slate-400 mb-1">Index Name</label>
+            <label className="block text-xs text-gray-500 mb-1">Index Name</label>
             <input
               type="text"
               value={index.name}
               onChange={(e) => onUpdate({ name: e.target.value })}
-              className="w-full bg-slate-600 border-none rounded px-3 py-1.5 text-sm text-white
+              className="w-full bg-gray-200 border-none rounded px-3 py-1.5 text-sm text-gray-900
                          focus:ring-1 focus:ring-blue-500 focus:outline-none"
               placeholder={`idx_${tableName}_...`}
             />
@@ -553,11 +553,11 @@ function IndexCard({ index, columns, tableName, onUpdate, onDelete }: IndexCardP
           <div className="flex gap-4">
             {/* Index type */}
             <div className="flex-1">
-              <label className="block text-xs text-slate-400 mb-1">Type</label>
+              <label className="block text-xs text-gray-500 mb-1">Type</label>
               <select
                 value={index.type}
                 onChange={(e) => onUpdate({ type: e.target.value as IndexType })}
-                className="w-full bg-slate-600 border-none rounded px-3 py-1.5 text-sm text-white
+                className="w-full bg-gray-200 border-none rounded px-3 py-1.5 text-sm text-gray-900
                            focus:ring-1 focus:ring-blue-500 focus:outline-none"
               >
                 {INDEX_TYPES.map((type) => (
@@ -567,7 +567,7 @@ function IndexCard({ index, columns, tableName, onUpdate, onDelete }: IndexCardP
                 ))}
               </select>
               {selectedIndexType && (
-                <p className="text-xs text-slate-500 mt-1">
+                <p className="text-xs text-gray-400 mt-1">
                   {selectedIndexType.description}
                 </p>
               )}
@@ -580,10 +580,10 @@ function IndexCard({ index, columns, tableName, onUpdate, onDelete }: IndexCardP
                 id={`unique-${index.id}`}
                 checked={index.isUnique}
                 onChange={(e) => onUpdate({ isUnique: e.target.checked })}
-                className="w-4 h-4 rounded bg-slate-600 border-slate-500
+                className="w-4 h-4 rounded bg-gray-200 border-gray-400
                            text-blue-600 focus:ring-blue-500"
               />
-              <label htmlFor={`unique-${index.id}`} className="text-sm text-slate-300">
+              <label htmlFor={`unique-${index.id}`} className="text-sm text-gray-700">
                 Unique
               </label>
             </div>
@@ -592,7 +592,7 @@ function IndexCard({ index, columns, tableName, onUpdate, onDelete }: IndexCardP
 
         <button
           onClick={onDelete}
-          className="p-2 text-slate-400 hover:text-red-400 transition-colors"
+          className="p-2 text-gray-500 hover:text-red-400 transition-colors"
         >
           <Trash2 size={16} />
         </button>
@@ -600,7 +600,7 @@ function IndexCard({ index, columns, tableName, onUpdate, onDelete }: IndexCardP
 
       {/* Column selection */}
       <div>
-        <label className="block text-xs text-slate-400 mb-2">
+        <label className="block text-xs text-gray-500 mb-2">
           Indexed Columns (select in order)
         </label>
         <div className="flex flex-wrap gap-2">
@@ -617,8 +617,8 @@ function IndexCard({ index, columns, tableName, onUpdate, onDelete }: IndexCardP
                   transition-colors
                   ${
                     isSelected
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-slate-600 text-slate-300 hover:bg-slate-500'
+                      ? 'bg-blue-500 text-white'
+                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                   }
                 `}
               >
@@ -628,13 +628,13 @@ function IndexCard({ index, columns, tableName, onUpdate, onDelete }: IndexCardP
                   </span>
                 )}
                 {column.name}
-                <span className="text-slate-400 text-[10px]">({column.type})</span>
+                <span className="text-gray-500 text-[10px]">({column.type})</span>
               </button>
             );
           })}
         </div>
         {index.columns.length === 0 && (
-          <p className="text-xs text-slate-500 mt-2">
+          <p className="text-xs text-gray-400 mt-2">
             Click columns above to add them to the index
           </p>
         )}
@@ -642,7 +642,7 @@ function IndexCard({ index, columns, tableName, onUpdate, onDelete }: IndexCardP
 
       {/* Preview */}
       {index.columns.length > 0 && (
-        <div className="bg-slate-900/50 rounded p-2 font-mono text-xs text-slate-400">
+        <div className="bg-gray-100 rounded p-2 font-mono text-xs text-gray-500">
           CREATE {index.isUnique ? 'UNIQUE ' : ''}INDEX {index.name} ON {tableName}
           <br />
           &nbsp;&nbsp;USING {index.type} (

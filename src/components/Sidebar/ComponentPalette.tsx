@@ -108,8 +108,8 @@ function DraggableComponent({ component }: { component: ComponentDefinition }) {
     <div
       draggable
       onDragStart={onDragStart}
-      className="flex items-center gap-4 px-4 py-3 rounded-lg bg-slate-700/50 border border-slate-600
-                 cursor-grab hover:bg-slate-700 hover:border-slate-500 transition-colors
+      className="flex items-center gap-4 px-4 py-3 rounded-lg bg-gray-50 border border-gray-200
+                 cursor-grab hover:bg-gray-100 hover:border-gray-300 transition-colors
                  active:cursor-grabbing"
     >
       <div
@@ -118,17 +118,17 @@ function DraggableComponent({ component }: { component: ComponentDefinition }) {
       >
         {component.icon}
       </div>
-      <span className="text-sm font-medium text-slate-200">{component.label}</span>
+      <span className="text-sm font-medium text-gray-700">{component.label}</span>
     </div>
   );
 }
 
 export function ComponentPalette() {
   return (
-    <div className="w-72 bg-slate-800 border-r border-slate-700 flex flex-col">
+    <div className="w-72 bg-white border-r border-gray-200 flex flex-col">
       <div className="px-6 pt-5 pb-4">
-        <h2 className="text-lg font-semibold text-white mb-2">Components</h2>
-        <p className="text-xs text-slate-400 leading-relaxed">
+        <h2 className="text-lg font-semibold text-gray-900 mb-2">Components</h2>
+        <p className="text-xs text-gray-500 leading-relaxed">
           Drag components onto the canvas to build your system design.
         </p>
       </div>

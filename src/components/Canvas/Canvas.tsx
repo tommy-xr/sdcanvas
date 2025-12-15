@@ -113,11 +113,11 @@ export function Canvas({ onOpenSchemaDesigner, onOpenAPIDesigner }: CanvasProps)
           variant={BackgroundVariant.Dots}
           gap={20}
           size={1}
-          color="#334155"
+          color="#d1d5db"
         />
-        <Controls className="!bg-slate-800 !border-slate-600 !rounded-lg" />
+        <Controls className="!bg-white !border-gray-200 !rounded-lg" />
         <MiniMap
-          className="!bg-slate-800 !border-slate-600 !rounded-lg"
+          className="!bg-white !border-gray-200 !rounded-lg"
           nodeColor={(node) => {
             const colors: Record<string, string> = {
               user: '#22c55e',

@@ -108,7 +108,7 @@ export function ERDiagram({ tables }: ERDiagramProps) {
 
   if (tables.length === 0) {
     return (
-      <div className="flex-1 flex items-center justify-center text-slate-500">
+      <div className="flex-1 flex items-center justify-center text-gray-400">
         <div className="text-center">
           <Link2 size={48} className="mx-auto mb-3 opacity-50" />
           <p>No tables to display</p>
@@ -123,9 +123,9 @@ export function ERDiagram({ tables }: ERDiagramProps) {
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
       {/* Controls */}
-      <div className="flex items-center justify-between px-4 py-2 border-b border-slate-700">
+      <div className="flex items-center justify-between px-4 py-2 border-b border-gray-200">
         <div className="flex items-center gap-4">
-          <span className="text-sm text-slate-400">
+          <span className="text-sm text-gray-500">
             {tables.length} table{tables.length !== 1 ? 's' : ''},{' '}
             {relationships.length} relationship{relationships.length !== 1 ? 's' : ''}
           </span>
@@ -133,27 +133,27 @@ export function ERDiagram({ tables }: ERDiagramProps) {
         <div className="flex items-center gap-2">
           <button
             onClick={() => setZoom((z) => Math.min(2, z + 0.1))}
-            className="p-2 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors"
+            className="p-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
             title="Zoom In"
           >
-            <ZoomIn size={16} className="text-slate-300" />
+            <ZoomIn size={16} className="text-gray-700" />
           </button>
-          <span className="text-sm text-slate-400 w-12 text-center">
+          <span className="text-sm text-gray-500 w-12 text-center">
             {Math.round(zoom * 100)}%
           </span>
           <button
             onClick={() => setZoom((z) => Math.max(0.25, z - 0.1))}
-            className="p-2 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors"
+            className="p-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
             title="Zoom Out"
           >
-            <ZoomOut size={16} className="text-slate-300" />
+            <ZoomOut size={16} className="text-gray-700" />
           </button>
           <button
             onClick={resetView}
-            className="p-2 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors"
+            className="p-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
             title="Reset View"
           >
-            <Maximize2 size={16} className="text-slate-300" />
+            <Maximize2 size={16} className="text-gray-700" />
           </button>
         </div>
       </div>
@@ -161,7 +161,7 @@ export function ERDiagram({ tables }: ERDiagramProps) {
       {/* Diagram area */}
       <div
         ref={containerRef}
-        className="flex-1 overflow-hidden bg-slate-900/50 cursor-grab active:cursor-grabbing"
+        className="flex-1 overflow-hidden bg-gray-100 cursor-grab active:cursor-grabbing"
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
@@ -252,8 +252,8 @@ export function ERDiagram({ tables }: ERDiagramProps) {
                   width={tableWidth}
                   height={tableHeight}
                   rx="8"
-                  fill="#1e293b"
-                  stroke="#334155"
+                  fill="#ffffff"
+                  stroke="#e5e5e5"
                   strokeWidth="2"
                 />
 
@@ -315,7 +315,7 @@ export function ERDiagram({ tables }: ERDiagramProps) {
                       <text
                         x={isPK || isFK ? 28 : 12}
                         y="16"
-                        fill={isPK ? '#fbbf24' : isFK ? '#60a5fa' : '#e2e8f0'}
+                        fill={isPK ? '#ca8a04' : isFK ? '#2563eb' : '#374151'}
                         fontSize="11"
                         fontWeight={isPK ? '600' : '400'}
                       >
@@ -327,7 +327,7 @@ export function ERDiagram({ tables }: ERDiagramProps) {
                         x={tableWidth - 12}
                         y="16"
                         textAnchor="end"
-                        fill="#64748b"
+                        fill="#6b7280"
                         fontSize="10"
                       >
                         {column.type}
@@ -342,7 +342,7 @@ export function ERDiagram({ tables }: ERDiagramProps) {
       </div>
 
       {/* Legend */}
-      <div className="px-4 py-2 border-t border-slate-700 flex items-center gap-6 text-xs text-slate-400">
+      <div className="px-4 py-2 border-t border-gray-200 flex items-center gap-6 text-xs text-gray-500">
         <div className="flex items-center gap-2">
           <Key size={12} className="text-yellow-500" />
           <span>Primary Key</span>

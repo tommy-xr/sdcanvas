@@ -69,9 +69,9 @@ export function QueryLinker({
   return (
     <div className="flex h-full">
       {/* Endpoint list sidebar */}
-      <div className="w-64 border-r border-slate-700 flex flex-col">
-        <div className="p-4 border-b border-slate-700">
-          <h3 className="text-sm font-medium text-slate-300">Select Endpoint</h3>
+      <div className="w-64 border-r border-gray-200 flex flex-col">
+        <div className="p-4 border-b border-gray-200">
+          <h3 className="text-sm font-medium text-gray-700">Select Endpoint</h3>
         </div>
         <div className="flex-1 overflow-y-auto p-2">
           {endpoints.map((endpoint) => (
@@ -83,7 +83,7 @@ export function QueryLinker({
                 ${
                   selectedEndpointId === endpoint.id
                     ? 'bg-blue-600/20 border border-blue-500/30'
-                    : 'hover:bg-slate-700/50 border border-transparent'
+                    : 'hover:bg-gray-100 border border-transparent'
                 }
               `}
             >
@@ -91,12 +91,12 @@ export function QueryLinker({
                 <span className={`text-xs font-bold ${getMethodColor(endpoint.method)}`}>
                   {endpoint.method}
                 </span>
-                <span className="text-sm text-slate-300 truncate font-mono">
+                <span className="text-sm text-gray-700 truncate font-mono">
                   {endpoint.path}
                 </span>
               </div>
               {endpoint.linkedQueries && endpoint.linkedQueries.length > 0 && (
-                <div className="flex items-center gap-1 mt-1 text-[10px] text-slate-500">
+                <div className="flex items-center gap-1 mt-1 text-[10px] text-gray-400">
                   <Database size={10} />
                   {endpoint.linkedQueries.length} queries
                 </div>
@@ -111,25 +111,25 @@ export function QueryLinker({
         {selectedEndpoint ? (
           <>
             {/* Header */}
-            <div className="p-4 border-b border-slate-700">
+            <div className="p-4 border-b border-gray-200">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-lg font-medium text-white">
+                  <h3 className="text-lg font-medium text-gray-900">
                     Database Queries for{' '}
                     <span className={getMethodColor(selectedEndpoint.method)}>
                       {selectedEndpoint.method}
                     </span>{' '}
                     <span className="font-mono">{selectedEndpoint.path}</span>
                   </h3>
-                  <p className="text-sm text-slate-400 mt-1">
+                  <p className="text-sm text-gray-500 mt-1">
                     Link this endpoint to database operations
                   </p>
                 </div>
                 <button
                   onClick={addLinkedQuery}
                   disabled={databaseNodes.length === 0}
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-500
-                             disabled:bg-slate-600 disabled:cursor-not-allowed
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-400
+                             disabled:bg-gray-200 disabled:cursor-not-allowed
                              text-white rounded-lg text-sm font-medium transition-colors"
                 >
                   <Plus size={16} />
@@ -141,7 +141,7 @@ export function QueryLinker({
             {/* Query list */}
             <div className="flex-1 overflow-y-auto p-4">
               {databaseNodes.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-full text-slate-500">
+                <div className="flex flex-col items-center justify-center h-full text-gray-400">
                   <Database size={48} className="mb-3 opacity-50" />
                   <p>No database nodes in your diagram</p>
                   <p className="text-sm mt-1">
@@ -149,7 +149,7 @@ export function QueryLinker({
                   </p>
                 </div>
               ) : linkedQueries.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-full text-slate-500">
+                <div className="flex flex-col items-center justify-center h-full text-gray-400">
                   <Link size={48} className="mb-3 opacity-50" />
                   <p>No queries linked to this endpoint</p>
                   <p className="text-sm mt-1">
@@ -174,18 +174,18 @@ export function QueryLinker({
 
             {/* Flow visualization */}
             {linkedQueries.length > 0 && (
-              <div className="border-t border-slate-700 p-4">
-                <h4 className="text-xs text-slate-400 mb-3">Data Flow</h4>
+              <div className="border-t border-gray-200 p-4">
+                <h4 className="text-xs text-gray-500 mb-3">Data Flow</h4>
                 <div className="flex items-center gap-3 flex-wrap">
                   <div className="px-3 py-2 bg-blue-500/20 border border-blue-500/30 rounded-lg">
                     <span className={`text-xs font-bold ${getMethodColor(selectedEndpoint.method)}`}>
                       {selectedEndpoint.method}
                     </span>
-                    <span className="text-sm text-slate-300 ml-2 font-mono">
+                    <span className="text-sm text-gray-700 ml-2 font-mono">
                       {selectedEndpoint.path}
                     </span>
                   </div>
-                  <ArrowRight size={16} className="text-slate-500" />
+                  <ArrowRight size={16} className="text-gray-400" />
                   {linkedQueries.map((query) => {
                     const dbNode = databaseNodes.find((n) => n.id === query.targetNodeId);
                     const dbData = dbNode?.data as PostgreSQLNodeData | undefined;
@@ -209,7 +209,7 @@ export function QueryLinker({
             )}
           </>
         ) : (
-          <div className="flex-1 flex items-center justify-center text-slate-500">
+          <div className="flex-1 flex items-center justify-center text-gray-400">
             <div className="text-center">
               <Database size={48} className="mx-auto mb-3 opacity-50" />
               <p>Select an endpoint to manage its database queries</p>
@@ -235,12 +235,12 @@ function QueryCard({ query, index, databaseNodes, onUpdate, onRemove }: QueryCar
   const tables = dbData?.tables || [];
 
   return (
-    <div className="bg-slate-700/30 rounded-lg p-4">
+    <div className="bg-gray-50 rounded-lg p-4">
       <div className="flex items-center justify-between mb-4">
-        <span className="text-xs text-slate-400 font-medium">Query {index + 1}</span>
+        <span className="text-xs text-gray-500 font-medium">Query {index + 1}</span>
         <button
           onClick={onRemove}
-          className="p-1 text-slate-400 hover:text-red-400 transition-colors"
+          className="p-1 text-gray-500 hover:text-red-400 transition-colors"
         >
           <Trash2 size={14} />
         </button>
@@ -249,12 +249,12 @@ function QueryCard({ query, index, databaseNodes, onUpdate, onRemove }: QueryCar
       <div className="grid grid-cols-3 gap-4">
         {/* Query Type */}
         <div>
-          <label className="block text-xs text-slate-400 mb-1">Query Type</label>
+          <label className="block text-xs text-gray-500 mb-1">Query Type</label>
           <select
             value={query.queryType}
             onChange={(e) => onUpdate({ queryType: e.target.value as QueryType })}
-            className="w-full bg-slate-600 border-none rounded-lg px-3 py-2
-                       text-white text-sm focus:ring-1 focus:ring-blue-500"
+            className="w-full bg-gray-200 border-none rounded-lg px-3 py-2
+                       text-gray-900 text-sm focus:ring-1 focus:ring-blue-500"
           >
             {QUERY_TYPES.map((type) => (
               <option key={type} value={type}>
@@ -266,7 +266,7 @@ function QueryCard({ query, index, databaseNodes, onUpdate, onRemove }: QueryCar
 
         {/* Database */}
         <div>
-          <label className="block text-xs text-slate-400 mb-1">Database</label>
+          <label className="block text-xs text-gray-500 mb-1">Database</label>
           <select
             value={query.targetNodeId}
             onChange={(e) => {
@@ -277,8 +277,8 @@ function QueryCard({ query, index, databaseNodes, onUpdate, onRemove }: QueryCar
                 targetTableId: newDbData?.tables?.[0]?.id || '',
               });
             }}
-            className="w-full bg-slate-600 border-none rounded-lg px-3 py-2
-                       text-white text-sm focus:ring-1 focus:ring-blue-500"
+            className="w-full bg-gray-200 border-none rounded-lg px-3 py-2
+                       text-gray-900 text-sm focus:ring-1 focus:ring-blue-500"
           >
             {databaseNodes.map((node) => (
               <option key={node.id} value={node.id}>
@@ -290,12 +290,12 @@ function QueryCard({ query, index, databaseNodes, onUpdate, onRemove }: QueryCar
 
         {/* Table */}
         <div>
-          <label className="block text-xs text-slate-400 mb-1">Table</label>
+          <label className="block text-xs text-gray-500 mb-1">Table</label>
           <select
             value={query.targetTableId}
             onChange={(e) => onUpdate({ targetTableId: e.target.value })}
-            className="w-full bg-slate-600 border-none rounded-lg px-3 py-2
-                       text-white text-sm focus:ring-1 focus:ring-blue-500"
+            className="w-full bg-gray-200 border-none rounded-lg px-3 py-2
+                       text-gray-900 text-sm focus:ring-1 focus:ring-blue-500"
           >
             {tables.length === 0 ? (
               <option value="">No tables</option>
@@ -312,22 +312,22 @@ function QueryCard({ query, index, databaseNodes, onUpdate, onRemove }: QueryCar
 
       {/* Description */}
       <div className="mt-4">
-        <label className="block text-xs text-slate-400 mb-1">Description (optional)</label>
+        <label className="block text-xs text-gray-500 mb-1">Description (optional)</label>
         <input
           type="text"
           value={query.description || ''}
           onChange={(e) => onUpdate({ description: e.target.value })}
           placeholder="e.g., Fetch user by ID"
-          className="w-full bg-slate-600 border-none rounded-lg px-3 py-2
-                     text-white text-sm focus:ring-1 focus:ring-blue-500"
+          className="w-full bg-gray-200 border-none rounded-lg px-3 py-2
+                     text-gray-900 text-sm focus:ring-1 focus:ring-blue-500"
         />
       </div>
 
       {/* SQL Preview */}
       {query.targetTableId && (
-        <div className="mt-4 bg-slate-900/50 rounded-lg p-3">
-          <span className="text-xs text-slate-400">SQL Preview:</span>
-          <pre className="text-sm text-slate-300 font-mono mt-1">
+        <div className="mt-4 bg-gray-100 rounded-lg p-3">
+          <span className="text-xs text-gray-500">SQL Preview:</span>
+          <pre className="text-sm text-gray-700 font-mono mt-1">
             {generateSqlPreview(query, tables.find((t) => t.id === query.targetTableId)?.name)}
           </pre>
         </div>
@@ -361,5 +361,5 @@ function getMethodColor(method: string): string {
     DELETE: 'text-red-400',
     PATCH: 'text-purple-400',
   };
-  return colors[method] || 'text-slate-400';
+  return colors[method] || 'text-gray-500';
 }

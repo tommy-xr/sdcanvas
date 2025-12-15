@@ -59,7 +59,7 @@ function AppContent() {
   );
 
   return (
-    <div className="flex flex-col h-screen w-screen bg-slate-900">
+    <div className="flex flex-col h-screen w-screen bg-gray-100">
       <Header />
       <div className="flex flex-1 overflow-hidden">
         <ComponentPalette />

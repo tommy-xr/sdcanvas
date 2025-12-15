@@ -144,9 +144,9 @@ export function SchemaEditor({
   return (
     <div className="flex h-full">
       {/* Endpoint list sidebar */}
-      <div className="w-64 border-r border-slate-700 flex flex-col">
-        <div className="p-4 border-b border-slate-700">
-          <h3 className="text-sm font-medium text-slate-300">Select Endpoint</h3>
+      <div className="w-64 border-r border-gray-200 flex flex-col">
+        <div className="p-4 border-b border-gray-200">
+          <h3 className="text-sm font-medium text-gray-700">Select Endpoint</h3>
         </div>
         <div className="flex-1 overflow-y-auto p-2">
           {endpoints.map((endpoint) => (
@@ -158,7 +158,7 @@ export function SchemaEditor({
                 ${
                   selectedEndpointId === endpoint.id
                     ? 'bg-blue-600/20 border border-blue-500/30'
-                    : 'hover:bg-slate-700/50 border border-transparent'
+                    : 'hover:bg-gray-100 border border-transparent'
                 }
               `}
             >
@@ -166,7 +166,7 @@ export function SchemaEditor({
                 <span className={`text-xs font-bold ${getMethodColor(endpoint.method)}`}>
                   {endpoint.method}
                 </span>
-                <span className="text-sm text-slate-300 truncate font-mono">
+                <span className="text-sm text-gray-700 truncate font-mono">
                   {endpoint.path}
                 </span>
               </div>
@@ -196,15 +196,15 @@ export function SchemaEditor({
         {selectedEndpoint ? (
           <>
             {/* Schema type tabs */}
-            <div className="flex border-b border-slate-700">
+            <div className="flex border-b border-gray-200">
               <button
                 onClick={() => setActiveSchemaType('request')}
                 className={`
                   flex items-center gap-2 px-6 py-3 text-sm font-medium transition-colors
                   ${
                     activeSchemaType === 'request'
-                      ? 'text-green-400 border-b-2 border-green-400 bg-slate-700/30'
-                      : 'text-slate-400 hover:text-white'
+                      ? 'text-green-400 border-b-2 border-green-400 bg-gray-50'
+                      : 'text-gray-500 hover:text-gray-900'
                   }
                 `}
               >
@@ -217,8 +217,8 @@ export function SchemaEditor({
                   flex items-center gap-2 px-6 py-3 text-sm font-medium transition-colors
                   ${
                     activeSchemaType === 'response'
-                      ? 'text-blue-400 border-b-2 border-blue-400 bg-slate-700/30'
-                      : 'text-slate-400 hover:text-white'
+                      ? 'text-blue-400 border-b-2 border-blue-400 bg-gray-50'
+                      : 'text-gray-500 hover:text-gray-900'
                   }
                 `}
               >
@@ -251,12 +251,12 @@ export function SchemaEditor({
                   onClear={clearSchema}
                 />
               ) : (
-                <div className="flex flex-col items-center justify-center h-full text-slate-500">
+                <div className="flex flex-col items-center justify-center h-full text-gray-400">
                   <FileJson size={48} className="mb-3 opacity-50" />
                   <p>No {activeSchemaType} schema defined</p>
                   <button
                     onClick={initializeSchema}
-                    className="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white
+                    className="mt-4 px-4 py-2 bg-blue-500 hover:bg-blue-400 text-white
                                rounded-lg text-sm font-medium transition-colors"
                   >
                     Create Schema
@@ -267,16 +267,16 @@ export function SchemaEditor({
 
             {/* JSON Preview - only for request or JSON response */}
             {currentSchema && (activeSchemaType === 'request' || selectedEndpoint.responseType !== 'binary') && (
-              <div className="border-t border-slate-700 p-4">
-                <h4 className="text-xs text-slate-400 mb-2">JSON Schema Preview</h4>
-                <pre className="bg-slate-900/50 rounded-lg p-3 text-xs text-slate-300 font-mono overflow-auto max-h-32">
+              <div className="border-t border-gray-200 p-4">
+                <h4 className="text-xs text-gray-500 mb-2">JSON Schema Preview</h4>
+                <pre className="bg-gray-100 rounded-lg p-3 text-xs text-gray-700 font-mono overflow-auto max-h-32">
                   {JSON.stringify(currentSchema, null, 2)}
                 </pre>
               </div>
             )}
           </>
         ) : (
-          <div className="flex-1 flex items-center justify-center text-slate-500">
+          <div className="flex-1 flex items-center justify-center text-gray-400">
             <div className="text-center">
               <FileJson size={48} className="mx-auto mb-3 opacity-50" />
               <p>Select an endpoint to edit its schemas</p>
@@ -350,15 +350,15 @@ function ResponseEditor({
     <div className="space-y-6">
       {/* Response Type Toggle */}
       <div>
-        <label className="block text-xs text-slate-400 mb-2">Response Type</label>
+        <label className="block text-xs text-gray-500 mb-2">Response Type</label>
         <div className="flex gap-2">
           <button
             onClick={() => handleResponseTypeChange('json')}
             className={`
               flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors
               ${responseType === 'json'
-                ? 'bg-blue-600 text-white'
-                : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                ? 'bg-blue-500 text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }
             `}
           >
@@ -370,8 +370,8 @@ function ResponseEditor({
             className={`
               flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors
               ${responseType === 'binary'
-                ? 'bg-blue-600 text-white'
-                : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                ? 'bg-blue-500 text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }
             `}
           >
@@ -385,12 +385,12 @@ function ResponseEditor({
       {responseType === 'binary' ? (
         <div className="space-y-4">
           <div>
-            <label className="block text-xs text-slate-400 mb-2">Content-Type</label>
+            <label className="block text-xs text-gray-500 mb-2">Content-Type</label>
             <select
               value={isCustomContentType ? 'custom' : (endpoint.responseContentType || 'application/octet-stream')}
               onChange={(e) => handleContentTypeChange(e.target.value)}
-              className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2.5
-                         text-white text-sm focus:border-blue-500 focus:outline-none"
+              className="w-full bg-gray-100 border border-gray-300 rounded-lg px-3 py-2.5
+                         text-gray-900 text-sm focus:border-blue-500 focus:outline-none"
             >
               {CONTENT_TYPE_CATEGORIES.map((category) => (
                 <optgroup key={category.label} label={category.label}>
@@ -410,7 +410,7 @@ function ResponseEditor({
           {/* Custom content type input */}
           {(isCustomContentType || customContentType) && (
             <div>
-              <label className="block text-xs text-slate-400 mb-2">Custom Content-Type</label>
+              <label className="block text-xs text-gray-500 mb-2">Custom Content-Type</label>
               <div className="flex gap-2">
                 <input
                   type="text"
@@ -424,14 +424,14 @@ function ResponseEditor({
                   }}
                   onKeyDown={(e) => e.key === 'Enter' && !isCustomContentType && handleCustomContentTypeSubmit()}
                   placeholder="e.g., application/x-custom"
-                  className="flex-1 bg-slate-700 border border-slate-600 rounded-lg px-3 py-2
-                             text-white text-sm focus:border-blue-500 focus:outline-none font-mono"
+                  className="flex-1 bg-gray-100 border border-gray-300 rounded-lg px-3 py-2
+                             text-gray-900 text-sm focus:border-blue-500 focus:outline-none font-mono"
                 />
                 {!isCustomContentType && (
                   <button
                     onClick={handleCustomContentTypeSubmit}
                     disabled={!customContentType.trim()}
-                    className="px-4 py-2 bg-blue-600 hover:bg-blue-500 disabled:bg-slate-600
+                    className="px-4 py-2 bg-blue-500 hover:bg-blue-400 disabled:bg-gray-200
                                text-white rounded-lg text-sm font-medium transition-colors"
                   >
                     Set
@@ -442,20 +442,20 @@ function ResponseEditor({
           )}
 
           {/* Binary response preview */}
-          <div className="bg-slate-900/50 rounded-lg p-4">
-            <h4 className="text-xs text-slate-400 mb-2">Response Preview</h4>
+          <div className="bg-gray-100 rounded-lg p-4">
+            <h4 className="text-xs text-gray-500 mb-2">Response Preview</h4>
             <div className="flex items-center gap-3">
-              <File size={24} className="text-slate-500" />
+              <File size={24} className="text-gray-400" />
               <div>
-                <p className="text-sm text-slate-300">Binary file response</p>
-                <p className="text-xs text-slate-500 font-mono">
+                <p className="text-sm text-gray-700">Binary file response</p>
+                <p className="text-xs text-gray-400 font-mono">
                   Content-Type: {endpoint.responseContentType || 'application/octet-stream'}
                 </p>
               </div>
             </div>
           </div>
 
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-gray-400">
             Use this for endpoints that return files, images, or other binary data (e.g., from S3).
           </p>
         </div>
@@ -469,12 +469,12 @@ function ResponseEditor({
           onClear={onClearSchema}
         />
       ) : (
-        <div className="flex flex-col items-center justify-center py-12 text-slate-500">
+        <div className="flex flex-col items-center justify-center py-12 text-gray-400">
           <FileJson size={48} className="mb-3 opacity-50" />
           <p>No response schema defined</p>
           <button
             onClick={onInitializeSchema}
-            className="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white
+            className="mt-4 px-4 py-2 bg-blue-500 hover:bg-blue-400 text-white
                        rounded-lg text-sm font-medium transition-colors"
           >
             Create Schema
@@ -518,12 +518,12 @@ function SchemaProperties({
     <div className="space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-medium text-slate-300">
+        <h3 className="text-sm font-medium text-gray-700">
           Properties ({properties.length})
         </h3>
         <button
           onClick={onClear}
-          className="text-xs text-slate-400 hover:text-red-400 transition-colors"
+          className="text-xs text-gray-500 hover:text-red-400 transition-colors"
         >
           Clear Schema
         </button>
@@ -537,14 +537,14 @@ function SchemaProperties({
           onChange={(e) => setNewPropName(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleAddProperty()}
           placeholder="Property name..."
-          className="flex-1 bg-slate-700 border border-slate-600 rounded-lg px-3 py-2
-                     text-white text-sm focus:border-blue-500 focus:outline-none"
+          className="flex-1 bg-gray-100 border border-gray-300 rounded-lg px-3 py-2
+                     text-gray-900 text-sm focus:border-blue-500 focus:outline-none"
         />
         <button
           onClick={handleAddProperty}
           disabled={!newPropName.trim()}
-          className="flex items-center gap-1 px-4 py-2 bg-blue-600 hover:bg-blue-500
-                     disabled:bg-slate-600 disabled:cursor-not-allowed
+          className="flex items-center gap-1 px-4 py-2 bg-blue-500 hover:bg-blue-400
+                     disabled:bg-gray-200 disabled:cursor-not-allowed
                      text-white rounded-lg text-sm font-medium transition-colors"
         >
           <Plus size={14} />
@@ -557,7 +557,7 @@ function SchemaProperties({
         <div className="space-y-2">
           {/* Header row */}
           <div className="grid grid-cols-[1fr_120px_120px_60px_40px] gap-2 px-3 py-2
-                          bg-slate-700/50 rounded-lg text-xs text-slate-400 font-medium">
+                          bg-gray-100 rounded-lg text-xs text-gray-500 font-medium">
             <div>Name</div>
             <div>Type</div>
             <div>Format</div>
@@ -570,16 +570,16 @@ function SchemaProperties({
             <div
               key={name}
               className="grid grid-cols-[1fr_120px_120px_60px_40px] gap-2 items-center
-                         bg-slate-700/30 rounded-lg px-3 py-2"
+                         bg-gray-50 rounded-lg px-3 py-2"
             >
-              <span className="text-sm text-slate-200 font-mono">{name}</span>
+              <span className="text-sm text-gray-800 font-mono">{name}</span>
 
               <select
                 value={prop.type}
                 onChange={(e) =>
                   onUpdateProperty(name, { type: e.target.value as SchemaProperty['type'] })
                 }
-                className="bg-slate-600 border-none rounded px-2 py-1 text-sm text-white"
+                className="bg-gray-200 border-none rounded px-2 py-1 text-sm text-gray-900"
               >
                 {PROPERTY_TYPES.map((type) => (
                   <option key={type} value={type}>
@@ -591,7 +591,7 @@ function SchemaProperties({
               <select
                 value={prop.format || ''}
                 onChange={(e) => onUpdateProperty(name, { format: e.target.value || undefined })}
-                className="bg-slate-600 border-none rounded px-2 py-1 text-sm text-white"
+                className="bg-gray-200 border-none rounded px-2 py-1 text-sm text-gray-900"
               >
                 {PROPERTY_FORMATS.map((format) => (
                   <option key={format} value={format}>
@@ -605,13 +605,13 @@ function SchemaProperties({
                   type="checkbox"
                   checked={required.includes(name)}
                   onChange={() => onToggleRequired(name)}
-                  className="w-4 h-4 rounded bg-slate-600 border-slate-500 text-blue-600"
+                  className="w-4 h-4 rounded bg-gray-200 border-gray-400 text-blue-600"
                 />
               </div>
 
               <button
                 onClick={() => onRemoveProperty(name)}
-                className="p-1 text-slate-400 hover:text-red-400 transition-colors"
+                className="p-1 text-gray-500 hover:text-red-400 transition-colors"
               >
                 <Trash2 size={14} />
               </button>
@@ -619,7 +619,7 @@ function SchemaProperties({
           ))}
         </div>
       ) : (
-        <div className="text-center py-8 text-slate-500 text-sm">
+        <div className="text-center py-8 text-gray-400 text-sm">
           No properties defined. Add some above.
         </div>
       )}
@@ -635,5 +635,5 @@ function getMethodColor(method: string): string {
     DELETE: 'text-red-400',
     PATCH: 'text-purple-400',
   };
-  return colors[method] || 'text-slate-400';
+  return colors[method] || 'text-gray-500';
 }

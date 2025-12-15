@@ -43,15 +43,15 @@ export function Header() {
   };
 
   return (
-    <header className="h-14 bg-slate-800 border-b border-slate-700 flex items-center px-6 gap-6">
+    <header className="h-14 bg-white border-b border-gray-200 flex items-center px-6 gap-6">
       <div className="flex items-center gap-3">
         <div className="p-2 bg-blue-600 rounded-lg">
           <Layers size={20} className="text-white" />
         </div>
-        <span className="text-lg font-bold text-white tracking-tight">sdcanvas</span>
+        <span className="text-lg font-bold text-gray-900 tracking-tight">sdcanvas</span>
       </div>
 
-      <div className="w-px h-7 bg-slate-600" />
+      <div className="w-px h-7 bg-gray-200" />
 
       <div className="flex items-center gap-2">
         {isEditing ? (
@@ -62,7 +62,7 @@ export function Header() {
             onChange={(e) => setEditValue(e.target.value)}
             onBlur={handleSubmit}
             onKeyDown={handleKeyDown}
-            className="bg-slate-700 border border-slate-500 rounded px-2 py-1 text-sm text-white
+            className="bg-gray-50 border border-gray-300 rounded px-2 py-1 text-sm text-gray-900
                        focus:outline-none focus:border-blue-500 min-w-[200px]"
           />
         ) : (
@@ -71,11 +71,11 @@ export function Header() {
               setEditValue(fileName);
               setIsEditing(true);
             }}
-            className="flex items-center gap-2 px-2 py-1 rounded text-slate-300 hover:text-white
-                       hover:bg-slate-700 transition-colors group"
+            className="flex items-center gap-2 px-2 py-1 rounded text-gray-600 hover:text-gray-900
+                       hover:bg-gray-100 transition-colors group"
           >
             <span className="text-sm font-medium">{fileName}</span>
-            <Pencil size={14} className="text-slate-500 group-hover:text-slate-300" />
+            <Pencil size={14} className="text-gray-400 group-hover:text-gray-600" />
           </button>
         )}
       </div>
@@ -86,29 +86,29 @@ export function Header() {
         <button
           onClick={() => setShowClearConfirm(true)}
           disabled={!hasContent}
-          className="flex items-center gap-2 px-3 py-1.5 rounded text-slate-400 hover:text-red-400
-                     hover:bg-slate-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed
-                     disabled:hover:text-slate-400 disabled:hover:bg-transparent"
+          className="flex items-center gap-2 px-3 py-1.5 rounded text-gray-500 hover:text-red-500
+                     hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed
+                     disabled:hover:text-gray-500 disabled:hover:bg-transparent"
         >
           <Trash2 size={16} />
           <span className="text-sm">Clear Canvas</span>
         </button>
 
         {showClearConfirm && (
-          <div className="absolute right-0 top-full mt-2 bg-slate-700 rounded-lg shadow-xl border border-slate-600 p-4 z-50 w-64">
-            <p className="text-sm text-slate-200 mb-3">
+          <div className="absolute right-0 top-full mt-2 bg-white rounded-lg shadow-xl border border-gray-200 p-4 z-50 w-64">
+            <p className="text-sm text-gray-700 mb-3">
               Clear all {nodes.length} node{nodes.length !== 1 ? 's' : ''} and {edges.length} connection{edges.length !== 1 ? 's' : ''}?
             </p>
             <div className="flex gap-2">
               <button
                 onClick={() => setShowClearConfirm(false)}
-                className="flex-1 px-3 py-1.5 text-sm rounded bg-slate-600 text-slate-300 hover:bg-slate-500 transition-colors"
+                className="flex-1 px-3 py-1.5 text-sm rounded bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={handleClearCanvas}
-                className="flex-1 px-3 py-1.5 text-sm rounded bg-red-600 text-white hover:bg-red-500 transition-colors"
+                className="flex-1 px-3 py-1.5 text-sm rounded bg-red-500 text-white hover:bg-red-600 transition-colors"
               >
                 Clear
               </button>
