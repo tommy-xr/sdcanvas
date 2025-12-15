@@ -88,7 +88,7 @@ export function Canvas({ onOpenSchemaDesigner, onOpenAPIDesigner }: CanvasProps)
   );
 
   return (
-    <div ref={reactFlowWrapper} className="flex-1 h-full">
+    <div ref={reactFlowWrapper} className="flex-1 h-full bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
       <ReactFlow
         nodes={nodes}
         edges={edges}

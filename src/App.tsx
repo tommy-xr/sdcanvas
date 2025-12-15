@@ -61,7 +61,7 @@ function AppContent() {
   return (
     <div className="flex flex-col h-screen w-screen bg-gray-100">
       <Header />
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-hidden p-3 gap-3">
         <ComponentPalette />
         <Canvas
           onOpenSchemaDesigner={handleOpenSchemaDesigner}
