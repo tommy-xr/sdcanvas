@@ -13,8 +13,8 @@ const methodColors: Record<string, string> = {
 
 export function APIServerNode({ data, selected }: NodeProps) {
   const nodeData = data as APIServerNodeData;
-  const displayedEndpoints = nodeData.endpoints?.slice(0, 3) || [];
-  const remainingCount = (nodeData.endpoints?.length || 0) - 3;
+  const displayedEndpoints = nodeData.endpoints?.slice(0, 10) || [];
+  const remainingCount = (nodeData.endpoints?.length || 0) - 10;
 
   return (
     <BaseNode
