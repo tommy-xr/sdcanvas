@@ -13,6 +13,21 @@ const connectionStyles: Record<string, { stroke: string; strokeDasharray?: strin
   cache: { stroke: '#dc382d', strokeDasharray: '8 4' },
 };
 
+const methodColors: Record<string, string> = {
+  GET: 'text-green-400',
+  POST: 'text-blue-400',
+  PUT: 'text-yellow-400',
+  DELETE: 'text-red-400',
+  PATCH: 'text-purple-400',
+};
+
+const queryTypeColors: Record<string, string> = {
+  SELECT: 'text-green-400',
+  INSERT: 'text-blue-400',
+  UPDATE: 'text-yellow-400',
+  DELETE: 'text-red-400',
+};
+
 export function LabeledEdge({
   id,
   sourceX,
@@ -37,6 +52,44 @@ export function LabeledEdge({
 
   const style = connectionStyles[edgeData?.connectionType || 'http'];
 
+  // Determine what badge/prefix to show
+  const renderPrefix = () => {
+    if (edgeData?.connectionType === 'http' && edgeData.method) {
+      return (
+        <span className={`${methodColors[edgeData.method] || 'text-blue-400'} mr-1 font-bold`}>
+          {edgeData.method}
+        </span>
+      );
+    }
+    if (edgeData?.connectionType === 'database' && edgeData.queryType) {
+      return (
+        <span className={`${queryTypeColors[edgeData.queryType] || 'text-slate-400'} mr-1 font-bold`}>
+          {edgeData.queryType}
+        </span>
+      );
+    }
+    if (edgeData?.connectionType === 'websocket' && edgeData.eventName) {
+      return (
+        <span className="text-purple-400 mr-1">
+          {edgeData.eventName}
+        </span>
+      );
+    }
+    return null;
+  };
+
+  // Determine the label text
+  const labelText = () => {
+    if (edgeData?.label) return edgeData.label;
+    if (edgeData?.connectionType === 'database' && edgeData.tableName) {
+      return edgeData.tableName;
+    }
+    return null;
+  };
+
+  const prefix = renderPrefix();
+  const label = labelText();
+
   return (
     <>
       <BaseEdge
@@ -48,7 +101,7 @@ export function LabeledEdge({
           strokeDasharray: style.strokeDasharray,
         }}
       />
-      {edgeData?.label && (
+      {(prefix || label) && (
         <EdgeLabelRenderer>
           <div
             style={{
@@ -62,10 +115,8 @@ export function LabeledEdge({
               ${selected ? 'ring-1 ring-blue-400' : ''}
             `}
           >
-            {edgeData.method && (
-              <span className="text-blue-400 mr-1">{edgeData.method}</span>
-            )}
-            <span className="text-slate-200">{edgeData.label}</span>
+            {prefix}
+            {label && <span className="text-slate-200">{label}</span>}
           </div>
         </EdgeLabelRenderer>
       )}

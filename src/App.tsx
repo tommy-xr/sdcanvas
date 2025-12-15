@@ -5,13 +5,16 @@ import { ComponentPalette } from './components/Sidebar/ComponentPalette';
 import { PropertiesPanel } from './components/Sidebar/PropertiesPanel';
 import { Header } from './components/Header/Header';
 import { SchemaDesignerModal } from './components/SchemaDesigner';
+import { APIDesignerModal } from './components/APIDesigner';
 import { useCanvasStore } from './store/canvasStore';
-import type { PostgreSQLNodeData } from './types/nodes';
+import type { PostgreSQLNodeData, APIServerNodeData } from './types/nodes';
 
 function AppContent() {
   const [schemaDesignerNodeId, setSchemaDesignerNodeId] = useState<string | null>(null);
+  const [apiDesignerNodeId, setApiDesignerNodeId] = useState<string | null>(null);
   const { nodes, updateNode } = useCanvasStore();
 
+  // Schema Designer
   const schemaDesignerNode = schemaDesignerNodeId
     ? nodes.find((n) => n.id === schemaDesignerNodeId && n.type === 'postgresql')
     : null;
@@ -33,13 +36,41 @@ function AppContent() {
     [schemaDesignerNodeId, updateNode]
   );
 
+  // API Designer
+  const apiDesignerNode = apiDesignerNodeId
+    ? nodes.find((n) => n.id === apiDesignerNodeId && n.type === 'apiServer')
+    : null;
+
+  const handleOpenAPIDesigner = useCallback((nodeId: string) => {
+    setApiDesignerNodeId(nodeId);
+  }, []);
+
+  const handleCloseAPIDesigner = useCallback(() => {
+    setApiDesignerNodeId(null);
+  }, []);
+
+  const handleUpdateAPIDesigner = useCallback(
+    (data: Partial<APIServerNodeData>) => {
+      if (apiDesignerNodeId) {
+        updateNode(apiDesignerNodeId, data);
+      }
+    },
+    [apiDesignerNodeId, updateNode]
+  );
+
   return (
     <div className="flex flex-col h-screen w-screen bg-slate-900">
       <Header />
       <div className="flex flex-1 overflow-hidden">
         <ComponentPalette />
-        <Canvas onOpenSchemaDesigner={handleOpenSchemaDesigner} />
-        <PropertiesPanel onOpenSchemaDesigner={handleOpenSchemaDesigner} />
+        <Canvas
+          onOpenSchemaDesigner={handleOpenSchemaDesigner}
+          onOpenAPIDesigner={handleOpenAPIDesigner}
+        />
+        <PropertiesPanel
+          onOpenSchemaDesigner={handleOpenSchemaDesigner}
+          onOpenAPIDesigner={handleOpenAPIDesigner}
+        />
       </div>
 
       {schemaDesignerNode && (
@@ -48,6 +79,16 @@ function AppContent() {
           onClose={handleCloseSchemaDesigner}
           data={schemaDesignerNode.data as PostgreSQLNodeData}
           onUpdate={handleUpdateSchemaDesigner}
+        />
+      )}
+
+      {apiDesignerNode && (
+        <APIDesignerModal
+          isOpen={true}
+          onClose={handleCloseAPIDesigner}
+          data={apiDesignerNode.data as APIServerNodeData}
+          onUpdate={handleUpdateAPIDesigner}
+          allNodes={nodes}
         />
       )}
     </div>

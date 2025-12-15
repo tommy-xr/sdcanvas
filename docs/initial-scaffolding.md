@@ -40,19 +40,28 @@ src/
 │   ├── Edges/
 │   │   ├── LabeledEdge.tsx         # Custom edge with labels
 │   │   └── index.ts
-│   └── SchemaDesigner/             # Database schema designer (Milestone 2)
-│       ├── SchemaDesignerModal.tsx # Main modal container
-│       ├── TableList.tsx           # Table sidebar list
-│       ├── TableEditor.tsx         # Column & index editor
-│       ├── ERDiagram.tsx           # Visual ER diagram
-│       ├── JoinVisualizer.tsx      # JOIN configuration & preview
-│       ├── QueryCostEstimator.tsx  # Query cost analysis
+│   ├── SchemaDesigner/             # Database schema designer (Milestone 2)
+│   │   ├── SchemaDesignerModal.tsx # Main modal container
+│   │   ├── TableList.tsx           # Table sidebar list
+│   │   ├── TableEditor.tsx         # Column & index editor
+│   │   ├── ERDiagram.tsx           # Visual ER diagram
+│   │   ├── JoinVisualizer.tsx      # JOIN configuration & preview
+│   │   ├── QueryCostEstimator.tsx  # Query cost analysis
+│   │   └── index.ts
+│   └── APIDesigner/                # API endpoint designer (Milestone 3)
+│       ├── APIDesignerModal.tsx    # Main modal container
+│       ├── EndpointList.tsx        # Endpoint sidebar list
+│       ├── EndpointEditor.tsx      # Endpoint details editor
+│       ├── SchemaEditor.tsx        # Request/response schema editor
+│       ├── QueryLinker.tsx         # Database query linking
 │       └── index.ts
 ├── store/
-│   └── canvasStore.ts              # Zustand store (nodes, edges, selection)
+│   └── canvasStore.ts              # Zustand store (nodes, edges, selection, validation)
+├── utils/
+│   └── connectionValidation.ts     # Connection validation rules (Milestone 3)
 ├── types/
-│   ├── nodes.ts                    # Node type definitions (incl. DB schema types)
-│   └── edges.ts                    # Edge type definitions
+│   ├── nodes.ts                    # Node type definitions (incl. DB schema, API types)
+│   └── edges.ts                    # Edge type definitions (incl. query types)
 ├── App.tsx
 ├── main.tsx
 └── index.css                       # Tailwind + custom styles
@@ -98,33 +107,107 @@ src/
 
 ---
 
+## Completed: Milestone 2 - Relational Database Deep Dive
+
+### Features Implemented
+
+**Schema Designer Modal** (double-click PostgreSQL node or use Properties Panel button)
+- Tabbed interface: Tables, ER Diagram, Joins, Cost Estimation
+- Full-screen modal with intuitive navigation
+
+**Table & Column Management**
+- Create/edit/delete tables with estimated row counts
+- Comprehensive PostgreSQL column types:
+  - Numeric: serial, bigserial, smallint, integer, bigint, decimal, numeric, real, double precision
+  - Character: char, varchar, text
+  - Date/Time: timestamp, timestamptz, date, time, timetz, interval
+  - JSON: json, jsonb
+  - Arrays: integer[], text[], varchar[], jsonb[]
+  - Other: boolean, uuid, bytea
+- Column constraints: Primary Key, Not Null, Unique
+- Foreign key relationships with table/column selection
+
+**Index Management**
+- Multiple index types: B-tree, Hash, GIN, GiST, BRIN
+- GIN indexes recommended for JSONB columns (with helpful tips)
+- Composite indexes with column ordering
+- Unique index option
+- Live SQL preview for each index definition
+
+**ER Diagram Visualization**
+- Visual representation of all tables
+- Foreign key relationships displayed as arrows
+- Pan/zoom controls with reset
+- Legend for primary keys, foreign keys, and relationships
+- Cardinality indicators (1:n)
+
+**JOIN Visualization**
+- Configure joins between any tables
+- All join types: INNER, LEFT, RIGHT, FULL, CROSS
+- Visual Venn diagram representation of join semantics
+- Live SQL preview generation
+- Result columns preview showing merged schema
+
+**Query Cost Estimation**
+- Configure queries with WHERE columns, ORDER BY, JOINs, LIMIT
+- Scan type detection (sequential scan vs index scan)
+- Index usage analysis
+- Performance warnings for:
+  - Missing indexes on WHERE columns
+  - JSONB columns without GIN indexes
+  - ORDER BY without supporting index
+  - Join columns without indexes
+- Visual feedback: green for optimized queries, orange for warnings
+
+---
+
+## Completed: Milestone 3 - API Design + Connections
+
+### Features Implemented
+
+**API Designer Modal** (double-click API Server node or use Properties Panel button)
+- Tabbed interface: Endpoints, Schemas, DB Queries
+- Full-screen modal with intuitive navigation
+
+**Endpoint Management**
+- Create/edit/delete API endpoints
+- HTTP methods: GET, POST, PUT, DELETE, PATCH
+- Path editing with path parameter detection
+- Endpoint descriptions
+- Quick preview of endpoint configuration
+
+**Request/Response Schema Editor**
+- JSON Schema-based request and response body definitions
+- Property management: add, edit, remove properties
+- Property types: string, number, boolean, object, array
+- Property formats: email, date-time, date, uuid, uri, hostname
+- Required field marking
+- Live JSON Schema preview
+
+**Database Query Linking**
+- Link endpoints to database operations
+- Query types: SELECT, INSERT, UPDATE, DELETE
+- Target database and table selection
+- Query descriptions
+- SQL preview for each linked query
+- Visual data flow diagram showing endpoint → query relationships
+
+**Enhanced Edge Visuals**
+- HTTP method colors: GET (green), POST (blue), PUT (yellow), DELETE (red), PATCH (purple)
+- Database query type colors: SELECT (green), INSERT (blue), UPDATE (yellow), DELETE (red)
+- WebSocket event name display
+- Table name display for database connections
+
+**Connection Validation System**
+- Rule-based connection validation between node types
+- Prevents invalid connections (e.g., User → Database directly)
+- Suggests appropriate connection types automatically
+- Warnings for suboptimal patterns (e.g., direct API-to-API without load balancer)
+- Validation messages stored for UI feedback
+
+---
+
 ## Upcoming Milestones
-
-### Milestone 2: Relational Database Deep Dive
-
-1. Schema designer modal for database nodes:
-   - Table creation/editing
-   - Column definitions (name, type, PK, FK, NOT NULL, UNIQUE)
-   - Foreign key relationships to other tables
-   - Index definitions (single/composite, B-tree/hash)
-2. Visual relationship diagram within the schema designer
-3. JOIN visualization:
-   - Select tables to join
-   - Show join type (INNER, LEFT, RIGHT, FULL)
-   - Preview resulting columns
-4. Query cost estimation based on indexes and table sizes
-
-### Milestone 3: API Design + Connections
-
-1. API endpoint designer for API servers:
-   - HTTP method + path
-   - Request/response schemas
-   - Link endpoints to database queries
-2. Enhanced edge types:
-   - HTTP (GET, POST, PUT, DELETE labels)
-   - WebSocket connections
-   - Database queries (SELECT, INSERT, etc.)
-3. Connection validation (e.g., API can't directly connect to another API without LB)
 
 ### Milestone 4: Simulation Foundation
 

@@ -12,6 +12,7 @@ import type {
 
 interface PropertiesPanelProps {
   onOpenSchemaDesigner: (nodeId: string) => void;
+  onOpenAPIDesigner: (nodeId: string) => void;
 }
 
 function UserProperties({ data, onChange }: { data: UserNodeData; onChange: (data: Partial<UserNodeData>) => void }) {
@@ -53,7 +54,15 @@ function LoadBalancerProperties({ data, onChange }: { data: LoadBalancerNodeData
   );
 }
 
-function APIServerProperties({ data, onChange }: { data: APIServerNodeData; onChange: (data: Partial<APIServerNodeData>) => void }) {
+function APIServerProperties({
+  data,
+  onChange,
+  onOpenAPIDesigner,
+}: {
+  data: APIServerNodeData;
+  onChange: (data: Partial<APIServerNodeData>) => void;
+  onOpenAPIDesigner?: () => void;
+}) {
   const addEndpoint = () => {
     const newEndpoint = {
       id: `endpoint-${Date.now()}`,
@@ -117,6 +126,19 @@ function APIServerProperties({ data, onChange }: { data: APIServerNodeData; onCh
           ))}
         </div>
       </div>
+      {onOpenAPIDesigner && (
+        <button
+          onClick={onOpenAPIDesigner}
+          className="flex items-center justify-center gap-2 w-full bg-slate-700 hover:bg-slate-600
+                     text-slate-300 border border-slate-600 rounded-lg py-2 text-sm transition-colors"
+        >
+          <ExternalLink size={14} />
+          Open API Designer
+        </button>
+      )}
+      <p className="text-xs text-slate-500">
+        Or double-click the node on the canvas
+      </p>
     </div>
   );
 }
@@ -286,7 +308,7 @@ function StickyNoteProperties({ data, onChange }: { data: StickyNoteNodeData; on
   );
 }
 
-export function PropertiesPanel({ onOpenSchemaDesigner }: PropertiesPanelProps) {
+export function PropertiesPanel({ onOpenSchemaDesigner, onOpenAPIDesigner }: PropertiesPanelProps) {
   const { nodes, selectedNodeId, updateNode, deleteNode, setSelectedNodeId } = useCanvasStore();
   const selectedNode = nodes.find((n) => n.id === selectedNodeId);
 
@@ -322,7 +344,13 @@ export function PropertiesPanel({ onOpenSchemaDesigner }: PropertiesPanelProps) 
       case 'loadBalancer':
         return <LoadBalancerProperties data={selectedNode.data as LoadBalancerNodeData} onChange={handleChange} />;
       case 'apiServer':
-        return <APIServerProperties data={selectedNode.data as APIServerNodeData} onChange={handleChange} />;
+        return (
+          <APIServerProperties
+            data={selectedNode.data as APIServerNodeData}
+            onChange={handleChange}
+            onOpenAPIDesigner={() => onOpenAPIDesigner(selectedNode.id)}
+          />
+        );
       case 'postgresql':
         return (
           <PostgreSQLProperties

@@ -7,13 +7,15 @@ import {
 } from '@xyflow/react';
 import type { NodeChange, EdgeChange, Connection } from '@xyflow/react';
 import type { SystemNode } from '../types/nodes';
-import type { SystemEdge, ConnectionData } from '../types/edges';
+import type { SystemEdge, ConnectionData, ConnectionValidation } from '../types/edges';
+import { validateConnection, suggestConnectionType } from '../utils/connectionValidation';
 
 interface CanvasState {
   nodes: SystemNode[];
   edges: SystemEdge[];
   selectedNodeId: string | null;
   fileName: string;
+  lastConnectionValidation: ConnectionValidation | null;
 
   // Actions
   setNodes: (nodes: SystemNode[]) => void;
@@ -27,6 +29,7 @@ interface CanvasState {
   deleteNode: (nodeId: string) => void;
   setSelectedNodeId: (nodeId: string | null) => void;
   clearCanvas: () => void;
+  clearLastValidation: () => void;
 }
 
 export const useCanvasStore = create<CanvasState>()(
@@ -36,6 +39,7 @@ export const useCanvasStore = create<CanvasState>()(
       edges: [],
       selectedNodeId: null,
       fileName: 'Untitled Design',
+      lastConnectionValidation: null,
 
       setNodes: (nodes) => set({ nodes }),
       setEdges: (edges) => set({ edges }),
@@ -54,20 +58,42 @@ export const useCanvasStore = create<CanvasState>()(
       },
 
       onConnect: (connection) => {
+        const nodes = get().nodes;
+        const sourceNode = nodes.find((n) => n.id === connection.source);
+        const targetNode = nodes.find((n) => n.id === connection.target);
+
+        if (!sourceNode || !targetNode) return;
+
+        // Get the suggested connection type
+        const connectionType = suggestConnectionType(sourceNode, targetNode);
+
+        // Validate the connection
+        const validation = validateConnection(sourceNode, targetNode, connectionType);
+
+        // Store validation result (for showing warnings/errors)
+        set({ lastConnectionValidation: validation });
+
+        // If invalid, don't create the connection
+        if (!validation.isValid) {
+          return;
+        }
+
         const newEdge: SystemEdge = {
           ...connection,
           id: `edge-${Date.now()}`,
           source: connection.source || '',
           target: connection.target || '',
           data: {
-            connectionType: 'http',
-            label: 'HTTP',
+            connectionType,
+            label: connectionType === 'http' ? 'HTTP' : connectionType === 'database' ? 'Query' : connectionType.toUpperCase(),
           } as ConnectionData,
         };
         set({
           edges: addEdge(newEdge, get().edges) as SystemEdge[],
         });
       },
+
+      clearLastValidation: () => set({ lastConnectionValidation: null }),
 
       addNode: (node) => {
         set({ nodes: [...get().nodes, node] });

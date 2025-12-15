@@ -17,9 +17,10 @@ import type { SystemNode, SystemNodeType } from '../../types/nodes';
 
 interface CanvasProps {
   onOpenSchemaDesigner: (nodeId: string) => void;
+  onOpenAPIDesigner: (nodeId: string) => void;
 }
 
-export function Canvas({ onOpenSchemaDesigner }: CanvasProps) {
+export function Canvas({ onOpenSchemaDesigner, onOpenAPIDesigner }: CanvasProps) {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const { screenToFlowPosition } = useReactFlow();
   const {
@@ -42,9 +43,11 @@ export function Canvas({ onOpenSchemaDesigner }: CanvasProps) {
     (_, node) => {
       if (node.type === 'postgresql') {
         onOpenSchemaDesigner(node.id);
+      } else if (node.type === 'apiServer') {
+        onOpenAPIDesigner(node.id);
       }
     },
-    [onOpenSchemaDesigner]
+    [onOpenSchemaDesigner, onOpenAPIDesigner]
   );
 
   const onPaneClick = useCallback(() => {

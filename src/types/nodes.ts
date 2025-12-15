@@ -27,10 +27,41 @@ export interface APIServerNodeData extends BaseNodeData {
   endpoints: APIEndpoint[];
 }
 
+export type HTTPMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+
 export interface APIEndpoint {
   id: string;
-  method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+  method: HTTPMethod;
   path: string;
+  description?: string;
+  requestSchema?: SchemaDefinition;
+  responseSchema?: SchemaDefinition;
+  linkedQueries?: LinkedQuery[];
+}
+
+// Schema definition for request/response bodies
+export interface SchemaDefinition {
+  type: 'object' | 'array' | 'string' | 'number' | 'boolean';
+  properties?: Record<string, SchemaProperty>;
+  items?: SchemaDefinition; // for arrays
+  required?: string[];
+  example?: string;
+}
+
+export interface SchemaProperty {
+  type: 'string' | 'number' | 'boolean' | 'object' | 'array';
+  description?: string;
+  format?: string; // e.g., 'email', 'date-time', 'uuid'
+  items?: SchemaProperty; // for arrays
+  properties?: Record<string, SchemaProperty>; // for nested objects
+}
+
+// Link endpoints to database queries
+export interface LinkedQuery {
+  id: string;
+  targetNodeId: string; // ID of the database node
+  targetTableId: string; // ID of the table
+  queryType: 'SELECT' | 'INSERT' | 'UPDATE' | 'DELETE';
   description?: string;
 }
 
