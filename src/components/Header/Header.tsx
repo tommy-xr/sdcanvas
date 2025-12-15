@@ -1,12 +1,20 @@
 import { useState, useEffect, useRef } from 'react';
-import { Layers, Pencil } from 'lucide-react';
+import { Layers, Pencil, Trash2 } from 'lucide-react';
 import { useCanvasStore } from '../../store/canvasStore';
 
 export function Header() {
-  const { fileName, setFileName } = useCanvasStore();
+  const { fileName, setFileName, clearCanvas, nodes, edges } = useCanvasStore();
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(fileName);
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const hasContent = nodes.length > 0 || edges.length > 0;
+
+  const handleClearCanvas = () => {
+    clearCanvas();
+    setShowClearConfirm(false);
+  };
 
   useEffect(() => {
     if (isEditing && inputRef.current) {
@@ -69,6 +77,43 @@ export function Header() {
             <span className="text-sm font-medium">{fileName}</span>
             <Pencil size={14} className="text-slate-500 group-hover:text-slate-300" />
           </button>
+        )}
+      </div>
+
+      <div className="flex-1" />
+
+      <div className="relative">
+        <button
+          onClick={() => setShowClearConfirm(true)}
+          disabled={!hasContent}
+          className="flex items-center gap-2 px-3 py-1.5 rounded text-slate-400 hover:text-red-400
+                     hover:bg-slate-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed
+                     disabled:hover:text-slate-400 disabled:hover:bg-transparent"
+        >
+          <Trash2 size={16} />
+          <span className="text-sm">Clear Canvas</span>
+        </button>
+
+        {showClearConfirm && (
+          <div className="absolute right-0 top-full mt-2 bg-slate-700 rounded-lg shadow-xl border border-slate-600 p-4 z-50 w-64">
+            <p className="text-sm text-slate-200 mb-3">
+              Clear all {nodes.length} node{nodes.length !== 1 ? 's' : ''} and {edges.length} connection{edges.length !== 1 ? 's' : ''}?
+            </p>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setShowClearConfirm(false)}
+                className="flex-1 px-3 py-1.5 text-sm rounded bg-slate-600 text-slate-300 hover:bg-slate-500 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleClearCanvas}
+                className="flex-1 px-3 py-1.5 text-sm rounded bg-red-600 text-white hover:bg-red-500 transition-colors"
+              >
+                Clear
+              </button>
+            </div>
+          </div>
         )}
       </div>
     </header>
