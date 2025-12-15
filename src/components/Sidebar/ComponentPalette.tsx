@@ -125,7 +125,7 @@ function DraggableComponent({ component }: { component: ComponentDefinition }) {
 
 export function ComponentPalette() {
   return (
-    <div className="w-72 bg-white border border-gray-200 rounded-xl flex flex-col shadow-sm">
+    <div className="w-72 bg-white border-r border-gray-200 flex flex-col">
       <div className="px-6 pt-5 pb-4">
         <h2 className="text-lg font-semibold text-gray-900 mb-2">Components</h2>
         <p className="text-xs text-gray-500 leading-relaxed">

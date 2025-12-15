@@ -61,12 +61,14 @@ function AppContent() {
   return (
     <div className="flex flex-col h-screen w-screen bg-gray-100">
       <Header />
-      <div className="flex flex-1 overflow-hidden p-3 gap-3">
+      <div className="flex flex-1 overflow-hidden">
         <ComponentPalette />
-        <Canvas
-          onOpenSchemaDesigner={handleOpenSchemaDesigner}
-          onOpenAPIDesigner={handleOpenAPIDesigner}
-        />
+        <div className="flex flex-1 gap-3 p-3">
+          <Canvas
+            onOpenSchemaDesigner={handleOpenSchemaDesigner}
+            onOpenAPIDesigner={handleOpenAPIDesigner}
+          />
+        </div>
         <PropertiesPanel
           onOpenSchemaDesigner={handleOpenSchemaDesigner}
           onOpenAPIDesigner={handleOpenAPIDesigner}

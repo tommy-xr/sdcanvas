@@ -314,7 +314,7 @@ export function PropertiesPanel({ onOpenSchemaDesigner, onOpenAPIDesigner }: Pro
 
   if (!selectedNode) {
     return (
-      <div className="w-80 bg-white border border-gray-200 rounded-xl shadow-sm">
+      <div className="w-80 bg-white border-l border-gray-200">
         <div className="px-6 py-5">
           <h2 className="text-lg font-semibold text-gray-900 mb-3">Properties</h2>
           <p className="text-sm text-gray-500">
@@ -371,7 +371,7 @@ export function PropertiesPanel({ onOpenSchemaDesigner, onOpenAPIDesigner }: Pro
   };
 
   return (
-    <div className="w-80 bg-white border border-gray-200 rounded-xl shadow-sm flex flex-col">
+    <div className="w-80 bg-white border-l border-gray-200 flex flex-col">
       <div className="px-6 pt-5 pb-4 flex items-center justify-between">
         <h2 className="text-lg font-semibold text-gray-900">Properties</h2>
         <button
