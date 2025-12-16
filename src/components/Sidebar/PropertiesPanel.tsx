@@ -3,6 +3,8 @@ import { Trash2, X, ExternalLink } from 'lucide-react';
 import type {
   UserNodeData,
   LoadBalancerNodeData,
+  CDNNodeData,
+  CDNCacheRule,
   APIServerNodeData,
   PostgreSQLNodeData,
   S3BucketNodeData,
@@ -50,6 +52,92 @@ function LoadBalancerProperties({ data, onChange }: { data: LoadBalancerNodeData
           <option value="ip-hash">IP Hash</option>
           <option value="weighted">Weighted</option>
         </select>
+      </div>
+    </div>
+  );
+}
+
+function CDNProperties({ data, onChange }: { data: CDNNodeData; onChange: (data: Partial<CDNNodeData>) => void }) {
+  const addCacheRule = () => {
+    const newRule: CDNCacheRule = {
+      id: `rule-${Date.now()}`,
+      pattern: '/*',
+    };
+    onChange({ cacheRules: [...(data.cacheRules || []), newRule] });
+  };
+
+  const removeCacheRule = (id: string) => {
+    onChange({ cacheRules: data.cacheRules?.filter((r) => r.id !== id) || [] });
+  };
+
+  const updateCacheRule = (id: string, updates: Partial<CDNCacheRule>) => {
+    onChange({
+      cacheRules: data.cacheRules?.map((r) =>
+        r.id === id ? { ...r, ...updates } : r
+      ) || [],
+    });
+  };
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <label className="block text-xs text-gray-500 mb-1">Provider</label>
+        <select
+          value={data.provider || 'generic'}
+          onChange={(e) => onChange({ provider: e.target.value as CDNNodeData['provider'] })}
+          className="w-full bg-gray-50 border border-gray-300 rounded px-3 py-2 text-sm text-gray-900"
+        >
+          <option value="generic">Generic CDN</option>
+          <option value="cloudflare">Cloudflare</option>
+          <option value="cloudfront">AWS CloudFront</option>
+          <option value="akamai">Akamai</option>
+          <option value="fastly">Fastly</option>
+        </select>
+      </div>
+      <div>
+        <div className="flex items-center justify-between mb-2">
+          <label className="text-xs text-gray-500">Cache Rules</label>
+          <button
+            onClick={addCacheRule}
+            className="text-xs bg-blue-500 hover:bg-blue-400 text-white px-2 py-1 rounded"
+          >
+            + Add
+          </button>
+        </div>
+        <div className="space-y-2 max-h-48 overflow-y-auto">
+          {data.cacheRules?.map((rule) => (
+            <div key={rule.id} className="bg-gray-100 p-2 rounded space-y-2">
+              <div className="flex items-center gap-1">
+                <input
+                  type="text"
+                  value={rule.pattern}
+                  onChange={(e) => updateCacheRule(rule.id, { pattern: e.target.value })}
+                  placeholder="/static/*"
+                  className="flex-1 bg-gray-200 border-none rounded px-2 py-1 text-xs text-gray-900 font-mono"
+                />
+                <button
+                  onClick={() => removeCacheRule(rule.id)}
+                  className="text-gray-400 hover:text-red-500"
+                >
+                  <X size={14} />
+                </button>
+              </div>
+              <div className="flex items-center gap-2">
+                <input
+                  type="number"
+                  value={rule.ttl || ''}
+                  onChange={(e) => updateCacheRule(rule.id, { ttl: e.target.value ? parseInt(e.target.value, 10) : undefined })}
+                  placeholder="TTL (sec)"
+                  className="w-24 bg-gray-200 border-none rounded px-2 py-1 text-xs text-gray-900"
+                />
+                <span className="text-[10px] text-gray-500">seconds</span>
+              </div>
+            </div>
+          ))}
+          {(!data.cacheRules || data.cacheRules.length === 0) && (
+            <div className="text-xs text-gray-400 italic">No cache rules defined</div>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -383,6 +471,8 @@ export function PropertiesPanel({ onOpenSchemaDesigner, onOpenAPIDesigner, onOpe
         return <UserProperties data={selectedNode.data as UserNodeData} onChange={handleChange} />;
       case 'loadBalancer':
         return <LoadBalancerProperties data={selectedNode.data as LoadBalancerNodeData} onChange={handleChange} />;
+      case 'cdn':
+        return <CDNProperties data={selectedNode.data as CDNNodeData} onChange={handleChange} />;
       case 'apiServer':
         return (
           <APIServerProperties

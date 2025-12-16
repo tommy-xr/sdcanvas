@@ -10,6 +10,7 @@ const connectionRules: Record<
   user: {
     user: [],
     loadBalancer: ['http', 'websocket'],
+    cdn: ['http'], // Users connect to CDN
     apiServer: ['http', 'websocket'], // Direct connection allowed but with warning
     postgresql: [],
     s3Bucket: ['http'], // Direct CDN access
@@ -19,15 +20,27 @@ const connectionRules: Record<
   loadBalancer: {
     user: [],
     loadBalancer: ['http'], // LB chaining
+    cdn: [],
     apiServer: ['http', 'websocket'],
     postgresql: [],
     s3Bucket: [],
     redis: [],
     stickyNote: [],
   },
+  cdn: {
+    user: [],
+    loadBalancer: ['http'], // CDN forwards to load balancer (origin)
+    cdn: [],
+    apiServer: ['http'], // CDN can connect to API server as origin
+    postgresql: [],
+    s3Bucket: ['http'], // CDN can pull from S3 origin
+    redis: [],
+    stickyNote: [],
+  },
   apiServer: {
     user: [],
     loadBalancer: ['http'], // Response back through LB
+    cdn: [],
     apiServer: ['http'], // Service-to-service (with warning if no LB)
     postgresql: ['database'],
     s3Bucket: ['http'],
@@ -37,6 +50,7 @@ const connectionRules: Record<
   postgresql: {
     user: [],
     loadBalancer: [],
+    cdn: [],
     apiServer: [],
     postgresql: ['database'], // Replication
     s3Bucket: [],
@@ -46,6 +60,7 @@ const connectionRules: Record<
   s3Bucket: {
     user: [],
     loadBalancer: [],
+    cdn: [],
     apiServer: [],
     postgresql: [],
     s3Bucket: [],
@@ -55,6 +70,7 @@ const connectionRules: Record<
   redis: {
     user: [],
     loadBalancer: [],
+    cdn: [],
     apiServer: [],
     postgresql: [],
     s3Bucket: [],
@@ -64,6 +80,7 @@ const connectionRules: Record<
   stickyNote: {
     user: [],
     loadBalancer: [],
+    cdn: [],
     apiServer: [],
     postgresql: [],
     s3Bucket: [],
@@ -158,6 +175,7 @@ function formatNodeType(type: SystemNodeType): string {
   const names: Record<SystemNodeType, string> = {
     user: 'User Client',
     loadBalancer: 'Load Balancer',
+    cdn: 'CDN',
     apiServer: 'API Server',
     postgresql: 'Database',
     s3Bucket: 'Blob Storage',

@@ -2,6 +2,7 @@ import type { DragEvent } from 'react';
 import {
   Monitor,
   Network,
+  Globe,
   Server,
   Database,
   HardDrive,
@@ -37,6 +38,17 @@ const components: ComponentDefinition[] = [
     defaultData: {
       label: 'Load Balancer',
       algorithm: 'round-robin',
+    },
+  },
+  {
+    type: 'cdn',
+    label: 'CDN',
+    icon: <Globe size={20} />,
+    color: '#8b5cf6',
+    defaultData: {
+      label: 'CDN',
+      provider: 'generic',
+      cacheRules: [],
     },
   },
   {

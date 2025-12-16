@@ -3,6 +3,7 @@ import type { Node } from '@xyflow/react';
 export type SystemNodeType =
   | 'user'
   | 'loadBalancer'
+  | 'cdn'
   | 'apiServer'
   | 'postgresql'
   | 's3Bucket'
@@ -21,6 +22,18 @@ export interface UserNodeData extends BaseNodeData {
 
 export interface LoadBalancerNodeData extends BaseNodeData {
   algorithm: 'round-robin' | 'least-connections' | 'ip-hash' | 'weighted';
+}
+
+export interface CDNCacheRule {
+  id: string;
+  pattern: string; // e.g., "/static/*", "*.jpg", "/api/v1/public/*"
+  ttl?: number; // TTL in seconds
+  description?: string;
+}
+
+export interface CDNNodeData extends BaseNodeData {
+  provider?: 'cloudflare' | 'cloudfront' | 'akamai' | 'fastly' | 'generic';
+  cacheRules?: CDNCacheRule[];
 }
 
 export interface APIServerNodeData extends BaseNodeData {
@@ -219,6 +232,7 @@ export interface StickyNoteNodeData extends BaseNodeData {
 export type SystemNodeData =
   | UserNodeData
   | LoadBalancerNodeData
+  | CDNNodeData
   | APIServerNodeData
   | PostgreSQLNodeData
   | S3BucketNodeData

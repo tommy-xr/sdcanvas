@@ -1,6 +1,7 @@
 import type { NodeTypes } from '@xyflow/react';
 import { UserNode } from './UserNode';
 import { LoadBalancerNode } from './LoadBalancerNode';
+import { CDNNode } from './CDNNode';
 import { APIServerNode } from './APIServerNode';
 import { PostgreSQLNode } from './PostgreSQLNode';
 import { S3BucketNode } from './S3BucketNode';
@@ -10,6 +11,7 @@ import { StickyNoteNode } from './StickyNoteNode';
 export const nodeTypes: NodeTypes = {
   user: UserNode,
   loadBalancer: LoadBalancerNode,
+  cdn: CDNNode,
   apiServer: APIServerNode,
   postgresql: PostgreSQLNode,
   s3Bucket: S3BucketNode,
@@ -20,6 +22,7 @@ export const nodeTypes: NodeTypes = {
 export {
   UserNode,
   LoadBalancerNode,
+  CDNNode,
   APIServerNode,
   PostgreSQLNode,
   S3BucketNode,

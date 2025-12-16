@@ -126,6 +126,7 @@ export function Canvas({ onOpenSchemaDesigner, onOpenAPIDesigner, onOpenRedisKey
             const colors: Record<string, string> = {
               user: '#22c55e',
               loadBalancer: '#f59e0b',
+              cdn: '#8b5cf6',
               apiServer: '#3b82f6',
               postgresql: '#336791',
               s3Bucket: '#ff9900',

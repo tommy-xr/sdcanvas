@@ -1,8 +1,6 @@
 - Export / load JSON
     - Consider back-compat (version in JSON, versioned loaders + upgraders)
     - Testing, API / core sim + model library split out and independent of UI
-- Key names for redis/cache
-- Key name format for blob storage
 - Message queue entity
 - CDN entity
 - Non-HTTP transport (websocket, raw tcp, udp)
