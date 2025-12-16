@@ -83,8 +83,9 @@ export function Canvas({ onOpenSchemaDesigner, onOpenAPIDesigner }: CanvasProps)
       };
 
       useCanvasStore.getState().addNode(newNode);
+      setSelectedNodeId(newNode.id);
     },
-    [screenToFlowPosition]
+    [screenToFlowPosition, setSelectedNodeId]
   );
 
   return (

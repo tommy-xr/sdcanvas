@@ -1,9 +1,9 @@
-- Clear button
 - Export / load JSON
     - Consider back-compat (version in JSON, versioned loaders + upgraders)
     - Testing, API / core sim + model library split out and independent of UI
 - Key names for redis/cache
-- Styling improvemens - better color scheme
+- Key name format for blob storage
+- Message queue entity
 - CDN entity
 - Non-HTTP transport (websocket, raw tcp, udp)
 - Keyboard shortcuts
@@ -13,6 +13,7 @@
 - Ability to branch - fusion 360 timeline view
 - Non-local
 - GPT integration (BYOK)
+    - AI Review
 - Structure - entities & notes?
 - Leetcode for SD
     - Initial set of sample problems
