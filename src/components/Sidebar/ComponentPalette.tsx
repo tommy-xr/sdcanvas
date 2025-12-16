@@ -7,6 +7,7 @@ import {
   Database,
   HardDrive,
   Zap,
+  MessageSquare,
   StickyNote,
 } from 'lucide-react';
 import type { SystemNodeType } from '../../types/nodes';
@@ -20,6 +21,17 @@ interface ComponentDefinition {
 }
 
 const components: ComponentDefinition[] = [
+  {
+    type: 'stickyNote',
+    label: 'Sticky Note',
+    icon: <StickyNote size={20} />,
+    color: '#eab308',
+    defaultData: {
+      label: 'Note',
+      content: '',
+      color: 'yellow',
+    },
+  },
   {
     type: 'user',
     label: 'User Client',
@@ -94,14 +106,15 @@ const components: ComponentDefinition[] = [
     },
   },
   {
-    type: 'stickyNote',
-    label: 'Sticky Note',
-    icon: <StickyNote size={20} />,
-    color: '#eab308',
+    type: 'messageQueue',
+    label: 'Message Queue',
+    icon: <MessageSquare size={20} />,
+    color: '#ec4899',
     defaultData: {
-      label: 'Note',
-      content: '',
-      color: 'yellow',
+      label: 'Queue',
+      provider: 'generic',
+      queueType: 'standard',
+      topics: [],
     },
   },
 ];

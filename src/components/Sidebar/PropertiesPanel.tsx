@@ -9,6 +9,8 @@ import type {
   PostgreSQLNodeData,
   S3BucketNodeData,
   RedisNodeData,
+  MessageQueueNodeData,
+  MessageQueueTopic,
   StickyNoteNodeData,
 } from '../../types/nodes';
 
@@ -395,6 +397,90 @@ function RedisProperties({
   );
 }
 
+function MessageQueueProperties({ data, onChange }: { data: MessageQueueNodeData; onChange: (data: Partial<MessageQueueNodeData>) => void }) {
+  const addTopic = () => {
+    const newTopic: MessageQueueTopic = {
+      id: `topic-${Date.now()}`,
+      name: 'new-topic',
+    };
+    onChange({ topics: [...(data.topics || []), newTopic] });
+  };
+
+  const removeTopic = (id: string) => {
+    onChange({ topics: data.topics?.filter((t) => t.id !== id) || [] });
+  };
+
+  const updateTopic = (id: string, updates: Partial<MessageQueueTopic>) => {
+    onChange({
+      topics: data.topics?.map((t) =>
+        t.id === id ? { ...t, ...updates } : t
+      ) || [],
+    });
+  };
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <label className="block text-xs text-gray-500 mb-1">Provider</label>
+        <select
+          value={data.provider || 'generic'}
+          onChange={(e) => onChange({ provider: e.target.value as MessageQueueNodeData['provider'] })}
+          className="w-full bg-gray-50 border border-gray-300 rounded px-3 py-2 text-sm text-gray-900"
+        >
+          <option value="generic">Generic Queue</option>
+          <option value="sqs">AWS SQS</option>
+          <option value="rabbitmq">RabbitMQ</option>
+          <option value="kafka">Apache Kafka</option>
+          <option value="pubsub">Google Pub/Sub</option>
+        </select>
+      </div>
+      <div>
+        <label className="block text-xs text-gray-500 mb-1">Queue Type</label>
+        <select
+          value={data.queueType || 'standard'}
+          onChange={(e) => onChange({ queueType: e.target.value as MessageQueueNodeData['queueType'] })}
+          className="w-full bg-gray-50 border border-gray-300 rounded px-3 py-2 text-sm text-gray-900"
+        >
+          <option value="standard">Standard</option>
+          <option value="fifo">FIFO (Ordered)</option>
+        </select>
+      </div>
+      <div>
+        <div className="flex items-center justify-between mb-2">
+          <label className="text-xs text-gray-500">Topics / Queues</label>
+          <button
+            onClick={addTopic}
+            className="text-xs bg-blue-500 hover:bg-blue-400 text-white px-2 py-1 rounded"
+          >
+            + Add
+          </button>
+        </div>
+        <div className="space-y-2 max-h-48 overflow-y-auto">
+          {data.topics?.map((topic) => (
+            <div key={topic.id} className="flex items-center gap-1 bg-gray-100 p-2 rounded">
+              <input
+                type="text"
+                value={topic.name}
+                onChange={(e) => updateTopic(topic.id, { name: e.target.value })}
+                className="flex-1 bg-gray-200 border-none rounded px-2 py-1 text-xs text-gray-900 font-mono"
+              />
+              <button
+                onClick={() => removeTopic(topic.id)}
+                className="text-gray-400 hover:text-red-500"
+              >
+                <X size={14} />
+              </button>
+            </div>
+          ))}
+          {(!data.topics || data.topics.length === 0) && (
+            <div className="text-xs text-gray-400 italic">No topics defined</div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const noteColors = [
   { value: 'yellow', label: 'Yellow', class: 'bg-yellow-300' },
   { value: 'blue', label: 'Blue', class: 'bg-blue-300' },
@@ -499,6 +585,8 @@ export function PropertiesPanel({ onOpenSchemaDesigner, onOpenAPIDesigner, onOpe
             onOpenKeyDesigner={() => onOpenRedisKeyDesigner(selectedNode.id)}
           />
         );
+      case 'messageQueue':
+        return <MessageQueueProperties data={selectedNode.data as MessageQueueNodeData} onChange={handleChange} />;
       case 'stickyNote':
         return <StickyNoteProperties data={selectedNode.data as StickyNoteNodeData} onChange={handleChange} />;
       default:

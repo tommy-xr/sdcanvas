@@ -15,6 +15,7 @@ const connectionRules: Record<
     postgresql: [],
     s3Bucket: ['http'], // Direct CDN access
     redis: [],
+    messageQueue: [],
     stickyNote: [],
   },
   loadBalancer: {
@@ -25,6 +26,7 @@ const connectionRules: Record<
     postgresql: [],
     s3Bucket: [],
     redis: [],
+    messageQueue: [],
     stickyNote: [],
   },
   cdn: {
@@ -35,6 +37,7 @@ const connectionRules: Record<
     postgresql: [],
     s3Bucket: ['http'], // CDN can pull from S3 origin
     redis: [],
+    messageQueue: [],
     stickyNote: [],
   },
   apiServer: {
@@ -45,6 +48,7 @@ const connectionRules: Record<
     postgresql: ['database'],
     s3Bucket: ['http'],
     redis: ['cache'],
+    messageQueue: ['http'], // API server publishes to queue
     stickyNote: [],
   },
   postgresql: {
@@ -55,6 +59,7 @@ const connectionRules: Record<
     postgresql: ['database'], // Replication
     s3Bucket: [],
     redis: [],
+    messageQueue: [],
     stickyNote: [],
   },
   s3Bucket: {
@@ -65,6 +70,7 @@ const connectionRules: Record<
     postgresql: [],
     s3Bucket: [],
     redis: [],
+    messageQueue: [],
     stickyNote: [],
   },
   redis: {
@@ -75,6 +81,18 @@ const connectionRules: Record<
     postgresql: [],
     s3Bucket: [],
     redis: ['cache'], // Redis cluster
+    messageQueue: [],
+    stickyNote: [],
+  },
+  messageQueue: {
+    user: [],
+    loadBalancer: [],
+    cdn: [],
+    apiServer: ['http'], // Queue triggers workers/consumers
+    postgresql: [],
+    s3Bucket: [],
+    redis: [],
+    messageQueue: [], // Could allow chaining
     stickyNote: [],
   },
   stickyNote: {
@@ -85,6 +103,7 @@ const connectionRules: Record<
     postgresql: [],
     s3Bucket: [],
     redis: [],
+    messageQueue: [],
     stickyNote: [],
   },
 };
@@ -180,6 +199,7 @@ function formatNodeType(type: SystemNodeType): string {
     postgresql: 'Database',
     s3Bucket: 'Blob Storage',
     redis: 'Cache',
+    messageQueue: 'Message Queue',
     stickyNote: 'Sticky Note',
   };
   return names[type] || type;

@@ -8,6 +8,7 @@ export type SystemNodeType =
   | 'postgresql'
   | 's3Bucket'
   | 'redis'
+  | 'messageQueue'
   | 'stickyNote';
 
 export interface BaseNodeData {
@@ -224,6 +225,18 @@ export interface RedisNodeData extends BaseNodeData {
   keys?: RedisKey[];
 }
 
+export interface MessageQueueTopic {
+  id: string;
+  name: string;
+  description?: string;
+}
+
+export interface MessageQueueNodeData extends BaseNodeData {
+  provider?: 'sqs' | 'rabbitmq' | 'kafka' | 'pubsub' | 'generic';
+  queueType?: 'standard' | 'fifo';
+  topics?: MessageQueueTopic[];
+}
+
 export interface StickyNoteNodeData extends BaseNodeData {
   content: string;
   color: 'yellow' | 'blue' | 'green' | 'pink' | 'purple';
@@ -237,6 +250,7 @@ export type SystemNodeData =
   | PostgreSQLNodeData
   | S3BucketNodeData
   | RedisNodeData
+  | MessageQueueNodeData
   | StickyNoteNodeData;
 
 export type SystemNode = Node<SystemNodeData, SystemNodeType>;

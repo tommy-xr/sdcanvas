@@ -132,6 +132,7 @@ export function Canvas({ onOpenSchemaDesigner, onOpenAPIDesigner, onOpenRedisKey
               postgresql: '#336791',
               s3Bucket: '#ff9900',
               redis: '#dc382d',
+              messageQueue: '#ec4899',
             };
             return colors[node.type || ''] || '#64748b';
           }}
