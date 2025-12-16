@@ -112,6 +112,7 @@ export function Canvas({ onOpenSchemaDesigner, onOpenAPIDesigner, onOpenRedisKey
         fitView
         snapToGrid
         snapGrid={[15, 15]}
+        proOptions={{ hideAttribution: true }}
       >
         <Background
           variant={BackgroundVariant.Dots}
