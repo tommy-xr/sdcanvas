@@ -196,9 +196,19 @@ export interface S3BucketNodeData extends BaseNodeData {
   isPublic: boolean;
 }
 
+export interface RedisKey {
+  id: string;
+  pattern: string; // e.g., "trending:puzzles", "user:{user_id}:session"
+  description?: string;
+  valueType: 'string' | 'counter' | 'json' | 'list' | 'set' | 'hash' | 'sortedSet';
+  valueSchema?: SchemaDefinition; // JSON schema for the value (when valueType is 'json', 'list', 'hash')
+  ttl?: number; // TTL in seconds
+}
+
 export interface RedisNodeData extends BaseNodeData {
   maxMemory: string;
   evictionPolicy: 'noeviction' | 'allkeys-lru' | 'volatile-lru' | 'allkeys-random';
+  keys?: RedisKey[];
 }
 
 export interface StickyNoteNodeData extends BaseNodeData {

@@ -13,6 +13,7 @@ import type {
 interface PropertiesPanelProps {
   onOpenSchemaDesigner: (nodeId: string) => void;
   onOpenAPIDesigner: (nodeId: string) => void;
+  onOpenRedisKeyDesigner: (nodeId: string) => void;
 }
 
 function UserProperties({ data, onChange }: { data: UserNodeData; onChange: (data: Partial<UserNodeData>) => void }) {
@@ -237,7 +238,15 @@ function S3BucketProperties({ data, onChange }: { data: S3BucketNodeData; onChan
   );
 }
 
-function RedisProperties({ data, onChange }: { data: RedisNodeData; onChange: (data: Partial<RedisNodeData>) => void }) {
+function RedisProperties({
+  data,
+  onChange,
+  onOpenKeyDesigner,
+}: {
+  data: RedisNodeData;
+  onChange: (data: Partial<RedisNodeData>) => void;
+  onOpenKeyDesigner?: () => void;
+}) {
   return (
     <div className="space-y-4">
       <div>
@@ -263,6 +272,37 @@ function RedisProperties({ data, onChange }: { data: RedisNodeData; onChange: (d
           <option value="allkeys-random">All Keys Random</option>
         </select>
       </div>
+      <div>
+        <div className="flex items-center justify-between mb-2">
+          <label className="text-xs text-gray-500">Keys</label>
+        </div>
+        <div className="space-y-2 max-h-32 overflow-y-auto">
+          {data.keys?.map((key) => (
+            <div key={key.id} className="bg-gray-100 p-2 rounded text-xs">
+              <div className="font-medium text-gray-700 font-mono">{key.pattern}</div>
+              <div className="text-gray-500">
+                {key.valueType}{key.ttl ? `, TTL: ${key.ttl}s` : ''}
+              </div>
+            </div>
+          ))}
+          {(!data.keys || data.keys.length === 0) && (
+            <div className="text-xs text-gray-400 italic">No keys defined</div>
+          )}
+        </div>
+      </div>
+      {onOpenKeyDesigner && (
+        <button
+          onClick={onOpenKeyDesigner}
+          className="flex items-center justify-center gap-2 w-full bg-gray-100 hover:bg-gray-200
+                     text-gray-700 border border-gray-300 rounded-lg py-2 text-sm transition-colors"
+        >
+          <ExternalLink size={14} />
+          Open Key Designer
+        </button>
+      )}
+      <p className="text-xs text-gray-400">
+        Or double-click the node on the canvas
+      </p>
     </div>
   );
 }
@@ -308,7 +348,7 @@ function StickyNoteProperties({ data, onChange }: { data: StickyNoteNodeData; on
   );
 }
 
-export function PropertiesPanel({ onOpenSchemaDesigner, onOpenAPIDesigner }: PropertiesPanelProps) {
+export function PropertiesPanel({ onOpenSchemaDesigner, onOpenAPIDesigner, onOpenRedisKeyDesigner }: PropertiesPanelProps) {
   const { nodes, selectedNodeId, updateNode, deleteNode, setSelectedNodeId } = useCanvasStore();
   const selectedNode = nodes.find((n) => n.id === selectedNodeId);
 
@@ -362,7 +402,13 @@ export function PropertiesPanel({ onOpenSchemaDesigner, onOpenAPIDesigner }: Pro
       case 's3Bucket':
         return <S3BucketProperties data={selectedNode.data as S3BucketNodeData} onChange={handleChange} />;
       case 'redis':
-        return <RedisProperties data={selectedNode.data as RedisNodeData} onChange={handleChange} />;
+        return (
+          <RedisProperties
+            data={selectedNode.data as RedisNodeData}
+            onChange={handleChange}
+            onOpenKeyDesigner={() => onOpenRedisKeyDesigner(selectedNode.id)}
+          />
+        );
       case 'stickyNote':
         return <StickyNoteProperties data={selectedNode.data as StickyNoteNodeData} onChange={handleChange} />;
       default:

@@ -18,9 +18,10 @@ import type { SystemNode, SystemNodeType } from '../../types/nodes';
 interface CanvasProps {
   onOpenSchemaDesigner: (nodeId: string) => void;
   onOpenAPIDesigner: (nodeId: string) => void;
+  onOpenRedisKeyDesigner: (nodeId: string) => void;
 }
 
-export function Canvas({ onOpenSchemaDesigner, onOpenAPIDesigner }: CanvasProps) {
+export function Canvas({ onOpenSchemaDesigner, onOpenAPIDesigner, onOpenRedisKeyDesigner }: CanvasProps) {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const { screenToFlowPosition } = useReactFlow();
   const {
@@ -45,9 +46,11 @@ export function Canvas({ onOpenSchemaDesigner, onOpenAPIDesigner }: CanvasProps)
         onOpenSchemaDesigner(node.id);
       } else if (node.type === 'apiServer') {
         onOpenAPIDesigner(node.id);
+      } else if (node.type === 'redis') {
+        onOpenRedisKeyDesigner(node.id);
       }
     },
-    [onOpenSchemaDesigner, onOpenAPIDesigner]
+    [onOpenSchemaDesigner, onOpenAPIDesigner, onOpenRedisKeyDesigner]
   );
 
   const onPaneClick = useCallback(() => {

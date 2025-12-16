@@ -6,12 +6,14 @@ import { PropertiesPanel } from './components/Sidebar/PropertiesPanel';
 import { Header } from './components/Header/Header';
 import { SchemaDesignerModal } from './components/SchemaDesigner';
 import { APIDesignerModal } from './components/APIDesigner';
+import { RedisKeyDesignerModal } from './components/RedisKeyDesigner';
 import { useCanvasStore } from './store/canvasStore';
-import type { PostgreSQLNodeData, APIServerNodeData } from './types/nodes';
+import type { PostgreSQLNodeData, APIServerNodeData, RedisNodeData } from './types/nodes';
 
 function AppContent() {
   const [schemaDesignerNodeId, setSchemaDesignerNodeId] = useState<string | null>(null);
   const [apiDesignerNodeId, setApiDesignerNodeId] = useState<string | null>(null);
+  const [redisKeyDesignerNodeId, setRedisKeyDesignerNodeId] = useState<string | null>(null);
   const { nodes, updateNode } = useCanvasStore();
 
   // Schema Designer
@@ -58,6 +60,28 @@ function AppContent() {
     [apiDesignerNodeId, updateNode]
   );
 
+  // Redis Key Designer
+  const redisKeyDesignerNode = redisKeyDesignerNodeId
+    ? nodes.find((n) => n.id === redisKeyDesignerNodeId && n.type === 'redis')
+    : null;
+
+  const handleOpenRedisKeyDesigner = useCallback((nodeId: string) => {
+    setRedisKeyDesignerNodeId(nodeId);
+  }, []);
+
+  const handleCloseRedisKeyDesigner = useCallback(() => {
+    setRedisKeyDesignerNodeId(null);
+  }, []);
+
+  const handleUpdateRedisKeyDesigner = useCallback(
+    (data: Partial<RedisNodeData>) => {
+      if (redisKeyDesignerNodeId) {
+        updateNode(redisKeyDesignerNodeId, data);
+      }
+    },
+    [redisKeyDesignerNodeId, updateNode]
+  );
+
   return (
     <div className="flex flex-col h-screen w-screen bg-gray-100">
       <Header />
@@ -67,11 +91,13 @@ function AppContent() {
           <Canvas
             onOpenSchemaDesigner={handleOpenSchemaDesigner}
             onOpenAPIDesigner={handleOpenAPIDesigner}
+            onOpenRedisKeyDesigner={handleOpenRedisKeyDesigner}
           />
         </div>
         <PropertiesPanel
           onOpenSchemaDesigner={handleOpenSchemaDesigner}
           onOpenAPIDesigner={handleOpenAPIDesigner}
+          onOpenRedisKeyDesigner={handleOpenRedisKeyDesigner}
         />
       </div>
 
@@ -91,6 +117,15 @@ function AppContent() {
           data={apiDesignerNode.data as APIServerNodeData}
           onUpdate={handleUpdateAPIDesigner}
           allNodes={nodes}
+        />
+      )}
+
+      {redisKeyDesignerNode && (
+        <RedisKeyDesignerModal
+          isOpen={true}
+          onClose={handleCloseRedisKeyDesigner}
+          data={redisKeyDesignerNode.data as RedisNodeData}
+          onUpdate={handleUpdateRedisKeyDesigner}
         />
       )}
     </div>
