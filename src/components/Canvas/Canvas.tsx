@@ -3,7 +3,6 @@ import {
   ReactFlow,
   Background,
   Controls,
-  MiniMap,
   BackgroundVariant,
   useReactFlow,
 } from '@xyflow/react';
@@ -121,22 +120,6 @@ export function Canvas({ onOpenSchemaDesigner, onOpenAPIDesigner, onOpenRedisKey
           color="#d1d5db"
         />
         <Controls className="!bg-white !border-gray-200 !rounded-lg" />
-        <MiniMap
-          className="!bg-white !border-gray-200 !rounded-lg"
-          nodeColor={(node) => {
-            const colors: Record<string, string> = {
-              user: '#22c55e',
-              loadBalancer: '#f59e0b',
-              cdn: '#8b5cf6',
-              apiServer: '#3b82f6',
-              postgresql: '#336791',
-              s3Bucket: '#ff9900',
-              redis: '#dc382d',
-              messageQueue: '#ec4899',
-            };
-            return colors[node.type || ''] || '#64748b';
-          }}
-        />
       </ReactFlow>
     </div>
   );
