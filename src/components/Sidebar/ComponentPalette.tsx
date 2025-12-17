@@ -133,6 +133,10 @@ const sections: ComponentSection[] = [
       },
     ],
   },
+  {
+    title: 'Frontend',
+    components: [],
+  },
 ];
 
 function DraggableComponent({ component }: { component: ComponentDefinition }) {
@@ -185,9 +189,13 @@ function AccordionSection({ section, defaultOpen = false }: { section: Component
         }`}
       >
         <div className="space-y-2 px-6">
-          {section.components.map((component) => (
-            <DraggableComponent key={component.type} component={component} />
-          ))}
+          {section.components.length > 0 ? (
+            section.components.map((component) => (
+              <DraggableComponent key={component.type} component={component} />
+            ))
+          ) : (
+            <p className="text-sm text-gray-400 italic py-2">Coming soon</p>
+          )}
         </div>
       </div>
     </div>
