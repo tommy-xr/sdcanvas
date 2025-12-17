@@ -12,12 +12,53 @@ import type {
   MessageQueueNodeData,
   MessageQueueTopic,
   StickyNoteNodeData,
+  ScalingConfig,
 } from '../../types/nodes';
 
 interface PropertiesPanelProps {
   onOpenSchemaDesigner: (nodeId: string) => void;
   onOpenAPIDesigner: (nodeId: string) => void;
   onOpenRedisKeyDesigner: (nodeId: string) => void;
+}
+
+function ScalingProperties({ scaling, onChange }: { scaling?: ScalingConfig; onChange: (scaling: ScalingConfig) => void }) {
+  const scalingType = scaling?.type || 'single';
+  const instances = scaling?.type === 'fixed' ? scaling.instances : 2;
+
+  return (
+    <div className="space-y-3">
+      <div>
+        <label className="block text-xs text-gray-500 mb-1">Scaling</label>
+        <select
+          value={scalingType}
+          onChange={(e) => {
+            const type = e.target.value as 'single' | 'fixed' | 'auto';
+            if (type === 'single') onChange({ type: 'single' });
+            else if (type === 'auto') onChange({ type: 'auto' });
+            else onChange({ type: 'fixed', instances: 2 });
+          }}
+          className="w-full bg-gray-50 border border-gray-300 rounded px-3 py-2 text-sm text-gray-900"
+        >
+          <option value="single">Single Instance</option>
+          <option value="fixed">Fixed Count</option>
+          <option value="auto">Auto-scaling</option>
+        </select>
+      </div>
+      {scalingType === 'fixed' && (
+        <div>
+          <label className="block text-xs text-gray-500 mb-1">Instances</label>
+          <input
+            type="number"
+            min={2}
+            max={100}
+            value={instances}
+            onChange={(e) => onChange({ type: 'fixed', instances: Math.max(2, parseInt(e.target.value) || 2) })}
+            className="w-full bg-gray-50 border border-gray-300 rounded px-3 py-2 text-sm text-gray-900"
+          />
+        </div>
+      )}
+    </div>
+  );
 }
 
 function UserProperties({ data, onChange }: { data: UserNodeData; onChange: (data: Partial<UserNodeData>) => void }) {
@@ -55,6 +96,10 @@ function LoadBalancerProperties({ data, onChange }: { data: LoadBalancerNodeData
           <option value="weighted">Weighted</option>
         </select>
       </div>
+      <ScalingProperties
+        scaling={data.scaling}
+        onChange={(scaling) => onChange({ scaling })}
+      />
     </div>
   );
 }
@@ -217,6 +262,10 @@ function APIServerProperties({
           ))}
         </div>
       </div>
+      <ScalingProperties
+        scaling={data.scaling}
+        onChange={(scaling) => onChange({ scaling })}
+      />
       {onOpenAPIDesigner && (
         <button
           onClick={onOpenAPIDesigner}

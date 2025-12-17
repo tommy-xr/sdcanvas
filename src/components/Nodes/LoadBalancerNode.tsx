@@ -20,6 +20,7 @@ export function LoadBalancerNode({ data, selected }: NodeProps) {
       subtitle="Load Balancer (nginx, ALB)"
       color="#f59e0b"
       selected={selected}
+      scaling={nodeData.scaling}
     >
       <div className="flex items-center gap-1">
         <span className="text-slate-500">Algorithm:</span>

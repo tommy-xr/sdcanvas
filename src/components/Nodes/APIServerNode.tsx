@@ -23,6 +23,7 @@ export function APIServerNode({ data, selected }: NodeProps) {
       subtitle="API Server"
       color="#3b82f6"
       selected={selected}
+      scaling={nodeData.scaling}
     >
       {displayedEndpoints.length > 0 ? (
         <div className="space-y-1">

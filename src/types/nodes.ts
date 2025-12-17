@@ -21,8 +21,14 @@ export interface UserNodeData extends BaseNodeData {
   clientType: 'browser' | 'mobile' | 'desktop';
 }
 
+export type ScalingConfig =
+  | { type: 'single' }
+  | { type: 'fixed'; instances: number }
+  | { type: 'auto' };
+
 export interface LoadBalancerNodeData extends BaseNodeData {
   algorithm: 'round-robin' | 'least-connections' | 'ip-hash' | 'weighted';
+  scaling?: ScalingConfig;
 }
 
 export interface CDNCacheRule {
@@ -39,6 +45,7 @@ export interface CDNNodeData extends BaseNodeData {
 
 export interface APIServerNodeData extends BaseNodeData {
   endpoints: APIEndpoint[];
+  scaling?: ScalingConfig;
 }
 
 export type HTTPMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
