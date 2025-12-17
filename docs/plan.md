@@ -6,6 +6,8 @@
 - API - model cache-through behavior against db (ie, check redis first)
 - Lower pane (evaluation, errors)
 - Simulation capability
+- Simulation: Transition to '3d' view with pylons for stats
+- Simulation: Show monitoring (newrelic, etc) style graphs of CPU, RPS, etc
 - Ability to branch - fusion 360 timeline view
 - Non-local
 - GPT integration (BYOK)
