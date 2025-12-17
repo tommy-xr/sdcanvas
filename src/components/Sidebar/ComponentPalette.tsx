@@ -1,4 +1,4 @@
-import type { DragEvent } from 'react';
+import { useState, type DragEvent } from 'react';
 import {
   Monitor,
   Network,
@@ -9,6 +9,7 @@ import {
   Zap,
   MessageSquare,
   StickyNote,
+  ChevronDown,
 } from 'lucide-react';
 import type { SystemNodeType } from '../../types/nodes';
 
@@ -20,102 +21,117 @@ interface ComponentDefinition {
   defaultData: Record<string, unknown>;
 }
 
-const components: ComponentDefinition[] = [
+interface ComponentSection {
+  title: string;
+  components: ComponentDefinition[];
+}
+
+const sections: ComponentSection[] = [
   {
-    type: 'stickyNote',
-    label: 'Sticky Note',
-    icon: <StickyNote size={20} />,
-    color: '#eab308',
-    defaultData: {
-      label: 'Note',
-      content: '',
-      color: 'yellow',
-    },
+    title: 'General',
+    components: [
+      {
+        type: 'stickyNote',
+        label: 'Sticky Note',
+        icon: <StickyNote size={20} />,
+        color: '#eab308',
+        defaultData: {
+          label: 'Note',
+          content: '',
+          color: 'yellow',
+        },
+      },
+      {
+        type: 'user',
+        label: 'User Client',
+        icon: <Monitor size={20} />,
+        color: '#22c55e',
+        defaultData: {
+          label: 'Client',
+          clientType: 'browser',
+        },
+      },
+      {
+        type: 'apiServer',
+        label: 'API Server',
+        icon: <Server size={20} />,
+        color: '#3b82f6',
+        defaultData: {
+          label: 'API Server',
+          endpoints: [],
+        },
+      },
+    ],
   },
   {
-    type: 'user',
-    label: 'User Client',
-    icon: <Monitor size={20} />,
-    color: '#22c55e',
-    defaultData: {
-      label: 'Client',
-      clientType: 'browser',
-    },
-  },
-  {
-    type: 'loadBalancer',
-    label: 'Load Balancer',
-    icon: <Network size={20} />,
-    color: '#f59e0b',
-    defaultData: {
-      label: 'Load Balancer',
-      algorithm: 'round-robin',
-    },
-  },
-  {
-    type: 'cdn',
-    label: 'CDN',
-    icon: <Globe size={20} />,
-    color: '#8b5cf6',
-    defaultData: {
-      label: 'CDN',
-      provider: 'generic',
-      cacheRules: [],
-    },
-  },
-  {
-    type: 'apiServer',
-    label: 'API Server',
-    icon: <Server size={20} />,
-    color: '#3b82f6',
-    defaultData: {
-      label: 'API Server',
-      endpoints: [],
-    },
-  },
-  {
-    type: 'postgresql',
-    label: 'Relational DB',
-    icon: <Database size={20} />,
-    color: '#336791',
-    defaultData: {
-      label: 'Database',
-      tables: [],
-    },
-  },
-  {
-    type: 's3Bucket',
-    label: 'Blob Storage',
-    icon: <HardDrive size={20} />,
-    color: '#ff9900',
-    defaultData: {
-      label: 'Blob Storage',
-      bucketName: 'my-bucket',
-      isPublic: false,
-    },
-  },
-  {
-    type: 'redis',
-    label: 'Cache',
-    icon: <Zap size={20} />,
-    color: '#dc382d',
-    defaultData: {
-      label: 'Cache',
-      maxMemory: '256MB',
-      evictionPolicy: 'allkeys-lru',
-    },
-  },
-  {
-    type: 'messageQueue',
-    label: 'Message Queue',
-    icon: <MessageSquare size={20} />,
-    color: '#ec4899',
-    defaultData: {
-      label: 'Queue',
-      provider: 'generic',
-      queueType: 'standard',
-      topics: [],
-    },
+    title: 'Backend',
+    components: [
+      {
+        type: 'loadBalancer',
+        label: 'Load Balancer',
+        icon: <Network size={20} />,
+        color: '#f59e0b',
+        defaultData: {
+          label: 'Load Balancer',
+          algorithm: 'round-robin',
+        },
+      },
+      {
+        type: 'cdn',
+        label: 'CDN',
+        icon: <Globe size={20} />,
+        color: '#8b5cf6',
+        defaultData: {
+          label: 'CDN',
+          provider: 'generic',
+          cacheRules: [],
+        },
+      },
+      {
+        type: 'postgresql',
+        label: 'Relational DB',
+        icon: <Database size={20} />,
+        color: '#336791',
+        defaultData: {
+          label: 'Database',
+          tables: [],
+        },
+      },
+      {
+        type: 's3Bucket',
+        label: 'Blob Storage',
+        icon: <HardDrive size={20} />,
+        color: '#ff9900',
+        defaultData: {
+          label: 'Blob Storage',
+          bucketName: 'my-bucket',
+          isPublic: false,
+        },
+      },
+      {
+        type: 'redis',
+        label: 'Cache',
+        icon: <Zap size={20} />,
+        color: '#dc382d',
+        defaultData: {
+          label: 'Cache',
+          maxMemory: '256MB',
+          evictionPolicy: 'allkeys-lru',
+        },
+      },
+      {
+        type: 'messageQueue',
+        label: 'Message Queue',
+        icon: <MessageSquare size={20} />,
+        color: '#ec4899',
+        defaultData: {
+          label: 'Queue',
+          provider: 'generic',
+          queueType: 'standard',
+          topics: [],
+        },
+      },
+    ],
   },
 ];
 
@@ -148,6 +164,36 @@ function DraggableComponent({ component }: { component: ComponentDefinition }) {
   );
 }
 
+function AccordionSection({ section, defaultOpen = false }: { section: ComponentSection; defaultOpen?: boolean }) {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
+
+  return (
+    <div className="border-b border-gray-200 last:border-b-0">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full flex items-center justify-between py-3 px-6 text-left hover:bg-gray-50 transition-colors"
+      >
+        <span className="text-sm font-semibold text-gray-700">{section.title}</span>
+        <ChevronDown
+          size={16}
+          className={`text-gray-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+        />
+      </button>
+      <div
+        className={`overflow-hidden transition-all duration-200 ${
+          isOpen ? 'max-h-[1000px] opacity-100 pb-3' : 'max-h-0 opacity-0'
+        }`}
+      >
+        <div className="space-y-2 px-6">
+          {section.components.map((component) => (
+            <DraggableComponent key={component.type} component={component} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function ComponentPalette() {
   return (
     <div className="w-72 bg-white border-r border-gray-200 flex flex-col">
@@ -157,12 +203,10 @@ export function ComponentPalette() {
           Drag components onto the canvas to build your system design.
         </p>
       </div>
-      <div className="flex-1 overflow-y-auto px-6 pb-5">
-        <div className="space-y-3">
-          {components.map((component) => (
-            <DraggableComponent key={component.type} component={component} />
-          ))}
-        </div>
+      <div className="flex-1 overflow-y-auto pb-5">
+        {sections.map((section, index) => (
+          <AccordionSection key={section.title} section={section} defaultOpen={index === 0} />
+        ))}
       </div>
     </div>
   );
