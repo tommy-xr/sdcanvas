@@ -4,8 +4,6 @@
 - Implement horizontal scaling
 - Non-HTTP transport (websocket, raw tcp, udp, other)
 - Delete key issues?
-- Keyboard shortcuts
-- Remove "mini-map"
 - API - model cache-through behavior against db (ie, check redis first)
 - Lower pane (evaluation, errors)
 - Simulation capability

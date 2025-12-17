@@ -204,8 +204,8 @@ export function ComponentPalette() {
         </p>
       </div>
       <div className="flex-1 overflow-y-auto pb-5">
-        {sections.map((section, index) => (
-          <AccordionSection key={section.title} section={section} defaultOpen={index === 0} />
+        {sections.map((section) => (
+          <AccordionSection key={section.title} section={section} defaultOpen />
         ))}
       </div>
     </div>
