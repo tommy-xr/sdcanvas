@@ -8,7 +8,9 @@
 - Simulation capability
 - Simulation: Transition to '3d' view with pylons for stats
 - Simulation: Show monitoring (newrelic, etc) style graphs of CPU, RPS, etc
+- Data Model Redesign
 - Ability to branch - fusion 360 timeline view
+    - Undo/redo as first 'baby step'
 - Non-local
 - GPT integration (BYOK)
     - AI Review
