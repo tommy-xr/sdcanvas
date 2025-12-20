@@ -37,7 +37,7 @@ export function QueryLinker({
     const firstTable = dbData.tables?.[0];
 
     const newQuery: LinkedQuery = {
-      id: `query-${Date.now()}`,
+      id: `query-${crypto.randomUUID()}`,
       targetNodeId: firstDb.id,
       targetTableId: firstTable?.id || '',
       queryType: 'SELECT',

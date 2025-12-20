@@ -13,7 +13,8 @@
     "build:cli": "npm run build -w @sdcanvas/cli",
     "lint": "eslint .",
     "preview": "vite preview",
-    "cli": "node packages/cli/dist/index.js"
+    "cli": "node packages/cli/dist/index.js",
+    "validate": "bash -c 'shopt -s nullglob; files=(examples/*.json examples/*.yaml examples/*.yml); if [ ${#files[@]} -eq 0 ]; then echo \"No canvas files found\"; exit 1; fi; for file in \"${files[@]}\"; do echo \"Validating: $file\"; npm run cli -- validate \"$file\"; done; echo \"All canvas files validated!\"'"
   },
   "dependencies": {
     "@xyflow/react": "^12.10.0",
