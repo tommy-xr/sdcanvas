@@ -1,6 +1,7 @@
-import type { Node } from '@xyflow/react';
+// Base types
+export type { Position, Viewport, BaseNode, BaseEdge } from './base.js';
 
-// Re-export all data types from @sdcanvas/core
+// Node types
 export type {
   SystemNodeType,
   BaseNodeData,
@@ -34,9 +35,14 @@ export type {
   MessageQueueNodeData,
   StickyNoteNodeData,
   SystemNodeData,
-} from '@sdcanvas/core';
+  SystemNode,
+} from './nodes.js';
 
-import type { SystemNodeData, SystemNodeType } from '@sdcanvas/core';
-
-// Use xyflow's Node type for UI compatibility
-export type SystemNode = Node<SystemNodeData, SystemNodeType>;
+// Edge types
+export type {
+  ConnectionType,
+  DatabaseQueryType,
+  ConnectionData,
+  ConnectionValidation,
+  SystemEdge,
+} from './edges.js';

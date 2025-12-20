@@ -1,13 +1,19 @@
 {
-  "name": "temp-project",
+  "name": "sdcanvas",
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "npm run build:core && npm run build:cli && tsc -b && vite build",
+    "build:core": "npm run build -w @sdcanvas/core",
+    "build:cli": "npm run build -w @sdcanvas/cli",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "cli": "node packages/cli/dist/index.js"
   },
   "dependencies": {
     "@xyflow/react": "^12.10.0",

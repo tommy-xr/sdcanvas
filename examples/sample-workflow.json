@@ -1,0 +1,149 @@
+{
+  "app": "sdcanvas",
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "user-1",
+      "type": "user",
+      "position": { "x": 100, "y": 200 },
+      "data": {
+        "label": "Web Client",
+        "clientType": "browser"
+      }
+    },
+    {
+      "id": "lb-1",
+      "type": "loadBalancer",
+      "position": { "x": 300, "y": 200 },
+      "data": {
+        "label": "Load Balancer",
+        "algorithm": "round-robin",
+        "scaling": { "type": "auto" }
+      }
+    },
+    {
+      "id": "api-1",
+      "type": "apiServer",
+      "position": { "x": 500, "y": 150 },
+      "data": {
+        "label": "API Server",
+        "endpoints": [
+          {
+            "id": "ep-1",
+            "method": "GET",
+            "path": "/api/users",
+            "description": "Get all users"
+          },
+          {
+            "id": "ep-2",
+            "method": "POST",
+            "path": "/api/users",
+            "description": "Create a user"
+          }
+        ],
+        "scaling": { "type": "fixed", "instances": 3 }
+      }
+    },
+    {
+      "id": "db-1",
+      "type": "postgresql",
+      "position": { "x": 700, "y": 200 },
+      "data": {
+        "label": "PostgreSQL",
+        "tables": [
+          {
+            "id": "tbl-1",
+            "name": "users",
+            "columns": [
+              {
+                "id": "col-1",
+                "name": "id",
+                "type": "serial",
+                "isPrimaryKey": true,
+                "isForeignKey": false,
+                "isNullable": false,
+                "isUnique": true
+              },
+              {
+                "id": "col-2",
+                "name": "email",
+                "type": "varchar",
+                "length": 255,
+                "isPrimaryKey": false,
+                "isForeignKey": false,
+                "isNullable": false,
+                "isUnique": true
+              }
+            ],
+            "indexes": []
+          }
+        ]
+      }
+    },
+    {
+      "id": "redis-1",
+      "type": "redis",
+      "position": { "x": 500, "y": 350 },
+      "data": {
+        "label": "Redis Cache",
+        "maxMemory": "1gb",
+        "evictionPolicy": "allkeys-lru",
+        "keys": [
+          {
+            "id": "key-1",
+            "pattern": "user:{user_id}:session",
+            "valueType": "json",
+            "ttl": 3600
+          }
+        ]
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge-1",
+      "source": "user-1",
+      "target": "lb-1",
+      "data": {
+        "connectionType": "http",
+        "method": "GET"
+      }
+    },
+    {
+      "id": "edge-2",
+      "source": "lb-1",
+      "target": "api-1",
+      "data": {
+        "connectionType": "http"
+      }
+    },
+    {
+      "id": "edge-3",
+      "source": "api-1",
+      "target": "db-1",
+      "data": {
+        "connectionType": "database",
+        "queryType": "SELECT"
+      }
+    },
+    {
+      "id": "edge-4",
+      "source": "api-1",
+      "target": "redis-1",
+      "data": {
+        "connectionType": "cache"
+      }
+    }
+  ],
+  "viewport": {
+    "x": 0,
+    "y": 0,
+    "zoom": 1
+  },
+  "metadata": {
+    "fileName": "sample-workflow",
+    "nodeCount": 5,
+    "edgeCount": 4,
+    "exportedAt": "2024-12-20T12:00:00.000Z"
+  }
+}
