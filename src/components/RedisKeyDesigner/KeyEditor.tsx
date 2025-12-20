@@ -108,7 +108,8 @@ export function KeyEditor({ redisKey, onUpdate }: KeyEditorProps) {
     if (!redisKey.valueSchema) return;
 
     if (redisKey.valueSchema.type === 'array' && redisKey.valueSchema.items?.properties) {
-      const { [name]: _, ...rest } = redisKey.valueSchema.items.properties;
+      const { [name]: _itemRemoved, ...rest } = redisKey.valueSchema.items.properties;
+      void _itemRemoved; // Intentionally unused - we're removing this property
       updateSchema({
         ...redisKey.valueSchema,
         items: {
@@ -117,7 +118,8 @@ export function KeyEditor({ redisKey, onUpdate }: KeyEditorProps) {
         },
       });
     } else if (redisKey.valueSchema.properties) {
-      const { [name]: _, ...rest } = redisKey.valueSchema.properties;
+      const { [name]: _propRemoved, ...rest } = redisKey.valueSchema.properties;
+      void _propRemoved; // Intentionally unused - we're removing this property
       updateSchema({
         ...redisKey.valueSchema,
         properties: rest,

@@ -115,7 +115,8 @@ export function SchemaEditor({
   const removeProperty = (name: string) => {
     if (!currentSchema?.properties) return;
 
-    const { [name]: _, ...rest } = currentSchema.properties;
+    const { [name]: _removed, ...rest } = currentSchema.properties;
+    void _removed; // Intentionally unused - we're removing this property
     updateSchema({
       ...currentSchema,
       properties: rest,
