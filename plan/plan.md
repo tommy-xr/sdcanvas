@@ -1,14 +1,11 @@
-- Export / load JSON
-    - Consider back-compat (version in JSON, versioned loaders + upgraders)
-    - Testing, API / core sim + model library split out and independent of UI
-- Non-HTTP transport (websocket, raw tcp, udp, other)
-- Delete key issues?
+- Non-HTTP transport modelling (websocket, raw tcp, udp, other)
 - API - model cache-through behavior against db (ie, check redis first)
 - Lower pane (evaluation, errors)
-- Simulation capability
-- Simulation: Transition to '3d' view with pylons for stats
-- Simulation: Show monitoring (newrelic, etc) style graphs of CPU, RPS, etc
-- Data Model Redesign
+- Simulation capability - see [simulation.md](./simulation.md) for detailed plan
+  - Phase 1: Core simulation engine + CLI
+  - Phase 2: Live simulation UI with animated requests
+  - Phase 3: Monitoring graphs (APM-style)
+  - Phase 4: 3D visualization with pylons
 - Ability to branch - fusion 360 timeline view
     - Undo/redo as first 'baby step'
 - Non-local
@@ -16,5 +13,3 @@
     - AI Review
 - Leetcode for SD
     - Initial set of sample problems
-
-
