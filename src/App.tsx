@@ -7,6 +7,7 @@ import { Header } from './components/Header/Header';
 import { SchemaDesignerModal } from './components/SchemaDesigner';
 import { APIDesignerModal } from './components/APIDesigner';
 import { RedisKeyDesignerModal } from './components/RedisKeyDesigner';
+import { SimulationControlPanel } from './components/Simulation';
 import { useCanvasStore } from './store/canvasStore';
 import type { PostgreSQLNodeData, APIServerNodeData, RedisNodeData } from './types/nodes';
 
@@ -87,12 +88,13 @@ function AppContent() {
       <Header />
       <div className="flex flex-1 overflow-hidden">
         <ComponentPalette />
-        <div className="flex flex-1 gap-3 p-3">
+        <div className="flex flex-1 gap-3 p-3 relative">
           <Canvas
             onOpenSchemaDesigner={handleOpenSchemaDesigner}
             onOpenAPIDesigner={handleOpenAPIDesigner}
             onOpenRedisKeyDesigner={handleOpenRedisKeyDesigner}
           />
+          <SimulationControlPanel />
         </div>
         <PropertiesPanel
           onOpenSchemaDesigner={handleOpenSchemaDesigner}

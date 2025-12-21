@@ -12,6 +12,7 @@ import '@xyflow/react/dist/style.css';
 import { useCanvasStore } from '../../store/canvasStore';
 import { nodeTypes } from '../Nodes';
 import { edgeTypes } from '../Edges';
+import { RequestAnimation, LiveMetricsOverlay } from '../Simulation';
 import type { SystemNode, SystemNodeType } from '../../types/nodes';
 
 interface CanvasProps {
@@ -91,7 +92,7 @@ export function Canvas({ onOpenSchemaDesigner, onOpenAPIDesigner, onOpenRedisKey
   );
 
   return (
-    <div ref={reactFlowWrapper} className="flex-1 h-full bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+    <div ref={reactFlowWrapper} className="flex-1 h-full bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden relative">
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -122,6 +123,9 @@ export function Canvas({ onOpenSchemaDesigner, onOpenAPIDesigner, onOpenRedisKey
         />
         <Controls className="!bg-white !border-gray-200 !rounded-lg" />
       </ReactFlow>
+      {/* Simulation overlays - outside ReactFlow to avoid clipping */}
+      <LiveMetricsOverlay />
+      <RequestAnimation />
     </div>
   );
 }
