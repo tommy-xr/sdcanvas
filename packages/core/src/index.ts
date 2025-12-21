@@ -30,3 +30,20 @@ export {
   serializeContent,
   loadFromString,
 } from './loader.js';
+
+// Simulation
+export {
+  runSimulation,
+  NODE_BEHAVIOR_MODELS,
+  getNodeBehavior,
+  calculateLatency,
+  calculateP99Latency,
+  getInstanceCount,
+  analyzeQuery,
+  analyzeQueriesForTable,
+  estimateCacheHitRate,
+  analyzeCacheKey,
+  calculateCacheThroughLatency,
+  getCacheEffectiveness,
+  getCacheSuggestions,
+} from './simulation/index.js';

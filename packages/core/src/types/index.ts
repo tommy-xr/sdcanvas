@@ -46,3 +46,26 @@ export type {
   ConnectionValidation,
   SystemEdge,
 } from './edges.js';
+
+// Simulation types
+export type {
+  SimulationConfig,
+  CPUResources,
+  MemoryResources,
+  NetworkResources,
+  NodeResources,
+  NodeMetrics,
+  EdgeMetrics,
+  BottleneckType,
+  BottleneckInfo,
+  NodeMetricsSnapshot,
+  TimelineSnapshot,
+  SimulationResult,
+  ScanType,
+  QueryWarningType,
+  QueryWarning,
+  QueryAnalysis,
+  CacheAnalysis,
+  LatencyModel,
+  NodeBehaviorModel,
+} from './simulation.js';

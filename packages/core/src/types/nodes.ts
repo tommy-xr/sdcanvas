@@ -106,6 +106,10 @@ export interface LinkedQuery {
   targetTableId: string; // ID of the table
   queryType: 'SELECT' | 'INSERT' | 'UPDATE' | 'DELETE';
   description?: string;
+  // Simulation fields for query cost analysis
+  whereColumns?: string[]; // Column IDs used in WHERE clause
+  orderByColumns?: string[]; // Column IDs used in ORDER BY
+  selectColumns?: string[]; // Column IDs being selected (for covering index check)
 }
 
 // Common PostgreSQL column types
@@ -224,6 +228,10 @@ export interface RedisKey {
   valueType: 'string' | 'counter' | 'json' | 'list' | 'set' | 'hash' | 'sortedSet';
   valueSchema?: SchemaDefinition; // JSON schema for the value (when valueType is 'json', 'list', 'hash')
   ttl?: number; // TTL in seconds
+  // Simulation fields for cache modeling
+  estimatedCardinality?: number; // How many unique keys (e.g., 100K users)
+  sourceNodeId?: string; // Which DB node this caches (e.g., 'postgresql-1')
+  sourceTableId?: string; // Which table this caches
 }
 
 export interface RedisNodeData extends BaseNodeData {

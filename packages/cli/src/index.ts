@@ -5,8 +5,10 @@ import { basename } from 'node:path';
 import {
   loadFromString,
   CURRENT_FILE_VERSION,
+  runSimulation,
   type SystemNode,
   type SystemEdge,
+  type SimulationConfig,
 } from '@sdcanvas/core';
 
 /**
@@ -20,19 +22,27 @@ Usage:
   sdcanvas <command> [options] [file]
 
 Commands:
-  load <file>     Load and validate a workflow file
-  validate <file> Validate a workflow file (alias for load)
-  info <file>     Show summary information about a workflow
-  help            Show this help message
+  load <file>      Load and validate a workflow file
+  validate <file>  Validate a workflow file (alias for load)
+  info <file>      Show summary information about a workflow
+  simulate <file>  Run a simulation on a workflow file
+  help             Show this help message
 
 Options:
-  --json          Output as JSON (for load/info commands)
-  --quiet, -q     Suppress warnings
+  --json           Output as JSON (for load/info/simulate commands)
+  --quiet, -q      Suppress warnings
+
+Simulate Options:
+  --rps <number>       Requests per second (default: 100)
+  --duration <seconds> Simulation duration in seconds (default: 60)
+  --seed <number>      Random seed for reproducible results
 
 Examples:
   sdcanvas load workflow.json
   sdcanvas info workflow.yaml --json
   sdcanvas validate my-design.json
+  sdcanvas simulate canvas.json --rps 1000 --duration 60
+  sdcanvas simulate canvas.json --json > results.json
 `);
 }
 
@@ -221,6 +231,150 @@ function infoCommand(filePath: string, options: { json?: boolean; quiet?: boolea
 }
 
 /**
+ * Format bytes for display
+ */
+function formatBytes(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  if (bytes < 1024 * 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} GB`;
+}
+
+/**
+ * Format RPS for display
+ */
+function formatRps(rps: number): string {
+  if (rps < 1000) return `${rps.toFixed(0)}`;
+  if (rps < 1000000) return `${(rps / 1000).toFixed(1)}K`;
+  return `${(rps / 1000000).toFixed(1)}M`;
+}
+
+/**
+ * Format severity with color indicator
+ */
+function formatSeverity(severity: 'warning' | 'critical'): string {
+  return severity === 'critical' ? '[CRITICAL]' : '[WARNING]';
+}
+
+/**
+ * Simulate command - run simulation on a workflow file
+ */
+function simulateCommand(
+  filePath: string,
+  options: {
+    json?: boolean;
+    quiet?: boolean;
+    rps?: number;
+    duration?: number;
+    seed?: number;
+  }
+): number {
+  try {
+    const content = readFileSync(filePath, 'utf-8');
+    const fileName = basename(filePath);
+    const formatHint = filePath.endsWith('.yaml') || filePath.endsWith('.yml') ? 'yaml' : 'json';
+
+    const loadResult = loadFromString(content, { fileName, formatHint });
+
+    if (!loadResult.success || !loadResult.data) {
+      if (options.json) {
+        console.log(JSON.stringify({ success: false, error: loadResult.error }));
+      } else {
+        console.error(`\n  Error: ${loadResult.error}\n`);
+      }
+      return 1;
+    }
+
+    const { nodes, edges } = loadResult.data;
+
+    // Build simulation config
+    const config: SimulationConfig = {
+      durationSeconds: options.duration || 60,
+      requestsPerSecond: options.rps || 100,
+      seed: options.seed,
+    };
+
+    // Run simulation
+    const result = runSimulation(nodes, edges, config);
+
+    if (options.json) {
+      console.log(JSON.stringify(result, null, 2));
+      return 0;
+    }
+
+    // Pretty print results
+    console.log(`\nSimulation Complete (${result.duration}s, ${result.totalRequests.toLocaleString()} requests)`);
+    console.log('='.repeat(60));
+
+    // Node Metrics
+    console.log('\nNode Metrics:');
+    for (const [nodeId, metrics] of Object.entries(result.nodeMetrics)) {
+      if (metrics.requestsReceived === 0) continue;
+
+      console.log(`\n  ${nodeId}:`);
+      console.log(`    Peak RPS: ${formatRps(metrics.peakRPS)} | Avg Latency: ${metrics.avgLatencyMs.toFixed(1)}ms | P99: ${metrics.p99LatencyMs.toFixed(1)}ms`);
+      console.log(`    CPU: ${metrics.resources.cpu.utilizationPercent.toFixed(0)}% | Memory: ${metrics.resources.memory.usedMB.toFixed(0)}MB/${metrics.resources.memory.totalMB}MB`);
+      if (metrics.errors > 0) {
+        console.log(`    Errors: ${metrics.errors}`);
+      }
+    }
+
+    // Bottlenecks
+    if (result.bottlenecks.length > 0) {
+      console.log('\nBottlenecks Detected:');
+      for (const bottleneck of result.bottlenecks) {
+        console.log(`  ${formatSeverity(bottleneck.severity)} ${bottleneck.nodeId}: ${bottleneck.message}`);
+        console.log(`    -> ${bottleneck.suggestion}`);
+      }
+    } else {
+      console.log('\nNo bottlenecks detected.');
+    }
+
+    // Edge Traffic (summary)
+    const activeEdges = Object.entries(result.edgeMetrics)
+      .filter(([, m]) => m.requestCount > 0)
+      .sort((a, b) => b[1].requestCount - a[1].requestCount);
+
+    if (activeEdges.length > 0) {
+      console.log('\nEdge Traffic:');
+      for (const [edgeId, metrics] of activeEdges.slice(0, 10)) {
+        const rps = metrics.requestCount / result.duration;
+        const bytesPerSec = metrics.totalBytesTransferred / result.duration;
+        console.log(`  ${edgeId}: ${formatRps(rps)} RPS, ${formatBytes(bytesPerSec)}/s`);
+      }
+      if (activeEdges.length > 10) {
+        console.log(`  ... and ${activeEdges.length - 10} more edges`);
+      }
+    }
+
+    console.log('');
+    return 0;
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    if (options.json) {
+      console.log(JSON.stringify({ success: false, error: message }));
+    } else {
+      console.error(`\n  Error: ${message}\n`);
+    }
+    return 1;
+  }
+}
+
+/**
+ * Parse a numeric argument
+ */
+function parseNumericArg(args: string[], flag: string): number | undefined {
+  const idx = args.indexOf(flag);
+  if (idx !== -1 && idx + 1 < args.length) {
+    const value = parseFloat(args[idx + 1]);
+    if (!isNaN(value)) {
+      return value;
+    }
+  }
+  return undefined;
+}
+
+/**
  * Main CLI entry point
  */
 function main(): void {
@@ -267,6 +421,21 @@ function main(): void {
         process.exit(1);
       }
       process.exit(infoCommand(filePath, options));
+      break;
+
+    case 'simulate':
+    case 'sim':
+      if (!filePath) {
+        console.error('Error: No file specified');
+        printUsage();
+        process.exit(1);
+      }
+      process.exit(simulateCommand(filePath, {
+        ...options,
+        rps: parseNumericArg(args, '--rps'),
+        duration: parseNumericArg(args, '--duration'),
+        seed: parseNumericArg(args, '--seed'),
+      }));
       break;
 
     default:

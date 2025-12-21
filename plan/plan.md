@@ -2,10 +2,10 @@
 - API - model cache-through behavior against db (ie, check redis first)
 - Lower pane (evaluation, errors)
 - Simulation capability - see [simulation.md](./simulation.md) for detailed plan
-  - Phase 1: Core simulation engine + CLI
-  - Phase 2: Live simulation UI with animated requests
-  - Phase 3: Monitoring graphs (APM-style)
-  - Phase 4: 3D visualization with pylons
+  - [x] Phase 1: Core simulation engine + CLI *(COMPLETE - 2024-12-21)*
+  - [ ] Phase 2: Live simulation UI with animated requests
+  - [ ] Phase 3: Monitoring graphs (APM-style)
+  - [ ] Phase 4: 3D visualization with pylons
 - Ability to branch - fusion 360 timeline view
     - Undo/redo as first 'baby step'
 - Non-local

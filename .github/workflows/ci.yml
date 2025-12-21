@@ -30,3 +30,6 @@ jobs:
 
       - name: Validate example canvases
         run: npm run validate
+
+      - name: Run simulation tests
+        run: npm run test:simulate
