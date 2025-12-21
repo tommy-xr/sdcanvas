@@ -1,5 +1,4 @@
-import { useMemo } from 'react';
-import { useReactFlow, useViewport } from '@xyflow/react';
+import { useViewport, useNodes } from '@xyflow/react';
 import { useSimulationStore, type LiveNodeMetrics } from '../../store/simulationStore';
 
 interface MetricsBadgeProps {
@@ -157,27 +156,25 @@ function MetricsBadge({ nodePosition, metrics }: MetricsBadgeProps) {
 export function LiveMetricsOverlay() {
   const { isRunning } = useSimulationStore();
   const liveMetrics = useSimulationStore((state) => state.liveMetrics);
-  const { getNodes } = useReactFlow();
+  const nodes = useNodes();
   const viewport = useViewport();
 
-  const nodePositions = useMemo(() => {
-    const nodes = getNodes();
-    const positions = new Map<string, { x: number; y: number; width: number; height: number }>();
+  // Build node positions map - useNodes already triggers re-render on changes
+  const nodePositions = new Map<string, { x: number; y: number; width: number; height: number }>();
+  for (const node of nodes) {
+    // Skip sticky notes
+    if (node.type === 'stickyNote') continue;
 
-    for (const node of nodes) {
-      // Skip sticky notes
-      if (node.type === 'stickyNote') continue;
+    nodePositions.set(node.id, {
+      x: node.position.x,
+      y: node.position.y,
+      width: node.measured?.width || 150,
+      height: node.measured?.height || 80,
+    });
+  }
 
-      positions.set(node.id, {
-        x: node.position.x,
-        y: node.position.y,
-        width: node.measured?.width || 150,
-        height: node.measured?.height || 80,
-      });
-    }
-
-    return positions;
-  }, [getNodes]);
+  // Debug
+  console.log('LiveMetricsOverlay:', { isRunning, metricsCount: Object.keys(liveMetrics).length, nodeCount: nodePositions.size, metrics: liveMetrics });
 
   if (!isRunning) {
     return null;

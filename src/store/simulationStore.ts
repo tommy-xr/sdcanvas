@@ -260,25 +260,14 @@ export const useSimulationStore = create<SimulationState>()((set, get) => ({
 
     const newRequests: LiveRequest[] = [...state.liveRequests];
 
-    // Debug logging
-    if (dotsToSpawn > 0) {
-      console.log('Spawning dots:', { dotsToSpawn, entryPoints: entryPoints.map(n => n.id), edgeCount: edges.length });
-    }
-
     // Spawn new requests from entry points
     for (let i = 0; i < dotsToSpawn; i++) {
       const entryPoint = entryPoints[Math.floor(Math.random() * entryPoints.length)];
-      if (!entryPoint) {
-        console.log('No entry point found');
-        continue;
-      }
+      if (!entryPoint) continue;
 
       // Find outgoing edges from this entry point
       const outgoingEdges = edges.filter((e) => e.source === entryPoint.id);
-      if (outgoingEdges.length === 0) {
-        console.log('No outgoing edges from entry point:', entryPoint.id);
-        continue;
-      }
+      if (outgoingEdges.length === 0) continue;
 
       const edge = outgoingEdges[Math.floor(Math.random() * outgoingEdges.length)];
       newRequests.push({

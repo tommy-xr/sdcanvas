@@ -1,5 +1,4 @@
-import { useMemo } from 'react';
-import { useReactFlow, useViewport } from '@xyflow/react';
+import { useViewport, useNodes } from '@xyflow/react';
 import { useSimulationStore } from '../../store/simulationStore';
 
 /**
@@ -120,24 +119,19 @@ function AnimatedDot({ sourceNode, targetNode, progress, multiplier }: AnimatedD
 export function RequestAnimation() {
   const { isRunning } = useSimulationStore();
   const liveRequests = useSimulationStore((state) => state.liveRequests);
-  const { getNodes } = useReactFlow();
+  const nodes = useNodes();
   const viewport = useViewport();
 
-  const nodePositions = useMemo(() => {
-    const nodes = getNodes();
-    const positions = new Map<string, { x: number; y: number; width: number; height: number }>();
-
-    for (const node of nodes) {
-      positions.set(node.id, {
-        x: node.position.x,
-        y: node.position.y,
-        width: node.measured?.width || 150,
-        height: node.measured?.height || 80,
-      });
-    }
-
-    return positions;
-  }, [getNodes]);
+  // Build node positions map - useNodes already triggers re-render on changes
+  const nodePositions = new Map<string, { x: number; y: number; width: number; height: number }>();
+  for (const node of nodes) {
+    nodePositions.set(node.id, {
+      x: node.position.x,
+      y: node.position.y,
+      width: node.measured?.width || 150,
+      height: node.measured?.height || 80,
+    });
+  }
 
   if (!isRunning || liveRequests.length === 0) {
     return null;
