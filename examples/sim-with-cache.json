@@ -1,0 +1,152 @@
+{
+  "app": "sdcanvas",
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "user-1",
+      "type": "user",
+      "position": { "x": 100, "y": 200 },
+      "data": {
+        "label": "Web Client",
+        "clientType": "browser"
+      }
+    },
+    {
+      "id": "api-1",
+      "type": "apiServer",
+      "position": { "x": 400, "y": 200 },
+      "data": {
+        "label": "API Server",
+        "endpoints": [
+          {
+            "id": "ep-1",
+            "method": "GET",
+            "path": "/api/users/:id",
+            "description": "Get user by ID (cache-through)",
+            "linkedQueries": [
+              {
+                "id": "q-1",
+                "targetNodeId": "db-1",
+                "targetTableId": "tbl-users",
+                "queryType": "SELECT",
+                "whereColumns": ["col-id"],
+                "selectColumns": ["col-id", "col-email", "col-name"]
+              }
+            ]
+          }
+        ],
+        "scaling": { "type": "fixed", "instances": 2 }
+      }
+    },
+    {
+      "id": "redis-1",
+      "type": "redis",
+      "position": { "x": 550, "y": 350 },
+      "data": {
+        "label": "Redis Cache",
+        "maxMemory": "1gb",
+        "evictionPolicy": "allkeys-lru",
+        "keys": [
+          {
+            "id": "key-user",
+            "pattern": "user:{id}",
+            "valueType": "json",
+            "ttl": 3600,
+            "estimatedCardinality": 10000,
+            "sourceNodeId": "db-1",
+            "sourceTableId": "tbl-users",
+            "description": "Cached user objects"
+          }
+        ]
+      }
+    },
+    {
+      "id": "db-1",
+      "type": "postgresql",
+      "position": { "x": 700, "y": 200 },
+      "data": {
+        "label": "PostgreSQL",
+        "tables": [
+          {
+            "id": "tbl-users",
+            "name": "users",
+            "estimatedRows": 100000,
+            "columns": [
+              {
+                "id": "col-id",
+                "name": "id",
+                "type": "serial",
+                "isPrimaryKey": true,
+                "isForeignKey": false,
+                "isNullable": false,
+                "isUnique": true
+              },
+              {
+                "id": "col-email",
+                "name": "email",
+                "type": "varchar",
+                "length": 255,
+                "isPrimaryKey": false,
+                "isForeignKey": false,
+                "isNullable": false,
+                "isUnique": true
+              },
+              {
+                "id": "col-name",
+                "name": "name",
+                "type": "varchar",
+                "length": 255,
+                "isPrimaryKey": false,
+                "isForeignKey": false,
+                "isNullable": false,
+                "isUnique": false
+              }
+            ],
+            "indexes": [
+              {
+                "id": "idx-pk",
+                "name": "users_pkey",
+                "columns": ["col-id"],
+                "isUnique": true,
+                "type": "btree"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge-1",
+      "source": "user-1",
+      "target": "api-1",
+      "data": {
+        "connectionType": "http",
+        "method": "GET"
+      }
+    },
+    {
+      "id": "edge-2",
+      "source": "api-1",
+      "target": "redis-1",
+      "data": {
+        "connectionType": "cache"
+      }
+    },
+    {
+      "id": "edge-3",
+      "source": "api-1",
+      "target": "db-1",
+      "data": {
+        "connectionType": "database",
+        "queryType": "SELECT"
+      }
+    }
+  ],
+  "viewport": {
+    "x": 0,
+    "y": 0,
+    "zoom": 1
+  }
+}

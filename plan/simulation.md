@@ -8,6 +8,41 @@ The simulation layer models request lifecycles across the system design, trackin
 
 ---
 
+## Progress
+
+### Phase 1: COMPLETE
+
+**Implemented** (2024-12-21):
+
+| Component | Status | Files |
+|-----------|--------|-------|
+| 1.1 Simulation Data Model | Done | `packages/core/src/types/simulation.ts` |
+| 1.2 Node Behavior Models | Done | `packages/core/src/simulation/nodeBehaviors.ts` |
+| 1.3 Query Cost Analysis | Done | `packages/core/src/simulation/queryCost.ts` |
+| 1.4 Cache Behavior Modeling | Done | `packages/core/src/simulation/cacheModel.ts` |
+| 1.5 Request Routing Logic | Done | `packages/core/src/simulation/engine.ts` |
+| 1.6 CLI `simulate` Command | Done | `packages/cli/src/index.ts` |
+
+**Example files created:**
+- `examples/sim-simple.json` - User -> API
+- `examples/sim-with-db.json` - User -> API -> PostgreSQL (with query cost analysis)
+- `examples/sim-with-cache.json` - User -> API -> Redis -> PostgreSQL
+
+**Usage:**
+```bash
+npm run cli -- simulate examples/sim-with-cache.json --rps 1000 --duration 60
+npm run cli -- simulate examples/sim-with-cache.json --rps 1000 --json > results.json
+npm run cli -- simulate examples/sim-with-cache.json --rps 1000 --seed 12345  # reproducible
+```
+
+**Resource modeling approach:**
+- **CPU**: Calculated as `(actual_RPS / max_RPS) × 100` - reflects load vs capacity
+- **Memory**: Uses Little's Law: `concurrent_requests × memory_per_request` where `concurrent = RPS × latency_seconds`
+- **Overload**: When load > 100%, latency increases exponentially; requests fail when > 150%
+- **Bottleneck detection**: Warns at 80% capacity, critical at 100%+
+
+---
+
 ## Phase 1: Core Simulation Engine (CLI)
 
 **Goal**: Build a headless simulation engine that can process a canvas file and output metrics.
@@ -621,15 +656,15 @@ operations: [
 
 ## Success Criteria
 
-- [ ] Phase 1: `npm run cli -- simulate` works on example files
-- [ ] Phase 1: Can identify bottlenecks via CLI output
-- [ ] Phase 1: Missing index detection works with actionable suggestions
-- [ ] Phase 1: Query cost estimates reflect table size and index usage
-- [ ] Phase 1: Cache hit rate estimation based on TTL + cardinality
-- [ ] Phase 1: Cache-through pattern reduces simulated DB load
+- [x] Phase 1: `npm run cli -- simulate` works on example files
+- [x] Phase 1: Can identify bottlenecks via CLI output
+- [x] Phase 1: Missing index detection works with actionable suggestions
+- [x] Phase 1: Query cost estimates reflect table size and index usage
+- [x] Phase 1: Cache hit rate estimation based on TTL + cardinality
+- [x] Phase 1: Cache-through pattern reduces simulated DB load
 - [ ] Phase 2: Live animation runs smoothly at 60fps
 - [ ] Phase 2: Can pause/resume simulation
 - [ ] Phase 3: Graphs show meaningful data during simulation
 - [ ] Phase 3: Can replay past simulations
 - [ ] Phase 4: 3D view provides additional insight
-- [ ] All phases: Example canvases demonstrate each scenario
+- [x] All phases: Example canvases demonstrate each scenario
