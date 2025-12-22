@@ -110,24 +110,15 @@ function buildGraph(
 }
 
 /**
- * Find entry point nodes (nodes with no incoming edges, typically 'user' nodes)
+ * Find entry point nodes (only 'user' nodes generate requests)
  */
 function findEntryPoints(graph: SimulationGraph): SystemNode[] {
   const entryPoints: SystemNode[] = [];
 
-  for (const [nodeId, node] of graph.nodes) {
-    const incoming = graph.incomingEdges.get(nodeId) || [];
-    if (incoming.length === 0 && node.type !== 'stickyNote') {
+  // Only User nodes are traffic sources - they represent clients making requests
+  for (const node of graph.nodes.values()) {
+    if (node.type === 'user') {
       entryPoints.push(node);
-    }
-  }
-
-  // If no entry points found, look for user nodes
-  if (entryPoints.length === 0) {
-    for (const node of graph.nodes.values()) {
-      if (node.type === 'user') {
-        entryPoints.push(node);
-      }
     }
   }
 

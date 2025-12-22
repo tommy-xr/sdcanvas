@@ -173,9 +173,6 @@ export function LiveMetricsOverlay() {
     });
   }
 
-  // Debug
-  console.log('LiveMetricsOverlay:', { isRunning, metricsCount: Object.keys(liveMetrics).length, nodeCount: nodePositions.size, metrics: liveMetrics });
-
   if (!isRunning) {
     return null;
   }
