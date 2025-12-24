@@ -1,15 +1,23 @@
 - Non-HTTP transport modelling (websocket, raw tcp, udp, other)
 - API - model cache-through behavior against db (ie, check redis first)
-- Lower pane (evaluation, errors)
+- Simulation: 
+  - We should be showing the "round-trip" behavior of API requests through the system. The latency for the client should show the average round-trip latency & error rate / dropped requests
+  - There should be an animation for when 'dots' are dropped / errored out (like an evaporating red dot)
+  - The UI should show the 'play' / 'stop' pause in header, but the details as a sub-header in the canvas area
+  - Show auto-scale behavior  - show the current number of instances. Pulse when scaling up/down
+  - Show estimated cost of running nodes. This should impact, for example, the COGs
+  - For stats, give indication that they are averaged across the instance count
+  - For nodes, give the option for specific node hardware types (memory, cpu) to give more fidelity to scaling and cost.
+- How can we gamify this? It would be fun to see, for example, how low we can make the cost and preserve 3 9s reliability
 - Simulation capability - see [simulation.md](./simulation.md) for detailed plan
   - [x] Phase 1: Core simulation engine + CLI *(COMPLETE - 2024-12-21)*
   - [ ] Phase 2: Live simulation UI with animated requests
-  - [ ] Phase 3: Monitoring graphs (APM-style)
-  - [ ] Phase 4: 3D visualization with pylons
 - Ability to branch - fusion 360 timeline view
     - Undo/redo as first 'baby step'
-- Non-local
 - GPT integration (BYOK)
     - AI Review
 - Leetcode for SD
     - Initial set of sample problems
+- Non-local
+- Lower pane (evaluation, errors)
+  - [ ] Simulation: Phase 4: 3D visualization with pylons
