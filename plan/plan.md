@@ -10,14 +10,13 @@
   - For nodes, give the option for specific node hardware types (memory, cpu) to give more fidelity to scaling and cost.
 - How can we gamify this? It would be fun to see, for example, how low we can make the cost and preserve 3 9s reliability
 - Simulation capability - see [simulation.md](./simulation.md) for detailed plan
-  - [x] Phase 1: Core simulation engine + CLI *(COMPLETE - 2024-12-21)*
-  - [ ] Phase 2: Live simulation UI with animated requests
 - Ability to branch - fusion 360 timeline view
     - Undo/redo as first 'baby step'
 - GPT integration (BYOK)
     - AI Review
-- Leetcode for SD
     - Initial set of sample problems
-- Non-local
-- Lower pane (evaluation, errors)
-  - [ ] Simulation: Phase 4: 3D visualization with pylons
+- SaaS: Ability to load/save into cloud
+- SaaS: Ability to collaborate / invite
+- Lower pane (practice problemsevaluation, errors)
+	- Leetcode for SD
+- [ ] Simulation: Phase 4: 3D visualization with pylons
