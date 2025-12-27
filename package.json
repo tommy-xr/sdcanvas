@@ -15,7 +15,7 @@
     "preview": "vite preview",
     "cli": "node packages/cli/dist/index.js",
     "validate": "bash -c 'shopt -s nullglob; files=(examples/*.json examples/*.yaml examples/*.yml); if [ ${#files[@]} -eq 0 ]; then echo \"No canvas files found\"; exit 1; fi; for file in \"${files[@]}\"; do echo \"Validating: $file\"; npm run cli -- validate \"$file\"; done; echo \"All canvas files validated!\"'",
-    "test:simulate": "bash -c 'shopt -s nullglob; files=(examples/sim-*.json); if [ ${#files[@]} -eq 0 ]; then echo \"No simulation files found\"; exit 1; fi; for file in \"${files[@]}\"; do echo \"Simulating: $file\"; npm run cli -- simulate \"$file\" --rps 1000 --duration 5 --seed 12345; done; echo \"All simulations passed!\"'"
+    "test:simulate": "node scripts/validate-simulations.mjs"
   },
   "dependencies": {
     "@xyflow/react": "^12.10.0",

@@ -31,6 +31,10 @@ export interface LiveRequest {
   pathHistory: string[];
   /** The user node this request originated from */
   originNodeId: string;
+  /** Request status: active (normal), failed (dropped), completing (success) */
+  status: 'active' | 'failed' | 'completing';
+  /** Timestamp when request failed (for fade animation) */
+  failedAt?: number;
 }
 
 /**
@@ -308,6 +312,7 @@ export const useSimulationStore = create<SimulationState>()((set, get) => ({
         isResponse: false,
         pathHistory: [entryPoint.id],
         originNodeId: entryPoint.id,
+        status: 'active',
       });
     }
 
@@ -316,7 +321,20 @@ export const useSimulationStore = create<SimulationState>()((set, get) => ({
     // Track round-trip completions for metrics update
     const newRoundTripMetrics = { ...state.roundTripMetrics };
 
+    // Fade duration for failed requests (must match RequestAnimation.tsx)
+    const failedFadeDuration = 0.8; // seconds
+
     for (const req of newRequests) {
+      // Handle failed requests - just fade them out
+      if (req.status === 'failed') {
+        if (req.failedAt && (newTime - req.failedAt) < failedFadeDuration) {
+          // Still fading, keep in list
+          updatedRequests.push(req);
+        }
+        // Otherwise, remove from list (fade complete)
+        continue;
+      }
+
       // Animate along edge - use consistent speed regardless of edge length
       // A request takes about 0.5-1 second to traverse an edge visually
       const edgeTraversalTime = 0.5; // seconds to cross an edge
@@ -324,6 +342,20 @@ export const useSimulationStore = create<SimulationState>()((set, get) => ({
       const newProgress = req.progress + progressDelta;
 
       if (newProgress >= 1) {
+        // Request has reached target node - check if it should fail
+        const targetMetrics = newLiveMetrics[req.targetNodeId];
+        const errorRate = targetMetrics?.errorRate ?? 0;
+
+        // Probabilistically fail based on error rate (only for forward requests)
+        if (!req.isResponse && errorRate > 0 && Math.random() < errorRate) {
+          updatedRequests.push({
+            ...req,
+            progress: 1, // Keep at destination
+            status: 'failed',
+            failedAt: newTime,
+          });
+          continue;
+        }
         if (req.isResponse) {
           // Response traveling back to origin
           // We've arrived at targetNodeId, find its position in pathHistory

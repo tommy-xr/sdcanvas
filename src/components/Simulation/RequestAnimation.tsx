@@ -52,9 +52,12 @@ interface AnimatedDotProps {
   progress: number;
   multiplier: number;
   isResponse: boolean;
+  status: 'active' | 'failed' | 'completing';
+  failedAt?: number;
+  currentTime: number;
 }
 
-function AnimatedDot({ sourceNode, targetNode, progress, multiplier, isResponse }: AnimatedDotProps) {
+function AnimatedDot({ sourceNode, targetNode, progress, multiplier, isResponse, status, failedAt, currentTime }: AnimatedDotProps) {
   // Calculate edge endpoints at node borders, not centers
   const sourceCenter = {
     x: sourceNode.x + (sourceNode.width || 150) / 2,
@@ -96,33 +99,56 @@ function AnimatedDot({ sourceNode, targetNode, progress, multiplier, isResponse 
   const sizeMultiplier = Math.log10(multiplier + 1) / 3 + 0.5;
   const size = baseSize * sizeMultiplier;
 
-  // Color based on request vs response
+  // Calculate fade progress for failed requests
+  const failedFadeDuration = 0.8; // seconds - longer for more visible effect
+  const fadeProgress = status === 'failed' && failedAt !== undefined
+    ? Math.min(1, (currentTime - failedAt) / failedFadeDuration)
+    : 0;
+
+  // Color based on status and request/response type
+  // Failed: red (hue 0) with fade
   // Requests: green (hue 120-140)
   // Responses: blue (hue 200-220)
-  const hue = isResponse
-    ? 200 + progress * 20  // Blue: 200 to 220
-    : 120 + progress * 20; // Green: 120 to 140
+  let hue: number;
+  let opacity: number;
+  let scale: number;
+  let yOffset: number;
+
+  if (status === 'failed') {
+    hue = 0; // Red
+    // Ease-out curve for smoother animation
+    const easeOut = 1 - Math.pow(1 - fadeProgress, 2);
+    opacity = 0.9 * (1 - easeOut); // Fade out
+    scale = 1 - easeOut * 0.3; // Shrink slightly
+    yOffset = -easeOut * 40; // Float upward 40px
+  } else {
+    hue = isResponse
+      ? 200 + progress * 20  // Blue: 200 to 220
+      : 120 + progress * 20; // Green: 120 to 140
+    opacity = 0.9;
+    scale = 1;
+    yOffset = 0;
+  }
 
   return (
     <div
       className="absolute pointer-events-none"
       style={{
         left: pos.x,
-        top: pos.y,
-        transform: 'translate(-50%, -50%)',
+        top: pos.y + yOffset,
+        transform: `translate(-50%, -50%) scale(${scale})`,
         width: size,
         height: size,
         borderRadius: '50%',
-        backgroundColor: `hsl(${hue}, 80%, 55%)`,
-        boxShadow: `0 0 ${size * 2}px hsl(${hue}, 80%, 55%)`,
-        opacity: 0.9,
+        backgroundColor: `hsla(${hue}, 80%, 55%, ${opacity})`,
+        boxShadow: `0 0 ${size * 2}px hsla(${hue}, 80%, 55%, ${opacity})`,
       }}
     />
   );
 }
 
 export function RequestAnimation() {
-  const { isRunning } = useSimulationStore();
+  const { isRunning, currentTime } = useSimulationStore();
   const liveRequests = useSimulationStore((state) => state.liveRequests);
   const nodes = useNodes();
   const viewport = useViewport();
@@ -171,6 +197,9 @@ export function RequestAnimation() {
               progress={request.progress}
               multiplier={request.requestMultiplier}
               isResponse={request.isResponse}
+              status={request.status}
+              failedAt={request.failedAt}
+              currentTime={currentTime}
             />
           );
         })}

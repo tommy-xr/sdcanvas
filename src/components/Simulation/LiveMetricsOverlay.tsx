@@ -265,9 +265,12 @@ function UserMetricsBadge({ nodePosition, metrics }: UserMetricsBadgeProps) {
 export function LiveMetricsOverlay() {
   const { isRunning } = useSimulationStore();
   const liveMetrics = useSimulationStore((state) => state.liveMetrics);
-  const roundTripMetrics = useSimulationStore((state) => state.roundTripMetrics);
+  const result = useSimulationStore((state) => state.result);
   const nodes = useNodes();
   const viewport = useViewport();
+
+  // Use simulated entry point metrics for RTT/success rate (not visual animation time)
+  const entryPointMetrics = result?.entryPointMetrics ?? {};
 
   // Build node positions and types map - useNodes already triggers re-render on changes
   const nodePositions = new Map<string, { x: number; y: number; width: number; height: number }>();
@@ -326,16 +329,26 @@ export function LiveMetricsOverlay() {
           );
         })}
 
-        {/* Render round-trip metrics for user nodes */}
-        {Object.entries(roundTripMetrics).map(([nodeId, metrics]) => {
+        {/* Render round-trip metrics for user nodes using simulated data */}
+        {Object.entries(entryPointMetrics).map(([nodeId, metrics]) => {
           const nodePosition = nodePositions.get(nodeId);
           if (!nodePosition) return null;
+
+          // Map EntryPointMetrics to RoundTripMetrics format
+          const roundTripMetrics: RoundTripMetrics = {
+            nodeId: metrics.nodeId,
+            totalRequests: metrics.totalRequests,
+            successfulResponses: metrics.successfulResponses,
+            totalLatencyMs: 0, // Not needed for display
+            avgLatencyMs: metrics.avgRoundTripMs, // Use simulated RTT
+            successRate: metrics.successRate,
+          };
 
           return (
             <UserMetricsBadge
               key={`user-${nodeId}`}
               nodePosition={nodePosition}
-              metrics={metrics}
+              metrics={roundTripMetrics}
             />
           );
         })}

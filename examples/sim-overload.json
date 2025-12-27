@@ -1,0 +1,49 @@
+{
+  "app": "sdcanvas",
+  "version": "1.0.0",
+  "description": "Overload test scenario - single API server that will drop requests under high load",
+  "nodes": [
+    {
+      "id": "user-1",
+      "type": "user",
+      "position": { "x": 100, "y": 200 },
+      "data": {
+        "label": "Web Client",
+        "clientType": "browser"
+      }
+    },
+    {
+      "id": "api-1",
+      "type": "apiServer",
+      "position": { "x": 400, "y": 200 },
+      "data": {
+        "label": "Overloaded API",
+        "endpoints": [
+          {
+            "id": "ep-1",
+            "method": "GET",
+            "path": "/api/data",
+            "description": "Returns data"
+          }
+        ],
+        "scaling": { "type": "single" }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge-1",
+      "source": "user-1",
+      "target": "api-1",
+      "data": {
+        "connectionType": "http",
+        "method": "GET"
+      }
+    }
+  ],
+  "viewport": {
+    "x": 0,
+    "y": 0,
+    "zoom": 1
+  }
+}
