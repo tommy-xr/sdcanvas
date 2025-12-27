@@ -306,10 +306,27 @@ function simulateCommand(
     console.log(`\nSimulation Complete (${result.duration}s, ${result.totalRequests.toLocaleString()} requests)`);
     console.log('='.repeat(60));
 
+    // Entry Point (User Node) Metrics - Round-Trip Times
+    const entryPointEntries = Object.entries(result.entryPointMetrics);
+    if (entryPointEntries.length > 0) {
+      console.log('\nClient Round-Trip Metrics:');
+      for (const [nodeId, metrics] of entryPointEntries) {
+        const successPercent = (metrics.successRate * 100).toFixed(1);
+        console.log(`\n  ${nodeId}:`);
+        console.log(`    Requests: ${metrics.totalRequests.toLocaleString()} | Success Rate: ${successPercent}%`);
+        console.log(`    RTT Avg: ${metrics.avgRoundTripMs.toFixed(1)}ms | RTT P99: ${metrics.p99RoundTripMs.toFixed(1)}ms`);
+        if (metrics.failedRequests > 0) {
+          console.log(`    Failed: ${metrics.failedRequests.toLocaleString()}`);
+        }
+      }
+    }
+
     // Node Metrics
     console.log('\nNode Metrics:');
     for (const [nodeId, metrics] of Object.entries(result.nodeMetrics)) {
       if (metrics.requestsReceived === 0) continue;
+      // Skip user nodes - they're shown in entry point metrics
+      if (result.entryPointMetrics[nodeId]) continue;
 
       console.log(`\n  ${nodeId}:`);
       console.log(`    Peak RPS: ${formatRps(metrics.peakRPS)} | Avg Latency: ${metrics.avgLatencyMs.toFixed(1)}ms | P99: ${metrics.p99LatencyMs.toFixed(1)}ms`);

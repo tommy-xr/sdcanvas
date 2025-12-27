@@ -51,9 +51,10 @@ interface AnimatedDotProps {
   targetNode: { x: number; y: number; width: number; height: number };
   progress: number;
   multiplier: number;
+  isResponse: boolean;
 }
 
-function AnimatedDot({ sourceNode, targetNode, progress, multiplier }: AnimatedDotProps) {
+function AnimatedDot({ sourceNode, targetNode, progress, multiplier, isResponse }: AnimatedDotProps) {
   // Calculate edge endpoints at node borders, not centers
   const sourceCenter = {
     x: sourceNode.x + (sourceNode.width || 150) / 2,
@@ -95,8 +96,12 @@ function AnimatedDot({ sourceNode, targetNode, progress, multiplier }: AnimatedD
   const sizeMultiplier = Math.log10(multiplier + 1) / 3 + 0.5;
   const size = baseSize * sizeMultiplier;
 
-  // Color gradient based on progress (blue -> cyan)
-  const hue = 200 + progress * 40; // 200 (blue) to 240
+  // Color based on request vs response
+  // Requests: green (hue 120-140)
+  // Responses: blue (hue 200-220)
+  const hue = isResponse
+    ? 200 + progress * 20  // Blue: 200 to 220
+    : 120 + progress * 20; // Green: 120 to 140
 
   return (
     <div
@@ -165,6 +170,7 @@ export function RequestAnimation() {
               targetNode={targetNode}
               progress={request.progress}
               multiplier={request.requestMultiplier}
+              isResponse={request.isResponse}
             />
           );
         })}

@@ -137,6 +137,31 @@ export interface TimelineSnapshot {
 }
 
 // ============================================================================
+// Entry Point (User Node) Metrics
+// ============================================================================
+
+/**
+ * Round-trip metrics for entry point (user/client) nodes
+ */
+export interface EntryPointMetrics {
+  nodeId: string;
+  /** Total requests sent from this entry point */
+  totalRequests: number;
+  /** Successful responses received */
+  successfulResponses: number;
+  /** Failed requests (errors/timeouts) */
+  failedRequests: number;
+  /** Average round-trip time in milliseconds */
+  avgRoundTripMs: number;
+  /** P99 round-trip time in milliseconds */
+  p99RoundTripMs: number;
+  /** Success rate (0-1) */
+  successRate: number;
+  /** All RTT samples for percentile calculation */
+  rttSamples: number[];
+}
+
+// ============================================================================
 // Simulation Result
 // ============================================================================
 
@@ -150,6 +175,8 @@ export interface SimulationResult {
   totalRequests: number;
   nodeMetrics: Record<string, NodeMetrics>;
   edgeMetrics: Record<string, EdgeMetrics>;
+  /** Round-trip metrics per entry point (user node) */
+  entryPointMetrics: Record<string, EntryPointMetrics>;
   bottlenecks: BottleneckInfo[];
   timeline: TimelineSnapshot[];
 }

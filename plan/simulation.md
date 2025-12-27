@@ -327,6 +327,18 @@ Edge Traffic:
 
 **Goal**: Overlay animated requests on the 2D canvas during simulation.
 
+### Phase 2 Progress
+
+**Implemented** (2024-12-27):
+
+| Component | Status | Notes |
+|-----------|--------|-------|
+| 2.1 Simulation State Management | Done | Zustand store with full state |
+| 2.2 Request Animation | Done | Bezier curve interpolation, round-trip support |
+| 2.3 Live Metrics Overlay | Done | RPS, CPU, Memory, Latency per node |
+| 2.4 Simulation Control Panel | Done | Bottom status bar with all controls |
+| Round-trip Visualization | Done | Requests (green) → Responses (blue), RTT + success rate on user nodes |
+
 ### 2.1 Simulation State Management
 
 Add Zustand store for simulation state:
@@ -662,8 +674,9 @@ operations: [
 - [x] Phase 1: Query cost estimates reflect table size and index usage
 - [x] Phase 1: Cache hit rate estimation based on TTL + cardinality
 - [x] Phase 1: Cache-through pattern reduces simulated DB load
-- [ ] Phase 2: Live animation runs smoothly at 60fps
-- [ ] Phase 2: Can pause/resume simulation
+- [x] Phase 2: Live animation runs smoothly at 60fps
+- [x] Phase 2: Can pause/resume simulation
+- [x] Phase 2: Round-trip visualization with color-coded requests/responses
 - [ ] Phase 3: Graphs show meaningful data during simulation
 - [ ] Phase 3: Can replay past simulations
 - [ ] Phase 4: 3D view provides additional insight

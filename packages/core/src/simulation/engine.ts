@@ -21,6 +21,7 @@ import type {
   NodeMetricsSnapshot,
   QueryAnalysis,
   CacheAnalysis,
+  EntryPointMetrics,
 } from '../types/simulation.js';
 import {
   getNodeBehavior,
@@ -70,6 +71,18 @@ interface EdgeState {
   requestCount: number;
   totalBytesTransferred: number;
   totalLatencyMs: number;
+}
+
+/**
+ * Runtime state for an entry point (user node) during simulation
+ */
+interface EntryPointState {
+  nodeId: string;
+  totalRequests: number;
+  successfulResponses: number;
+  failedRequests: number;
+  totalRttMs: number;
+  rttSamples: number[];
 }
 
 /**
@@ -326,6 +339,16 @@ function edgeStateToMetrics(state: EdgeState): EdgeMetrics {
 }
 
 /**
+ * Result of simulating a request path
+ */
+interface RequestPathResult {
+  /** Total round-trip latency in milliseconds */
+  totalLatencyMs: number;
+  /** Whether the request completed successfully */
+  success: boolean;
+}
+
+/**
  * Simulate request flow through a path
  */
 function simulateRequestPath(
@@ -336,8 +359,9 @@ function simulateRequestPath(
   random: () => number,
   queryAnalyses: Map<string, QueryAnalysis>,
   cacheAnalyses: Map<string, CacheAnalysis>
-): number {
+): RequestPathResult {
   let totalLatency = 0;
+  let success = true;
   const visited = new Set<string>();
   const queue: SystemNode[] = [startNode];
 
@@ -397,7 +421,7 @@ function simulateRequestPath(
       if (loadFactor > 1.5 && random() < (loadFactor - 1.5)) {
         state.errors++;
         // Don't process further - request failed
-        return totalLatency;
+        return { totalLatencyMs: totalLatency, success: false };
       }
     } else if (loadFactor > 0.8) {
       // Approaching capacity: gradual latency increase
@@ -437,7 +461,7 @@ function simulateRequestPath(
     }
   }
 
-  return totalLatency;
+  return { totalLatencyMs: totalLatency, success };
 }
 
 /**
@@ -526,6 +550,16 @@ function preAnalyze(
 }
 
 /**
+ * Calculate P99 from RTT samples
+ */
+function calculateP99Rtt(samples: number[]): number {
+  if (samples.length === 0) return 0;
+  const sorted = [...samples].sort((a, b) => a - b);
+  const idx = Math.floor(sorted.length * 0.99);
+  return sorted[Math.min(idx, sorted.length - 1)];
+}
+
+/**
  * Run a simulation on the given nodes and edges
  */
 export function runSimulation(
@@ -540,6 +574,7 @@ export function runSimulation(
   // Initialize state
   const nodeStates = new Map<string, NodeState>();
   const edgeStates = new Map<string, EdgeState>();
+  const entryPointStates = new Map<string, EntryPointState>();
 
   for (const node of nodes) {
     if (node.type !== 'stickyNote') {
@@ -549,6 +584,18 @@ export function runSimulation(
 
   for (const edge of edges) {
     edgeStates.set(edge.id, initEdgeState(edge));
+  }
+
+  // Initialize entry point states
+  for (const entryPoint of entryPoints) {
+    entryPointStates.set(entryPoint.id, {
+      nodeId: entryPoint.id,
+      totalRequests: 0,
+      successfulResponses: 0,
+      failedRequests: 0,
+      totalRttMs: 0,
+      rttSamples: [],
+    });
   }
 
   // Pre-analyze queries and cache patterns
@@ -572,8 +619,10 @@ export function runSimulation(
     const requestsPerEntry = Math.ceil(requestsThisSecond / Math.max(1, entryPoints.length));
 
     for (const entryPoint of entryPoints) {
+      const entryState = entryPointStates.get(entryPoint.id);
+
       for (let i = 0; i < requestsPerEntry; i++) {
-        simulateRequestPath(
+        const result = simulateRequestPath(
           entryPoint,
           graph,
           nodeStates,
@@ -583,6 +632,18 @@ export function runSimulation(
           cacheAnalyses
         );
         totalRequests++;
+
+        // Track RTT for this entry point
+        if (entryState) {
+          entryState.totalRequests++;
+          if (result.success) {
+            entryState.successfulResponses++;
+            entryState.totalRttMs += result.totalLatencyMs;
+            entryState.rttSamples.push(result.totalLatencyMs);
+          } else {
+            entryState.failedRequests++;
+          }
+        }
       }
     }
 
@@ -609,6 +670,28 @@ export function runSimulation(
     edgeMetrics[edgeId] = edgeStateToMetrics(state);
   }
 
+  // Build entry point metrics
+  const entryPointMetrics: Record<string, EntryPointMetrics> = {};
+  for (const [nodeId, state] of entryPointStates) {
+    const avgRtt = state.successfulResponses > 0
+      ? state.totalRttMs / state.successfulResponses
+      : 0;
+    const successRate = state.totalRequests > 0
+      ? state.successfulResponses / state.totalRequests
+      : 1;
+
+    entryPointMetrics[nodeId] = {
+      nodeId: state.nodeId,
+      totalRequests: state.totalRequests,
+      successfulResponses: state.successfulResponses,
+      failedRequests: state.failedRequests,
+      avgRoundTripMs: avgRtt,
+      p99RoundTripMs: calculateP99Rtt(state.rttSamples),
+      successRate,
+      rttSamples: state.rttSamples,
+    };
+  }
+
   const bottlenecks = detectBottlenecks(nodeStates, graph, config.durationSeconds);
 
   return {
@@ -617,6 +700,7 @@ export function runSimulation(
     totalRequests,
     nodeMetrics,
     edgeMetrics,
+    entryPointMetrics,
     bottlenecks,
     timeline,
   };

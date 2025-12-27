@@ -56,6 +56,7 @@ export type {
   NodeResources,
   NodeMetrics,
   EdgeMetrics,
+  EntryPointMetrics,
   BottleneckType,
   BottleneckInfo,
   NodeMetricsSnapshot,

@@ -1,9 +1,9 @@
 - Non-HTTP transport modelling (websocket, raw tcp, udp, other)
 - API - model cache-through behavior against db (ie, check redis first)
 - Simulation: 
-  - We should be showing the "round-trip" behavior of API requests through the system. The latency for the client should show the average round-trip latency & error rate / dropped requests
+  - [x] Round-trip visualization - requests (green) travel forward, responses (blue) trace back to user. User nodes show RTT and success rate
   - There should be an animation for when 'dots' are dropped / errored out (like an evaporating red dot)
-  - The UI should show the 'play' / 'stop' pause in header, but the details as a sub-header in the canvas area
+  - [x] Simulation controls (play/stop/pause) - implemented in bottom status bar simulation control panel
   - Show auto-scale behavior  - show the current number of instances. Pulse when scaling up/down
   - Show estimated cost of running nodes. This should impact, for example, the COGs
   - For stats, give indication that they are averaged across the instance count
@@ -20,3 +20,4 @@
 - Lower pane (practice problemsevaluation, errors)
 	- Leetcode for SD
 - [ ] Simulation: Phase 4: 3D visualization with pylons
+- [ ] Testing: Add accessibility handles to edges for Playwright testability
