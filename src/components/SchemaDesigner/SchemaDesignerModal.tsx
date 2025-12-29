@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { X, Database, Table2, Columns3, GitBranch, BarChart3 } from 'lucide-react';
 import type { PostgreSQLNodeData, DatabaseTable } from '../../types/nodes';
 import { TableList } from './TableList';
@@ -27,7 +27,7 @@ export function SchemaDesignerModal({
     data.tables?.[0]?.id || null
   );
 
-  const tables = data.tables || [];
+  const tables = useMemo(() => data.tables || [], [data.tables]);
   const selectedTable = tables.find((t) => t.id === selectedTableId) || null;
 
   const handleAddTable = useCallback(() => {

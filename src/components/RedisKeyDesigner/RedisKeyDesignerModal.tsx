@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { X, Key } from 'lucide-react';
 import type { RedisNodeData, RedisKey } from '../../types/nodes';
 import { KeyList } from './KeyList';
@@ -21,7 +21,7 @@ export function RedisKeyDesignerModal({
     data.keys?.[0]?.id || null
   );
 
-  const keys = data.keys || [];
+  const keys = useMemo(() => data.keys || [], [data.keys]);
   const selectedKey = keys.find((k) => k.id === selectedKeyId) || null;
 
   const handleAddKey = useCallback(() => {

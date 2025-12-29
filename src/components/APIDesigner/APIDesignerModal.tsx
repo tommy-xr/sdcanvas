@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { X, Server, FileJson, Database } from 'lucide-react';
 import type { APIServerNodeData, APIEndpoint } from '../../types/nodes';
 import type { SystemNode } from '../../types/nodes';
@@ -29,7 +29,7 @@ export function APIDesignerModal({
     data.endpoints?.[0]?.id || null
   );
 
-  const endpoints = data.endpoints || [];
+  const endpoints = useMemo(() => data.endpoints || [], [data.endpoints]);
   const selectedEndpoint = endpoints.find((e) => e.id === selectedEndpointId) || null;
 
   // Get all database nodes for linking

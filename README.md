@@ -1,5 +1,7 @@
 # `sdcanvas`
 
+[![CI](https://github.com/tommy-xr/sdcanvas/actions/workflows/ci.yml/badge.svg)](https://github.com/tommy-xr/sdcanvas/actions/workflows/ci.yml)
+
 ## Overview
 
 System Design Canvas (`sdcanvas`)
