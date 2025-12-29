@@ -15,6 +15,7 @@ import { nodeTypes } from '../Nodes';
 import { edgeTypes } from '../Edges';
 import { RequestAnimation, LiveMetricsOverlay } from '../Simulation';
 import type { SystemNode, SystemNodeType } from '../../types/nodes';
+import type { SystemEdge } from '../../types/edges';
 
 interface CanvasProps {
   onOpenSchemaDesigner: (nodeId: string) => void;
@@ -37,7 +38,7 @@ export function Canvas({ onOpenSchemaDesigner, onOpenAPIDesigner, onOpenRedisKey
 
   const onReconnect = useCallback(
     (oldEdge: Edge, newConnection: Connection) => {
-      setEdges(reconnectEdge(oldEdge, newConnection, edges));
+      setEdges(reconnectEdge(oldEdge, newConnection, edges) as SystemEdge[]);
     },
     [edges, setEdges]
   );
