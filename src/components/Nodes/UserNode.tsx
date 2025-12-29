@@ -15,12 +15,13 @@ const clientLabels = {
   desktop: 'Desktop',
 };
 
-export function UserNode({ data, selected }: NodeProps) {
+export function UserNode({ id, data, selected }: NodeProps) {
   const nodeData = data as UserNodeData;
   const Icon = clientIcons[nodeData.clientType] || Monitor;
 
   return (
     <BaseNode
+      id={id}
       icon={<Icon size={18} />}
       label={nodeData.label}
       subtitle={clientLabels[nodeData.clientType]}

@@ -3,11 +3,12 @@ import { HardDrive } from 'lucide-react';
 import type { S3BucketNodeData } from '../../types/nodes';
 import { BaseNode } from './BaseNode';
 
-export function S3BucketNode({ data, selected }: NodeProps) {
+export function S3BucketNode({ id, data, selected }: NodeProps) {
   const nodeData = data as S3BucketNodeData;
 
   return (
     <BaseNode
+      id={id}
       icon={<HardDrive size={18} />}
       label={nodeData.label}
       subtitle="Blob Storage (S3, GCS)"

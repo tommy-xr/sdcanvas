@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import type { ScalingConfig } from '../../types/nodes';
 
 interface BaseNodeProps {
+  id?: string;
   icon: ReactNode;
   label: string;
   subtitle?: string;
@@ -13,6 +14,7 @@ interface BaseNodeProps {
 }
 
 export function BaseNode({
+  id,
   icon,
   label,
   subtitle,
@@ -66,6 +68,7 @@ export function BaseNode({
           type="target"
           position={Position.Left}
           className="!w-3 !h-3 !bg-gray-400 !border-2 !border-gray-300"
+          data-testid={id ? `node-${id}-target-handle` : undefined}
         />
 
         <div
@@ -100,6 +103,7 @@ export function BaseNode({
           type="source"
           position={Position.Right}
           className="!w-3 !h-3 !bg-gray-400 !border-2 !border-gray-300"
+          data-testid={id ? `node-${id}-source-handle` : undefined}
         />
       </div>
     </div>

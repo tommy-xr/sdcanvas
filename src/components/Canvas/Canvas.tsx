@@ -5,8 +5,9 @@ import {
   Controls,
   BackgroundVariant,
   useReactFlow,
+  reconnectEdge,
 } from '@xyflow/react';
-import type { NodeMouseHandler } from '@xyflow/react';
+import type { NodeMouseHandler, Edge, Connection } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
 import { useCanvasStore } from '../../store/canvasStore';
@@ -14,6 +15,7 @@ import { nodeTypes } from '../Nodes';
 import { edgeTypes } from '../Edges';
 import { RequestAnimation, LiveMetricsOverlay } from '../Simulation';
 import type { SystemNode, SystemNodeType } from '../../types/nodes';
+import type { SystemEdge } from '../../types/edges';
 
 interface CanvasProps {
   onOpenSchemaDesigner: (nodeId: string) => void;
@@ -31,7 +33,15 @@ export function Canvas({ onOpenSchemaDesigner, onOpenAPIDesigner, onOpenRedisKey
     onEdgesChange,
     onConnect,
     setSelectedNodeId,
+    setEdges,
   } = useCanvasStore();
+
+  const onReconnect = useCallback(
+    (oldEdge: Edge, newConnection: Connection) => {
+      setEdges(reconnectEdge(oldEdge, newConnection, edges) as SystemEdge[]);
+    },
+    [edges, setEdges]
+  );
 
   const onNodeClick: NodeMouseHandler = useCallback(
     (_, node) => {
@@ -99,6 +109,7 @@ export function Canvas({ onOpenSchemaDesigner, onOpenAPIDesigner, onOpenRedisKey
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
+        onReconnect={onReconnect}
         onNodeClick={onNodeClick}
         onNodeDoubleClick={onNodeDoubleClick}
         onPaneClick={onPaneClick}
@@ -108,6 +119,7 @@ export function Canvas({ onOpenSchemaDesigner, onOpenAPIDesigner, onOpenRedisKey
         edgeTypes={edgeTypes}
         defaultEdgeOptions={{
           type: 'labeled',
+          reconnectable: true,
         }}
         fitView
         snapToGrid
