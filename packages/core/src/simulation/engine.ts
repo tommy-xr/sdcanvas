@@ -361,7 +361,7 @@ function simulateRequestPath(
   cacheAnalyses: Map<string, CacheAnalysis>
 ): RequestPathResult {
   let totalLatency = 0;
-  let success = true;
+  const success = true;
   const visited = new Set<string>();
   const queue: SystemNode[] = [startNode];
 

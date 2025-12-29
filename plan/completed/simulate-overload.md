@@ -124,4 +124,4 @@ In the `tick` function, filter out requests where:
 - [x] `npm run test:simulate` passes with new overload scenario
 - [x] `sim-overload.json` at 5000 RPS produces `successRate < 0.5` (actual: 39.9%)
 - [x] Existing `sim-*.json` files continue to pass (successRate > 0.9)
-- [ ] UI shows red evaporating dots when running overload scenario (ready for manual testing)
+- [x] UI shows red evaporating dots when running overload scenario

@@ -1,17 +1,20 @@
+- Fix CI issues and add badge
+- Add screenshot of app in action in simulation on main page
+- Add link to sdcanvas.dev from README on GitHub
 - Non-HTTP transport modelling (websocket, raw tcp, udp, other)
 - API - model cache-through behavior against db (ie, check redis first)
-- Simulation: 
+- Simulation:
   - [x] Round-trip visualization - requests (green) travel forward, responses (blue) trace back to user. User nodes show RTT and success rate
-  - There should be an animation for when 'dots' are dropped / errored out (like an evaporating red dot)
+  - [x] Error animation - red dots float upward and fade out when requests are dropped (see `plan/completed/simulate-overload.md`)
   - [x] Simulation controls (play/stop/pause) - implemented in bottom status bar simulation control panel
-  - Show auto-scale behavior  - show the current number of instances. Pulse when scaling up/down
+  - Show auto-scale behavior  - show the current number of instances. Pulse when scaling up/down. We should differentiate when auto-scaling without a load-balancer (where the api server would be continually hit).
   - Show estimated cost of running nodes. This should impact, for example, the COGs
   - For stats, give indication that they are averaged across the instance count
   - For nodes, give the option for specific node hardware types (memory, cpu) to give more fidelity to scaling and cost.
+  - Allow per-node `maxRpsOverride` in canvas file (currently hardcoded per node type in `nodeBehaviors.ts`)
 - How can we gamify this? It would be fun to see, for example, how low we can make the cost and preserve 3 9s reliability
 - Simulation capability - see [simulation.md](./simulation.md) for detailed plan
-- Ability to branch - fusion 360 timeline view
-    - Undo/redo as first 'baby step'
+- Undo/redo as first 'baby step'
 - GPT integration (BYOK)
     - AI Review
     - Initial set of sample problems
@@ -19,5 +22,10 @@
 - SaaS: Ability to collaborate / invite
 - Lower pane (practice problemsevaluation, errors)
 	- Leetcode for SD
+- Test out database problem / optimization
 - [ ] Simulation: Phase 4: 3D visualization with pylons
 - [ ] Testing: Add accessibility handles to edges for Playwright testability
+- [x] Testing: CLI simulation validation (`npm run test:simulate`) - validates success rates for sim-*.json files
+
+- Cut:
+	- Fusion 360 style timeline view, not on the critical path or needed here
