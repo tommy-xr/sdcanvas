@@ -2,11 +2,15 @@
 
 [![CI](https://github.com/tommy-xr/sdcanvas/actions/workflows/ci.yml/badge.svg)](https://github.com/tommy-xr/sdcanvas/actions/workflows/ci.yml)
 
+**[Try it live at sdcanvas.dev](https://sdcanvas.dev)**
+
 ## Overview
 
 System Design Canvas (`sdcanvas`)
 
 This is a drawing tool focused on high-level system architecture - geared towards system design interviews. Think of it like an IDE for system design.
+
+![SDCanvas Simulation Mode](docs/screenshot-simulation.png)
 
 ## Development
 
