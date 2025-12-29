@@ -10,11 +10,12 @@ const algorithmLabels = {
   weighted: 'Weighted',
 };
 
-export function LoadBalancerNode({ data, selected }: NodeProps) {
+export function LoadBalancerNode({ id, data, selected }: NodeProps) {
   const nodeData = data as LoadBalancerNodeData;
 
   return (
     <BaseNode
+      id={id}
       icon={<Network size={18} />}
       label={nodeData.label}
       subtitle="Load Balancer (nginx, ALB)"

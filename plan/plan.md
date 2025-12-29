@@ -24,7 +24,7 @@
 	- Leetcode for SD
 - Test out database problem / optimization
 - [ ] Simulation: Phase 4: 3D visualization with pylons
-- [ ] Testing: Add accessibility handles to edges for Playwright testability
+- [x] Testing: Add accessibility handles to edges for Playwright testability
 - [x] Testing: CLI simulation validation (`npm run test:simulate`) - validates success rates for sim-*.json files
 
 - Cut:

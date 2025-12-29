@@ -11,7 +11,7 @@ const providerLabels: Record<string, string> = {
   generic: 'Queue',
 };
 
-export function MessageQueueNode({ data, selected }: NodeProps) {
+export function MessageQueueNode({ id, data, selected }: NodeProps) {
   const nodeData = data as MessageQueueNodeData;
   const topicCount = nodeData.topics?.length || 0;
   const displayedTopics = nodeData.topics?.slice(0, 4) || [];
@@ -19,6 +19,7 @@ export function MessageQueueNode({ data, selected }: NodeProps) {
 
   return (
     <BaseNode
+      id={id}
       icon={<MessageSquare size={18} />}
       label={nodeData.label}
       subtitle={`Message Queue (${providerLabels[nodeData.provider || 'generic']})`}

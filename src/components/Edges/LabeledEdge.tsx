@@ -6,6 +6,9 @@ import {
 import type { EdgeProps } from '@xyflow/react';
 import type { ConnectionData } from '../../types/edges';
 
+// Size of the invisible interaction zone at edge endpoints
+const HANDLE_SIZE = 16;
+
 const connectionStyles: Record<string, { stroke: string; strokeDasharray?: string }> = {
   http: { stroke: '#3b82f6' },
   websocket: { stroke: '#8b5cf6', strokeDasharray: '5 5' },
@@ -30,6 +33,8 @@ const queryTypeColors: Record<string, string> = {
 
 export function LabeledEdge({
   id,
+  source,
+  target,
   sourceX,
   sourceY,
   targetX,
@@ -40,6 +45,7 @@ export function LabeledEdge({
   selected,
 }: EdgeProps) {
   const edgeData = data as ConnectionData | undefined;
+  const testId = `edge-${source}-${target}`;
 
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
@@ -91,7 +97,7 @@ export function LabeledEdge({
   const label = labelText();
 
   return (
-    <>
+    <g data-testid={testId} data-edge-id={id}>
       <BaseEdge
         id={id}
         path={edgePath}
@@ -100,6 +106,25 @@ export function LabeledEdge({
           strokeWidth: selected ? 3 : 2,
           strokeDasharray: style.strokeDasharray,
         }}
+      />
+      {/* Invisible interaction zones at endpoints for Playwright testing */}
+      <circle
+        cx={sourceX}
+        cy={sourceY}
+        r={HANDLE_SIZE / 2}
+        fill="transparent"
+        data-testid={`${testId}-source-handle`}
+        className="edge-handle-source"
+        style={{ cursor: 'crosshair' }}
+      />
+      <circle
+        cx={targetX}
+        cy={targetY}
+        r={HANDLE_SIZE / 2}
+        fill="transparent"
+        data-testid={`${testId}-target-handle`}
+        className="edge-handle-target"
+        style={{ cursor: 'crosshair' }}
       />
       {(prefix || label) && (
         <EdgeLabelRenderer>
@@ -114,12 +139,13 @@ export function LabeledEdge({
               bg-white border border-gray-300 shadow-sm
               ${selected ? 'ring-1 ring-blue-500' : ''}
             `}
+            data-testid={`${testId}-label`}
           >
             {prefix}
             {label && <span className="text-gray-700">{label}</span>}
           </div>
         </EdgeLabelRenderer>
       )}
-    </>
+    </g>
   );
 }

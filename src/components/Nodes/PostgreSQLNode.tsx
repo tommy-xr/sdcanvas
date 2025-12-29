@@ -3,12 +3,13 @@ import { Database } from 'lucide-react';
 import type { PostgreSQLNodeData } from '../../types/nodes';
 import { BaseNode } from './BaseNode';
 
-export function PostgreSQLNode({ data, selected }: NodeProps) {
+export function PostgreSQLNode({ id, data, selected }: NodeProps) {
   const nodeData = data as PostgreSQLNodeData;
   const tableCount = nodeData.tables?.length || 0;
 
   return (
     <BaseNode
+      id={id}
       icon={<Database size={18} />}
       label={nodeData.label}
       subtitle="Relational (Postgres, MySQL)"

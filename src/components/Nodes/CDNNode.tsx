@@ -3,7 +3,7 @@ import { Globe } from 'lucide-react';
 import type { CDNNodeData } from '../../types/nodes';
 import { BaseNode } from './BaseNode';
 
-export function CDNNode({ data, selected }: NodeProps) {
+export function CDNNode({ id, data, selected }: NodeProps) {
   const nodeData = data as CDNNodeData;
   const ruleCount = nodeData.cacheRules?.length || 0;
   const displayedRules = nodeData.cacheRules?.slice(0, 4) || [];
@@ -11,6 +11,7 @@ export function CDNNode({ data, selected }: NodeProps) {
 
   return (
     <BaseNode
+      id={id}
       icon={<Globe size={18} />}
       label={nodeData.label}
       subtitle="CDN / Edge Cache"

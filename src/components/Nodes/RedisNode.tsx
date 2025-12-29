@@ -23,7 +23,7 @@ const valueTypeLabels: Record<RedisKey['valueType'], string> = {
   sortedSet: 'ZSET',
 };
 
-export function RedisNode({ data, selected }: NodeProps) {
+export function RedisNode({ id, data, selected }: NodeProps) {
   const nodeData = data as RedisNodeData;
   const keyCount = nodeData.keys?.length || 0;
   const displayedKeys = nodeData.keys?.slice(0, 5) || [];
@@ -31,6 +31,7 @@ export function RedisNode({ data, selected }: NodeProps) {
 
   return (
     <BaseNode
+      id={id}
       icon={<Zap size={18} />}
       label={nodeData.label}
       subtitle="Cache (Redis, Memcached)"

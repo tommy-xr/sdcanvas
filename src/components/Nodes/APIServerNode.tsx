@@ -11,13 +11,14 @@ const methodColors: Record<string, string> = {
   PATCH: 'text-purple-400',
 };
 
-export function APIServerNode({ data, selected }: NodeProps) {
+export function APIServerNode({ id, data, selected }: NodeProps) {
   const nodeData = data as APIServerNodeData;
   const displayedEndpoints = nodeData.endpoints?.slice(0, 10) || [];
   const remainingCount = (nodeData.endpoints?.length || 0) - 10;
 
   return (
     <BaseNode
+      id={id}
       icon={<Server size={18} />}
       label={nodeData.label}
       subtitle="API Server"
